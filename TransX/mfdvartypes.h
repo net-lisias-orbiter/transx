@@ -27,7 +27,7 @@ class liststring : public listelement
 {
 	char buffer[40];
 public:
-	setbuffer(char *tbuffer);
+	void setbuffer(char *tbuffer);
 	char *getbuffer(){return buffer;};//returns pointer to actual buffer.
 	liststring(bool manageme = true);
 	virtual ~liststring(){};//virtual destructor to guard against memory leak

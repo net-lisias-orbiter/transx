@@ -22,6 +22,7 @@ private:
 	bool valid; //Whether the orbit class is valid or not
 	double simpletimetoradius(double radius) const;
 	double simpletimetothi(double costhi, double sinthi) const;//private time calculation function
+public:
 	void improvebyradius(double timetarget,double topthi,double timeattopthi,class orbittime *posvel) const;
 	void improvebysubdivision(double timetarget,double topthi,double timeattopthi,class orbittime *posvel) const;
 	bool improve(double timetarget,class orbittime *posvel) const;

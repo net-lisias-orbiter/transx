@@ -304,7 +304,7 @@ transxstate::transxstate(OBJHANDLE thcraft, class shipptrs *tshipptrs)
 	saveflag=false;
 	actionframe=0;
 	selectshipvars=false;
-	eastereggswitch=int(floor(long(oapiGetSimMJD()*86400)%5-1));
+	eastereggswitch=long(oapiGetSimMJD()*86400)%5-1;
 	initialisevars();
 	initfunctions();
 }
@@ -347,7 +347,7 @@ bool transxstate::baseonexisting(class transxstate *existing)
 	previous=NULL;
 	if (currbase->gethmajor()!=mappointer->getcurrbody(hcraft)) return false;//check that initial body is correct
 	numentries=existing->baselist.size();
-	for (a=0;a<numentries;a++)
+	for (int a=0;a<numentries;a++)
 	{
 		currbase=existing->baselist[a];
 		newbase=new basefunction(this,previous,currbase,hcraft);//creates new basefunction matching old one
@@ -421,7 +421,7 @@ transxstate::~transxstate()
 	{
 		delete baselist[a];
 	}
-	for (a=0;a<todeletelist.size();a++)
+	for (int a=0;a<todeletelist.size();a++)
 	{
 		delete todeletelist[a];
 	}

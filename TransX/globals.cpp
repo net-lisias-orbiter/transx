@@ -35,7 +35,7 @@ struct {
 	int mode;
 }g_transxMFD;
 
-
+using namespace std;
 
 // ==============================================================
 // API interface
@@ -48,7 +48,7 @@ DLLCLBK void opcDLLInit (HINSTANCE hDLL)
 	spec.msgproc = TransxMFD::MsgProc;
 	//Code contributed by Dave Robotham
 	ifstream kstream;
-	kstream.open("config\\transx.cfg",ios::nocreate);	// this could be any file really.
+	kstream.open("config\\transx.cfg",NULL);	// this could be any file really.
 	if( kstream )
 	{
 		try 

@@ -966,7 +966,6 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 			planpointer->wordupdate(hDC,tw,th,this);
 		}
 	}
-	return;
 }
 
 
