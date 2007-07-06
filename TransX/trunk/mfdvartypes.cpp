@@ -480,6 +480,9 @@ bool MFDvarMJD::inc_variable()
 		adjuster=0.00001;
 		break;
 	case 6:
+		adjuster=0.000001;
+		break;
+	case 7:
 		value=oapiGetSimMJD();
 		return true;
 	}
@@ -517,6 +520,9 @@ bool MFDvarMJD::dec_variable()
 		adjuster=0.00001;
 		break;
 	case 6:
+		adjuster=0.000001;
+		break;
+	case 7:
 		value=oapiGetSimMJD();
 		return true;
 
@@ -558,6 +564,9 @@ bool MFDvarfloat::inc_variable()
 		adjuster=0.00001;
 		break;
 	case 6:
+		adjuster=0.000001;
+		break;
+	case 7:
 		value=defaultvalue;
 		return true;
 	}
@@ -595,6 +604,9 @@ bool MFDvarfloat::dec_variable()
 		adjuster=0.00001;
 		break;
 	case 6:
+		adjuster=0.000001;
+		break;
+	case 7:
 		value=defaultvalue;
 		return true;
 
@@ -817,6 +829,9 @@ bool MFDvarangle::inc_variable()
 		adjuster=0.00001;
 		break;
 	case 6:
+		adjuster=0.000001;
+		break;
+	case 7:
 		value=defaultvalue;
 		cosvalue=cos(value);
 		sinvalue=sin(value);
@@ -861,6 +876,9 @@ bool MFDvarangle::dec_variable()
 		adjuster=0.00001;
 		break;
 	case 6:
+		adjuster=0.000001;
+		break;
+	case 7:
 		value=defaultvalue;
 		cosvalue=cos(value);
 		sinvalue=sin(value);

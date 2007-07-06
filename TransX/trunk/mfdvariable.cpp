@@ -187,6 +187,9 @@ void MFDvariable::showadjustment(HDC hDC, int width, int line) const
 		length=sprintf(buffer,"Ultra");
 		break;
 	case 6:
+		length=sprintf(buffer,"Hyper");
+		break;
+	case 7:
 		length=sprintf(buffer,"Reset");
 		break;
 	}
@@ -200,13 +203,13 @@ void MFDvariable::ch_adjmode()
 
 {
 	if (adjmode==0) return;
-	if (++adjmode>6) adjmode=1;
+	if (++adjmode>7) adjmode=1;
 }
 
 void MFDvariable::chm_adjmode()
 {
 	if (adjmode==0) return;
-	if (--adjmode<1) adjmode=6;
+	if (--adjmode<1) adjmode=7;
 }
 
 bool MFDvariable::flip_variable()

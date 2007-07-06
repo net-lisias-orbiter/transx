@@ -81,7 +81,7 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="C:\Program files\orbitersdk\lib\"
-				IgnoreDefaultLibraryNames="msvcirt.lib"
+				IgnoreDefaultLibraryNames="msvcirt.lib,msvcrt.lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/transx.pdb"
 				ImportLibrary=".\Debug/transx.lib"
