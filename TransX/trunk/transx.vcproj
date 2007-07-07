@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="rmin"
+	Name="TransX"
 	ProjectGUID="{DBBECE45-BC45-406F-A8D4-AB6DDAB5898F}"
 	RootNamespace="rmin"
 	>

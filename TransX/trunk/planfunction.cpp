@@ -272,6 +272,23 @@ void encounterplan::graphupdate(HDC hDC,GRAPH *graph,basefunction *base)
 	if (surfbase==NULL) return;
 	OBJHANDLE hmaj=base->gethmajor();
 	oapiGetRelativePos(surfbase,hmaj,&baseposition);
+	double rot = oapiGetPlanetPeriod(hmaj);
+	ORBIT craft=base->getcraftorbit();
+	
+	// Get the base position at the Pe by rotating the body by the time until Pe
+	double deltatime = craft.getpedeltatime();
+	MATRIX3 oblrot;
+	oapiGetPlanetObliquityMatrix(hmaj, &oblrot);
+	MATRIX3 invoblrot = getinvmatrix(oblrot);
+	VECTOR3 v1, v2;
+	double theta = 2 * PI * deltatime / rot; // angle rotated by planet in 1 second
+	MATRIX3 majrot = {cos(theta), 0, -sin(theta), 
+					  0,		  1, 0,
+					  sin(theta), 0, cos(theta)};
+	matrixmultiply(invoblrot, baseposition, &v1);
+	matrixmultiply(majrot, v1, &v2);
+	matrixmultiply(oblrot, v2, &baseposition);
+
 	double distance2=vectorsize2(baseposition);
 	double radius2=oapiGetSize(hmaj);
 	radius2=radius2*radius2;
