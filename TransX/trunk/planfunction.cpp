@@ -431,7 +431,7 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 			VECTOR3 position,velocity;
 			craft.radiustovectors(radius,false,&position,&velocity);
 			double distfrombase=vectorsize(position-baseposition);
-			TextShow(hDC,"L.site 2 Base",0,pos,distfrombase);
+			TextShow(hDC,"L.site dist to Base",0,pos,distfrombase);
 			pos+=linespacing;
 		}
 	}
@@ -453,6 +453,11 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 		VECTOR3 plane=unitise(craft.getplanevector());
 		double distoffplane=dotproduct(plane,baseposition);
 		TextShow(hDC,"Offplane Dist:",0,pos,distoffplane);
+		pos+=linespacing;
+		VECTOR3 position,velocity;
+		craft.radiustovectors(ped+10,false,&position,&velocity);
+		double distfrombase=vectorsize(position-baseposition);
+		TextShow(hDC,"Pe dist to Base:",0,pos,distfrombase);
 		pos+=linespacing;
 	}
 
