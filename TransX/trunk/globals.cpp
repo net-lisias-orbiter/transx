@@ -321,4 +321,29 @@ void getinvrotmatrix(VECTOR3 arot, MATRIX3 *invrotmatrix)//arot not really a vec
 	matrixmultiply(temp,x,invrotmatrix);
 }
 
+double getdeterminant(const MATRIX3 mat)
+{
+	return   mat.m11 * (mat.m22 * mat.m33 - mat.m23 * mat.m32)
+		   - mat.m12 * (mat.m21 * mat.m33 - mat.m23 * mat.m31)
+		   + mat.m13 * (mat.m21 * mat.m32 - mat.m22 * mat.m31);
+}
+
+MATRIX3 getinvmatrix(const MATRIX3 mat)
+{
+	MATRIX3 out = {0,0,0,0,0,0,0,0,0};
+	double det = getdeterminant(mat);
+	if(det == 0)
+		return out; // prevent devide by zero
 	
+	out.m11 =  (mat.m22 * mat.m33 - mat.m23 * mat.m32) / det;
+	out.m21 = -(mat.m21 * mat.m33 - mat.m23 * mat.m31) / det;
+	out.m31 =  (mat.m21 * mat.m32 - mat.m22 * mat.m31) / det;
+	out.m12 = -(mat.m12 * mat.m33 - mat.m13 * mat.m32) / det;
+	out.m22 =  (mat.m11 * mat.m33 - mat.m13 * mat.m31) / det;
+	out.m32 = -(mat.m11 * mat.m32 - mat.m12 * mat.m31) / det;
+	out.m13 =  (mat.m12 * mat.m23 - mat.m13 * mat.m22) / det;
+	out.m23 = -(mat.m11 * mat.m23 - mat.m13 * mat.m21) / det;
+	out.m33 =  (mat.m11 * mat.m22 - mat.m12 * mat.m21) / det;
+
+	return out;
+}
