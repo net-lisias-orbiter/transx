@@ -53,6 +53,10 @@ int transxstate::movetonextfunction(int curvarfunction)
 	class basefunction *cfunction=baselist[curvarfunction-1];
 
 	OBJHANDLE tmajor,tminor,actualhmajor;
+	VESSELSTATUS status;
+	oapiGetVesselInterface(hcraft)->GetStatus(status);	
+	if (status.status==1 && !cfunction->getpreviousfunc()) // craft is landed and we are in the first stage
+		cfunction->setplanstate(0, 1); // force an escape plan
 	cfunction->updateplan();
 	cfunction->handlesfornextfunction(&tmajor,&tminor);
 	if (curvarfunction<baselist.size())//if not the last function
