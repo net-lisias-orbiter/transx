@@ -128,7 +128,7 @@ DLLCLBK void opcFocusChanged(OBJHANDLE newfocus, OBJHANDLE oldfocus)
 	//viewstate::updatefocusvessel(newfocus);
 }
 
-DLLCLBK void opcTimestep(double SimT, double SimDT, double mjd)
+DLLCLBK void opcPostStep(double SimT, double SimDT, double mjd)
 {
 	static int choose;
 	if (choose!=0)
