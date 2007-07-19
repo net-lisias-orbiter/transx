@@ -15,7 +15,6 @@ private:
 public:
 	void addtolist(class MFDvariable *item);
 	bool crosscopy(MFDvarhandler &othervars);
-	//void removefromlist(MFDvariable *item);
 	void setprevcurrent(int viewmode);
 	void setnextcurrent(int viewmode);
 	void saveallvariables(FILEHANDLE scn);

@@ -52,8 +52,6 @@ void MFDvariable::setall(class MFDvariable *var)
 	sethandle(var->gethandle());
 }
 
-
-
 bool MFDvariable::getshow()
 {
 	return showvariable;
@@ -69,7 +67,7 @@ void MFDvariable::setcmdnugget(cmdnugget *nugget)
 bool MFDvariable::showgeneric(HDC hDC,int width,int line, char *inbuff)
 {
 // This is a helper function that formats output to the MFD screen
-	char buffer[20];
+	char buffer[MAX_NAME_LENGTH];
 	int linecentre=(int) width/2;
 	int linepos= 6*line;
 	int inlength=strlen(inbuff);
@@ -99,11 +97,9 @@ bool MFDvariable::showgeneric(HDC hDC,int width,int line, char *inbuff)
 }
 
 bool MFDvariable::show(HDC hDC, int width, int line)
-
 //This is a virtual function that will not normally be used. Although MFDvariable is not
 // a pure virtual class, it is only the derived classes that are created in practice.
 // All these show() functions describe the MFDvariable on the screen
-
 {
 	return showgeneric(hDC,width,line," ");
 }
@@ -128,7 +124,6 @@ void MFDvariable::getname(char *buffer) const
 {
 	strcpy(buffer,name);
 }
-
 
 void MFDvariable::setadjmode(int tadjmode)
 {
@@ -158,11 +153,9 @@ int MFDvariable::getadjmode() const
 }
 
 void MFDvariable::showadjustment(HDC hDC, int width, int line) const
-
 // This shows the mode of adjustment currently in force for the current MFDvariable
-
 {
-	char buffer[20];
+	char buffer[MAX_NAME_LENGTH];
 	int ypos=int(7*line);
 	int xpos=int(width/2);
 	int length;
@@ -195,9 +188,7 @@ void MFDvariable::showadjustment(HDC hDC, int width, int line) const
 
 
 void MFDvariable::ch_adjmode()
-
 // Change the adjustment mode of this MFDvariable
-
 {
 	if (adjmode==0) return;
 	if (++adjmode>6) adjmode=1;
@@ -249,7 +240,6 @@ double MFDvariable::getcos() const
 {
 	return (double) 1;
 }
-
 
 void MFDvariable::setvalue(double tvalue)
 {}

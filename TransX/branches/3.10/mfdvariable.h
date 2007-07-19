@@ -4,6 +4,9 @@
 #include "doublelink.h"
 class cmdnugget;
 
+#define MAX_NAME_LENGTH			20
+#define MAX_HELPSTRING_LENGTH	40
+
 class MFDvariable : listelement
 {
 private:
@@ -11,9 +14,9 @@ private:
 	int execstatus,execcountdown;//Simple system to provide feedback message on pressing of EXE
 	cmdnugget *inugget;
 protected:
-	char name[20]; //Name of variable as displayed on MFD
-	char helpstring1[40]; //Help string
-	char helpstring2[40];//Help string
+	char name[MAX_NAME_LENGTH]; //Name of variable as displayed on MFD
+	char helpstring1[MAX_HELPSTRING_LENGTH]; //Help string
+	char helpstring2[MAX_HELPSTRING_LENGTH];//Help string
 	int adjmode; // Integer representing the adjustment mode - use depends on class
 	bool showvariable;
 public:

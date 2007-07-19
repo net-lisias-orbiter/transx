@@ -8,8 +8,6 @@
 #include "TransXFunction.h"
 #include "transx.h"
 
-
-
 TransXFunction::TransXFunction(class transxstate *tstate, OBJHANDLE thmajor, OBJHANDLE thminor, OBJHANDLE thtarget, OBJHANDLE thcraft, OBJHANDLE thbase)
 {	
 	state=tstate;
@@ -30,8 +28,6 @@ TransXFunction::TransXFunction(class transxstate *tstate, OBJHANDLE thmajor, OBJ
 	initpens();
 }
 
-
-
 TransXFunction::~TransXFunction()
 {
 	//Need to delete the pens to stop them eating system resources
@@ -50,7 +46,8 @@ void TransXFunction::restoreself(FILEHANDLE scn)
 	char *bufferpointer;
 	char tempbuffer[18], finalbuffer[18];
 	bool ok;
-	do {
+	do 
+	{
 		ok=oapiReadScenario_nextline(scn,bufferpointer);
 		strncpy(tempbuffer,bufferpointer,16);
 		sscanf(tempbuffer,"%s",finalbuffer);
@@ -182,7 +179,7 @@ bool TransXFunction::loadorbit(FILEHANDLE scn,ORBIT *loadorbit)
 	if (!loadvector(scn,&tvel)) return false;
 	if (!loaddouble(scn,&gmplanet)) return false;
 	if (!loaddouble(scn,&timestamp)) return false;
-	timestamp=(timestamp-simstartMJD)*86400;
+	timestamp=(timestamp-simstartMJD)*SECONDS_PER_DAY;
 	loadorbit->init(tpos,tvel,timestamp,gmplanet);
 	return true;
 }
@@ -191,13 +188,9 @@ void TransXFunction::savehandle(FILEHANDLE scn, OBJHANDLE handle)
 {
 	char namebuffer[30];
 	if (handle!=NULL)
-	{
 		oapiGetObjectName(handle,namebuffer,30);
-	}
 	else
-	{
 		strcpy(namebuffer,"NULL");
-	}
 	oapiWriteScenario_string(scn,"Handle",namebuffer);
 	return;
 }
@@ -207,13 +200,9 @@ void TransXFunction::saveorbit(FILEHANDLE scn, const ORBIT &saveorbit)
 {
 	char validvalue[6];
 	if (saveorbit.isvalid())
-	{
 		strcpy(validvalue,"True");
-	}
 	else
-	{
 		strcpy(validvalue,"False");
-	}
 	oapiWriteScenario_string(scn,"Orbit",validvalue);
 	if (!saveorbit.isvalid()) return;
 	VECTOR3 tpos,tvel;
@@ -222,14 +211,9 @@ void TransXFunction::saveorbit(FILEHANDLE scn, const ORBIT &saveorbit)
 	savevector(scn,tvel);
 	double planet=saveorbit.getgmplanet();
 	savedouble(scn,planet);
-	double time=saveorbit.gettimestamp()/86400+simstartMJD;
+	double time=saveorbit.gettimestamp()/SECONDS_PER_DAY+simstartMJD;
 	savedouble(scn,time);
 }
-
-
-
-
-
 
 void TransXFunction::setnumberviews(int tnumberviews)
 {
@@ -245,7 +229,6 @@ MFDvariable *TransXFunction::getcurrentvariable(int view)
 {
 	return vars.getcurrent(view);
 }
-
 
 void TransXFunction::sethmajor(OBJHANDLE handle)
 {
@@ -296,7 +279,6 @@ void TransXFunction::sethandles(OBJHANDLE thmajor, OBJHANDLE thminor, OBJHANDLE 
 	hbase=thbase;
 }
 
-
 void TransXFunction::gethandles(OBJHANDLE *thmajor, OBJHANDLE *thminor, OBJHANDLE *thtarget, OBJHANDLE *thcraft, OBJHANDLE *thbase)
 {
 	*thmajor=hmajor;
@@ -306,53 +288,30 @@ void TransXFunction::gethandles(OBJHANDLE *thmajor, OBJHANDLE *thminor, OBJHANDL
 	*thbase=hbase;
 }
 
-/*HPEN TransXFunction::SelectDefaultPen(HDC hDC, int value)
-{
-	return state->GetMFDpointer()->SelectDefaultPen(hDC,value);
-}*/
-
-
-
-
 void TransXFunction::initpens(void)								//(rbd+)
 {
-	pens[0] = CreatePen(PS_SOLID, 0 , RGB(0x00, 0xFF, 0x00));// Green - stands for craft
-	pens[1] = CreatePen(PS_SOLID, 0 , RGB(0x00, 0x00, 0xCD));//Blue - stands for planet
-	pens[2] = CreatePen(PS_DOT, 0 , RGB(0xCD, 0xCD, 0x00));//Bright yellow - hypos
-	pens[3] = CreatePen(PS_SOLID, 0 , RGB(0xFF, 0x00, 0x00));//Bright red - unused, but danger
-	pens[4] = CreatePen(PS_SOLID, 0 , RGB(0xC0, 0xC0, 0xC0));//Light Grey
-	pens[5] = CreatePen(PS_SOLID, 0 , RGB(0xFF, 0xFF, 0xFF));//Bright white - unused
-	//pens[0] = CreatePen(PS_SOLID, 0, RGB(0xCD, 0xCD, 0x00));	// 6 = Solid, Bright Yellow
-	//pens[1] = CreatePen(PS_SOLID, 0, RGB(0x00, 0x00, 0xCD));	// 7 = Solid, Medium Blue
-	//pens[2] = CreatePen(PS_SOLID, 0, RGB(0xFF, 0xFF, 0xFF));	// 8 = Solid, Bright White
-	//pens[3] = CreatePen(PS_SOLID, 0, RGB(0x80, 0x00, 0x00));	// 9 = Solid, Dark Red
+	pens[0] = CreatePen(PS_SOLID, 0 , RGB(0x00, 0xFF, 0x00));	// Green - stands for craft
+	pens[1] = CreatePen(PS_SOLID, 0 , RGB(0x00, 0x00, 0xCD));	// Blue - stands for planet
+	pens[2] = CreatePen(PS_DOT, 0 , RGB(0xCD, 0xCD, 0x00));		// Bright yellow - hypos
+	pens[3] = CreatePen(PS_SOLID, 0 , RGB(0xFF, 0x00, 0x00));	// Bright red - unused, but danger
+	pens[4] = CreatePen(PS_SOLID, 0 , RGB(0xC0, 0xC0, 0xC0));	// Light Grey
+	pens[5] = CreatePen(PS_SOLID, 0 , RGB(0xFF, 0xFF, 0xFF));	// Bright white - unused
 }
 
 
 void TransXFunction::deletepens()
 {
-	for (int a=0;a<6;a++)
-	{
+	for (int a=0;a<NUM_PENS;a++)
 		DeleteObject(pens[a]);
-	}
 }
 															//(rbd-)
 HPEN TransXFunction::SelectDefaultPen(HDC hDC, int value)
 {
-	if(value <6)
-	{//(rbd+)
+	if(value < NUM_PENS) //(rbd+)
 		return((HPEN)SelectObject(hDC, pens[value-1]));		// Custom pen
-	}
-	else
-	{//(rbd-)
+	else //(rbd-)
 		return state->GetMFDpointer()->SelectDefaultPen(hDC,value);
-	}
 }
-
-
-
-
-
 
 void TransXFunction::sethelp(char *help1,char *help2,char *help3,char *help4,char *help5)
 {

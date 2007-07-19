@@ -16,17 +16,13 @@ class viewstate
 	class TransxMFD *imfd;
 	viewstate(UINT tmfd,TransxMFD *mfdptr,class shipptrs *shipptrs);
 	class transxstate *state;//Pointer to the transxstate associated with this
-	//static class viewstate *viewstates[20];
-	//static bool viewstatesinitialised;
 	void selfdownshift();
 	void resetshift();
 public:
 	bool doupdate(HDC hDC,int tw,int th,TransxMFD *mfdptr);
-	//static bool getviewstate(UINT tmfd,class viewstate **tviewstate,TransxMFD *mfdptr,VESSEL *vessel);
 	bool getrenderviewport(){return renderviewport;};
 	class MFDvariable *GetCurrVariable(); 
 	static void preparetoclose();
-	//static void downshift();
 	void setmfdactive(bool temp){mfdactive=temp;};
 	void movetonextfunction();
 	void movetopreviousfunction();
@@ -37,7 +33,6 @@ public:
 	int getvariableviewmode(){return varviewmode;};
 	class MFDvarhandler *GetVarhandler();
 	void fliphelpsystem();
-	//static void updatefocusvessel(OBJHANDLE newfocus);
 	~viewstate();
 	friend class shipptrs;
 };

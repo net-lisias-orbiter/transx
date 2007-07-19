@@ -2,8 +2,10 @@
 #define __SHIPLIST_H
 
 #include "viewstate.h"
-//#include "transxstate.h"
 #include "transx.h"
+
+#define SHIPNAME_LENGTH	50
+#define	MFDLIST_LENGTH	20
 
 class transxstate;
 
@@ -15,9 +17,9 @@ class shipptrs
 	shipptrs *previous,*next;
 	static shipptrs *current;//Used in background task
 	void subcreate();
-	class viewstate *mfdlist[20];
+	class viewstate *mfdlist[MFDLIST_LENGTH];
 	class transxstate *state;
-	char shipname[50];//ship name - needs to be long enough to have good chance of being complete
+	char shipname[SHIPNAME_LENGTH];//ship name - needs to be long enough to have good chance of being complete
 	static bool saved;//whether a save has been performed since last timestep
 public:
 	static void refreshsave(){saved=false;};

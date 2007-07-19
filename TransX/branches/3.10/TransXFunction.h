@@ -2,11 +2,13 @@
 #define __TRANSXFUNCTION_H
 
 #include "mfdfunction.h"
-//#include "transxstate.h"
 #include "parser.h"
 #include "mfdvarhandler.h"
 #include "intercept.h"
 #include "graph.h"
+
+#define MAX_HELPSTRING_LENGTH	40
+#define NUM_PENS				6
 
 class transxstate;
 
@@ -18,16 +20,18 @@ private:
 	virtual bool initialisevars() = 0;
 	void deletepens();
 	PARSER parser;
-	char helpstring1[40],helpstring2[40],helpstring3[40],helpstring4[40],helpstring5[40];
+	char helpstring1[MAX_HELPSTRING_LENGTH],
+		 helpstring2[MAX_HELPSTRING_LENGTH],
+		 helpstring3[MAX_HELPSTRING_LENGTH],
+		 helpstring4[MAX_HELPSTRING_LENGTH],
+		 helpstring5[MAX_HELPSTRING_LENGTH];
 protected:
 	OBJHANDLE hmajor, hminor, hmajtarget, hcraft, hbase;//Standard set of OBJHANDLES for the TransX MFD
 	double gravbodyratio; //Specific computation associated with hmajor+hminor
 	double simstartMJD; //Time at which current scenario commenced
 	class MFDvarhandler vars; //Variable set associated with this MFDFunction
 	class transxstate *state; //Pointer to calling transxstate
-	HPEN pens[6];//Replacement pens for MFD
-
-
+	HPEN pens[NUM_PENS];//Replacement pens for MFD
 
 public:
 	HPEN SelectDefaultPen(HDC hDC, int value);

@@ -57,9 +57,7 @@ void parser::parseline(char *xbuffer)//Parses the line
 bool parser::getlineelement(int element, char **tbuffer, int *length)
 {
 	if (element>totalmembers-1 || element<0)
-	{
 		return false;//Requested element doesn't exist
-	}
 	*tbuffer=memberstart[element];
 	*length=memberend[element]-memberstart[element];
 	if (*length>39) return false;

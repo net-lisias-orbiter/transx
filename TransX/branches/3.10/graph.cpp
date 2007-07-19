@@ -62,9 +62,7 @@ void graphset::setviewscale(const ORBIT &orbit)
 }
 
 void graphset::setprojection(const VECTOR3 &txaxis, const VECTOR3 &tyaxis, const VECTOR3 &tzaxis)
-
 // Set projection vectors
-
 {
 	xaxis=unitise(txaxis);
 	yaxis=unitise(tyaxis);
@@ -79,10 +77,8 @@ void graphset::setprojection(const ORBIT &torbit)
 }
 
 void graphset::setprojection(const VECTOR3 &projection)
-
 //Set projection vectors using a viewpoint vector
 // Angle of peojection is set by the same method used by Orbiter
-
 {
 	if (projection.x==0 && projection.z==0)
 	{
@@ -110,7 +106,6 @@ void graphset::draworbit(const ORBIT &element, HDC hDC, bool drawradius)
 
 
 void graphset::drawtwovector(HDC hDC, const VECTOR3 &line1, const VECTOR3 &line2)
-
 // Draw two vectors from the planet centre
 {
 	const double xoffset=(ixstart+ixend)*0.5;
@@ -146,7 +141,6 @@ void graphset::drawvector(HDC hDC,const VECTOR3 &line1)
 
 
 void graphset::drawvectorline(HDC hDC, const VECTOR3 &line)
-
 // Draw a vector from the planet centre
 {
 	const double xoffset=(ixstart+ixend)*0.5;
@@ -227,7 +221,7 @@ double graphset::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VE
 	MoveToEx(hDC,ixstart,iystart+centre+lines,NULL);
 	LineTo(hDC, ixstart+edge,iystart+centre+lines);
 	double offsetsize=sqrt(trtarget.x*trtarget.x+trtarget.y*trtarget.y);
-	double scalar=0.707106781;
+	double scalar=sqrt(2.0) / 2;
 	double xang=trtarget.x/offsetsize;
 	double yang=-trtarget.y/offsetsize;
 	offsetsize=sqrt(offsetsize/trtarget.z);

@@ -1,8 +1,5 @@
 #define STRICT
 
-//#include <windows.h>
-//#include <stdio.h>
-//#include <math.h>
 #include "orbitersdk.h"
 #include <deque>
 #include "mfd.h"
@@ -13,12 +10,6 @@
 #include "viewstate.h"
 #include "shiplist.h"
 #include "transxstate.h"
-
-//bool transxstate::statelistinitflag=false;
-
-
-//double debug;
-
 
 MFDvarhandler *transxstate::GetVarhandler(int currvarfunction)
 {
@@ -35,8 +26,6 @@ MFDvariable *transxstate::GetCurrVariable(int currvarfunction,int currviewmode)
 	class basefunction *cfunction=baselist[currvarfunction-1];
 	return cfunction->getcurrentvariable(currviewmode);
 }
-
-
 
 int transxstate::movetonextfunction(int curvarfunction)
 {
@@ -87,7 +76,6 @@ int transxstate::movetonextfunction(int curvarfunction)
 	return curvarfunction+1;
 }
 
-
 bool transxstate::checkdelete()
 {
 	if (todeletelist.empty()) return false;
@@ -96,7 +84,6 @@ bool transxstate::checkdelete()
 	addaction(0);
 	return true;
 }
-
 
 int transxstate::movetopreviousfunction(int curvarfunction)
 {
@@ -116,7 +103,6 @@ int transxstate::inc_viewmode(int currfunction,int currview)
 	return baselist[currfunction-1]->calcnewview(currview,currfunction==1);
 }
 
-
 void transxstate::dolowpriaction()
 {
 
@@ -129,7 +115,7 @@ void transxstate::dolowpriaction()
 		addaction(0);
 		return;
 	}
-	actionframe=0;//10;
+	actionframe=0;
 	if (currcalcfunction<0)
 	{
 		currcalcfunction=0;
@@ -195,18 +181,13 @@ class TransxMFD *transxstate::GetMFDpointer()
 	return mfdpointer;
 }
 
-
 void transxstate::updateownfocusvessel(OBJHANDLE newfocus)
 {
 	for (int a=0;a<baselist.size();a++)
-	{
 		baselist[a]->sethcraft(newfocus);
-	}
 	hcraft=newfocus;
 	m_ships.initbybody(newfocus,true);
 }
-
-
 
 void transxstate::savecurrent(FILEHANDLE scn)
 
@@ -219,12 +200,8 @@ void transxstate::savecurrent(FILEHANDLE scn)
 	oapiWriteScenario_int(scn,buffer,baselist.size());
 	std::deque<class basefunction*>::iterator a;
 	for (a=baselist.begin();a!=baselist.end();a++)
-	{
 		(*a)->saveself(scn);
-	}
 }
-
-
 
 bool transxstate::restoresave(FILEHANDLE scn)
 {
@@ -265,29 +242,21 @@ bool transxstate::restoresave(FILEHANDLE scn)
 			break;
 		}
 		baselist.push_back(temp);
-		//temp->initialisevars();
 	}
 	if (success)
 	{
 		for (a=0;a<numfunctions;a++)
-		{
 			baselist[a]->restoreself(scn);
-		}
 	}
 	else
 	{
 		for (a=0;a<baselist.size();a++)
-		{
 			delete baselist[a];
-		}
 		baselist.clear();
-		//addaction(0);//start process of deleting functions
 	}
 	currcalcfunction=-1;
 	return true;
 }
-
-
 
 transxstate::transxstate(OBJHANDLE thcraft, class shipptrs *tshipptrs)
 {
@@ -304,7 +273,7 @@ transxstate::transxstate(OBJHANDLE thcraft, class shipptrs *tshipptrs)
 	saveflag=false;
 	actionframe=0;
 	selectshipvars=false;
-	eastereggswitch=long(oapiGetSimMJD()*86400)%5-1;
+	eastereggswitch=long(oapiGetSimMJD()*SECONDS_PER_DAY)%5-1;
 	initialisevars();
 	initfunctions();
 }
@@ -314,9 +283,7 @@ void copytransxstatecmd::execute()
 {
 	OBJHANDLE craft=ivar->gethandle();//Get the handle this is based on
 	if (craft!=NULL)
-	{
 		mytxstate->baseonvessel(craft);
-	}
 }
 
 
@@ -364,7 +331,6 @@ bool transxstate::baseonexisting(class transxstate *existing)
 bool transxstate::initialisevars()
 {
 	m_ships.init(&vars,2,2,"Inherit from");
-	//setnumberviews(2);
 	//Make invisible all variables that sometimes are invisible
 
 	//set up help system
@@ -375,9 +341,6 @@ bool transxstate::initialisevars()
 	nugget->settransxstate(this);
 	m_ships.setcmdnugget(nugget);
 
-	/*sethelp(
-		"Use these variables for broad ",
-		"changes to your plan.","","","");*/
 	return true;
 }
 
@@ -418,17 +381,12 @@ basefunction *transxstate::getnextfunction(int positionnumber)
 transxstate::~transxstate()
 {
 	for (int a=0;a<baselist.size();a++)
-	{
 		delete baselist[a];
-	}
 	for (int a=0;a<todeletelist.size();a++)
-	{
 		delete todeletelist[a];
-	}
 	baselist.clear();
 	todeletelist.clear();
 }
-
 
 bool transxstate::doupdate(HDC hDC, int tw, int th,int currfunction,int currview, int curvarfunction, int currvarview,TransxMFD *tmfdpointer)
 {

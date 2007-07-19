@@ -3,9 +3,6 @@
 
 
 // Needed due to the implementation of the selection functions in Orbiter
-//bool SelectMajorbody(void*id, char *str, void *usrdata);
-//bool SelectMinorbody(void*id, char *str, void *usrdata);
-//bool SelectTargetbody(void*id, char *str, void *usrdata);
 bool SelectVariableBody(void *id, char *str, void *usrdata);
 DLLCLBK void opcDLLInit (HINSTANCE hDLL);
 DLLCLBK void opcDLLExit (HINSTANCE hDLL);
@@ -19,12 +16,10 @@ void matrixmultiply(const MATRIX3 &first, const MATRIX3 &second, MATRIX3 *result
 void matrixmultiply(const MATRIX3 &first, const VECTOR3 &second, VECTOR3 *result);
 void getinvrotmatrix(VECTOR3 arot, MATRIX3 *invrotmatrix);
 
-
 // Standard formatting function
 void TextShow(HDC hDC, const char *label, int wpos, int hpos, double value);
 void TextShow(HDC hDC, const char *label, int wpos, int hpos, OBJHANDLE handle);
 void TextForm(char *buffer,const char *label,double value);
-
 
 const double GRAVITY=6.67259e-11; // Gravitational constant
 

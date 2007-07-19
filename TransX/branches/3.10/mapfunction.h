@@ -4,6 +4,8 @@
 #include "mfdfunction.h"
 #include "orbitelements.h"
 
+#define MAX_BODIES	101
+
 typedef struct {
 	OBJHANDLE bodyhandle;
 	int parentbody;
@@ -30,7 +32,7 @@ private:
 	int actionstage,actionloop;
 	bool initialised;
 	static class mapfunction *themap;
-	HASHENTRY hashtable[101];
+	HASHENTRY hashtable[MAX_BODIES];
 	void getallhandles();
 	void sorthandles();
 	void mergelists(GBODY *list1, GBODY *endlist1, GBODY *list2, GBODY *endlist2, GBODY *listout);

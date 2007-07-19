@@ -29,29 +29,17 @@ MFDFunction::~MFDFunction()
 void MFDFunction::delist()
 {
 	if (lastfast==this)
-	{
 		lastfast=previous;
-	}
 	if (firstfast==this)
-	{
 		firstfast=next;
-	}
 	if (lastslow==this)
-	{
 		lastslow=previous;
-	}
 	if (firstslow==this)
-	{
 		firstslow=next;
-	}
 	if (next!=NULL)
-	{
 		next->previous=previous;
-	}
 	if (previous!=NULL)
-	{
 		previous->next=next;
-	}
 	allowedtowrite=true;
 }
 
@@ -66,8 +54,6 @@ void MFDFunction::dohighpriaction()
 
 void MFDFunction::dolowpriaction()
 {}
-
-
 
 void MFDFunction::donextaction()
 {

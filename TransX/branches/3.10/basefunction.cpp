@@ -8,7 +8,6 @@
 
 #include "transx.h"
 
-
 extern double debug;
 
 basefunction::basefunction(class transxstate *tstate, class basefunction *tpreviousfunc, OBJHANDLE thmajor, OBJHANDLE thminor,OBJHANDLE thcraft)
@@ -750,8 +749,6 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 {
 	if (!valid) return;
 	if (!m_target.validate()) hmajtarget=NULL;
-	//W=tw;
-	//H=th;
 	int linespacing=th/24;
 	VECTOR3 targetvel;
 	calculate(&targetvel);
@@ -805,11 +802,10 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 	TextOut(hDC,wpos,hpos,buffer,strlen(buffer));
 	if (viewmode==1 && hypormaj.isvalid())//Target view
 	{
-		double timeoffset=(m_ejdate-simstartMJD)*86400-craft.gettimestamp();
+		double timeoffset=(m_ejdate-simstartMJD)*SECONDS_PER_DAY-craft.gettimestamp();
 		VECTOR3 craftpos,craftvel;
 		craft.timetovectors(timeoffset,&deltavel);//New eccentricity insensitive timetovectors
 		deltavel.getposvel(&craftpos,&craftvel);
-		//craft.getcurrentvectors(&craftpos,&craftvel);
 		VESSEL *pV=oapiGetVesselInterface(hcraft);
 		double rvel=graph.vectorpointdisplay(hDC, targetvel-craftvel, state->GetMFDpointer(), pV, false);
 		TextShow(hDC,"Rel V: ",0,18*linespacing,rvel);
@@ -948,7 +944,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 				}
 				hpos+=linespacing;
 				char buffer[20];
-				int length=sprintf(buffer,"Pe MJD %.4f",(craft.getpedeltatime()+craft.gettimestamp())/86400+simstartMJD);
+				int length=sprintf(buffer,"Pe MJD %.4f",(craft.getpedeltatime()+craft.gettimestamp())/SECONDS_PER_DAY+simstartMJD);
 				TextOut(hDC,wpos,hpos,buffer, length);
 				hpos+=linespacing;
 			}
@@ -956,7 +952,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 			{
 				TextShow(hDC,"Hyp Ped ",wpos,hpos,hypormaj.getpedistance());
 				hpos+=linespacing;
-				double timeatped=(hypormaj.gettimestamp()+hypormaj.getpedeltatime())/86400+simstartMJD;
+				double timeatped=(hypormaj.gettimestamp()+hypormaj.getpedeltatime())/SECONDS_PER_DAY+simstartMJD;
 				int length=sprintf(buffer,"H. Pe MJD %.2f",timeatped);
 				TextOut(hDC,wpos,hpos,buffer,length);
 			}
@@ -970,15 +966,13 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 
 
 void basefunction::Getmode2hypo(VECTOR3 *targetvel)
-
 // This obtains the current hypothetical orbit in rmin influence
-
 {
 	hypormaj.setinvalid();
 	if (!basisorbit.isvalid()) return;
 	if (m_prograde*m_prograde+m_outwardvel*m_outwardvel+m_chplvel*m_chplvel<0.0001) return;//No need to calculate if result is less than 1 cm per second!
 	// New section
-	double difftime=(m_ejdate-simstartMJD)*86400-basisorbit.gettimestamp();//Converts to seconds from present time
+	double difftime=(m_ejdate-simstartMJD)*SECONDS_PER_DAY-basisorbit.gettimestamp();//Converts to seconds from present time
 	VECTOR3 ejradius, ejvel;
 
 	basisorbit.timetovectors(difftime,&mode2orbittime);
@@ -997,7 +991,7 @@ void basefunction::Getmode2hypo(VECTOR3 *targetvel)
 	*targetvel=hypovel;
 
 	//Create hypothetical orbit in rmaj
-	hypormaj.init(hypopos, hypovel, (m_ejdate-simstartMJD)*86400, basisorbit.getgmplanet());
+	hypormaj.init(hypopos, hypovel, (m_ejdate-simstartMJD)*SECONDS_PER_DAY, basisorbit.getgmplanet());
 }
 
 

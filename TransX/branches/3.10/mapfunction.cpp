@@ -144,7 +144,7 @@ void mapfunction::sorthandles()
 void mapfunction::initialisehashtable()
 {
 	HASHENTRY *pointer=hashtable;
-	for (int a=0;a<101;a++)
+	for (int a=0;a<MAX_BODIES;a++)
 	{
 		pointer->bodyhandle=NULL;
 		pointer->pointer=-1;
@@ -163,7 +163,7 @@ void mapfunction::populatehashtable()
 
 void mapfunction::homegbody(int listmember, OBJHANDLE handle)
 {
-	int hashpoint=int(handle)%101;//Convert pointer, and get position in hashtable
+	int hashpoint=int(handle)%MAX_BODIES;//Convert pointer, and get position in hashtable
 	if (hashtable[hashpoint].bodyhandle==NULL)
 	{
 		//Enter pointer to ourselves directly in hash table
@@ -182,7 +182,7 @@ void mapfunction::homegbody(int listmember, OBJHANDLE handle)
 	
 int mapfunction::getbodybyhandle(OBJHANDLE handle)
 {
-	int hashpoint=int(handle)%101;
+	int hashpoint=int(handle)%MAX_BODIES;
 	if (hashtable[hashpoint].bodyhandle==NULL) return -1;//Handle not in table
 	if (hashtable[hashpoint].bodyhandle==handle)
 	{
@@ -250,12 +250,6 @@ void mapfunction::findmajor(int position)//Assumes majors already found for bodi
 	(array+position)->gravbodyratio2=pow((array+position)->mass/(array+currentsoi)->mass,0.8);
 	(array+position)->soisize2=currdistance2*(array+position)->gravbodyratio2;//Internal soi size
 }
-
-/*OBJHANDLE mapfunction::getcurrbody()
-{
-	OBJHANDLE tvessel=oapiGetFocusObject();
-	return getcurrbody(tvessel);
-}*/
 
 OBJHANDLE mapfunction::getcurrbody(OBJHANDLE vessel)//Finds current body for current focus vessel
 {

@@ -14,7 +14,6 @@
 #include "shiplist.h"
 #include "transx.h"
 
-
 int TransxMFD::MfdCount=0;
 
 double debug;
@@ -32,7 +31,6 @@ TransxMFD::TransxMFD (DWORD w, DWORD h, VESSEL *vessel, UINT mfd)
 	viewstate=shptr->getviewstate(mfd,this);
 	viewstate->setmfdactive(true);
 	++MfdCount;
-	//debug=0;
 }
 
 TransxMFD::~TransxMFD()
@@ -44,8 +42,6 @@ TransxMFD::~TransxMFD()
 	}
 	--MfdCount;
 }
-
-
 
 // Called by Orbiter when a screen update is needed
 void TransxMFD::Update (HDC hDC)
@@ -84,12 +80,8 @@ int TransxMFD::getheight()
 	return H;
 }
 
-
-
 int TransxMFD::MsgProc (UINT msg, UINT mfd, WPARAM wparam, LPARAM lparam)
-
 // Standard message parser for messages passed from Orbiter
-
 {
 	switch (msg) {
 	case OAPI_MSG_MFD_OPENED:
@@ -99,18 +91,14 @@ int TransxMFD::MsgProc (UINT msg, UINT mfd, WPARAM wparam, LPARAM lparam)
 }
 
 char *TransxMFD::ButtonLabel (int bt)
-
 // Routine to pass button label back to Orbiter. Called by Orbiter
-
 {
 	char *label[11] = {"HLP","FWD","BCK", "VW","VAR","-VR", "ADJ", "-AJ","++", "--","EXE"};
 	return (bt < 11 ? label[bt] : 0);
 }
 
 int TransxMFD::ButtonMenu (const MFDBUTTONMENU **menu) const
-
 // Routine to pass menu description for buttons back to Orbiter. Called by Orbiter
-
 {
 	static const MFDBUTTONMENU mnu[11] = {
 		{"Toggle Help","On/Off",'H'},
@@ -130,30 +118,20 @@ int TransxMFD::ButtonMenu (const MFDBUTTONMENU **menu) const
 }
 
 bool TransxMFD::ConsumeKeyImmediate(char *kstate)
-
 // Routine which processes the keyboard state. Allows continuous change of variable.
-
 {
 	if (!valid) return false;
 	MFDvariable *varpointer=viewstate->GetCurrVariable();
 	if (varpointer==NULL) return false;
 	if  (*(kstate+OAPI_KEY_MINUS)==-128)
-	{
 		return varpointer->dec_variable();
-	}
 	if (*(kstate+OAPI_KEY_EQUALS)==-128)
-	{
 		return varpointer->inc_variable();
-	}
 	return false;
 }
 
-
-
 bool TransxMFD::ConsumeButton(int bt, int event)
-
 // Deal with mouse pressing of keys
-
 {
 	static const DWORD btkey[11]={OAPI_KEY_H, OAPI_KEY_F, OAPI_KEY_R, OAPI_KEY_W, OAPI_KEY_PERIOD, 
 		OAPI_KEY_COMMA, OAPI_KEY_LBRACKET, OAPI_KEY_RBRACKET, OAPI_KEY_EQUALS, OAPI_KEY_MINUS, OAPI_KEY_X};
@@ -170,13 +148,9 @@ bool TransxMFD::ConsumeButton(int bt, int event)
 	// At this point, only the possibility of immediate consumption...
 	if (!(event & PANEL_MOUSE_LBPRESSED)) return false; //Mouse button is down on 9 or 10
 	if (bt==9)
-	{
 		varpointer->dec_variable();
-	}
 	if (bt==8)
-	{
 		varpointer->inc_variable();
-	}
 	return true;
 }
 
@@ -231,16 +205,12 @@ bool TransxMFD::ConsumeKeyBuffered (DWORD key)
 	return false; //Key not one of cases above
 }
 
-
-
-
-
 void TransxMFD::WriteStatus(FILEHANDLE scn) const
 {
-	if (!valid) return;
+	if (!valid) 
+		return;
 	shipptrs::saveallships(scn);
 }
-
 
 void TransxMFD::ReadStatus(FILEHANDLE scn)
 {

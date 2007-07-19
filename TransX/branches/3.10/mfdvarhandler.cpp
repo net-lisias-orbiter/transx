@@ -9,37 +9,10 @@
 #include "parser.h"
 #include "mfdvarhandler.h"
 
-//extern double debug;
-
 void MFDvarhandler::addtolist(MFDvariable *item)
 {
 	listhead.addend(item);
 }
-
-/*void MFDvarhandler::removefromlist(MFDvariable *item)
-{
-	if (item->next==item)
-	{
-		firstitem=lastitem=NULL;
-		return;
-	}
-	if (firstitem==item)
-	{
-		firstitem=item->next;
-	}
-	if (lastitem==item)
-	{
-		lastitem=item->previous;
-	}
-	item->previous->next=item->next;
-	item->next->previous=item->previous;
-	for (int a=0;a<5;a++)
-	{
-		if (item==currvariable[a]) currvariable[a]=NULL;
-	}
-}*/
-
-
 
 void MFDvarhandler::saveallvariables(FILEHANDLE scn)
 {

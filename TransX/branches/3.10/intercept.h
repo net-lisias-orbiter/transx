@@ -26,7 +26,6 @@ typedef class intercept{
 		//Private functions
 		void improveinterceptstraightline(const ORBIT &craft, const ORBIT &target);//Straight line improvement on previous intercept
 		void adjustorbitsdown();//Change the orbital offset
-		//bool tryplaneceptvector(const ORBIT &craft, const ORBIT &target);//See if plane intercept vector gives good intercept
 	public:
 		intercept(); //Default constructor
 		void updateintercept(const ORBIT &craft, const ORBIT &target,double craftorbitsahead = 0);

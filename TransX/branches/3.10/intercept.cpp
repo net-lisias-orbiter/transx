@@ -7,8 +7,6 @@
 #include "mfd.h"
 #include "intercept.h"
 
-//extern double debug;
-
 intercept::intercept()
 {
 	iceptmethod=1;
@@ -43,8 +41,6 @@ void intercept::adjustorbitsdown()
 
 void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &target)
 {
-	//int fullorbits=int(floor(craftorbitsahead));
-	//int halforbits=int((craftorbitsahead-fullorbits)*2);
 	double craftorbittime;
 	if (craft.geteccentricity()<1)
 	{
@@ -74,7 +70,6 @@ void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &ta
 	double diff=crafttimeest-targettimeest;
 	orbitnumber=floor(diff/orbittime+0.5);
 	diff-=orbitnumber*orbittime;
-	;
 	//
 	//Now correcting the costhi of the craft to account for the time error
 	//
@@ -98,7 +93,6 @@ void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &ta
 	}
 	//targettimeest=target.GetTimeToThi(targetcosthi,targetsinthi);
 	diff=crafttimeest-targettimeest;
-
 
 	orbitnumber=floor(diff/orbittime+0.5);
 	diff-=orbitnumber*orbittime;
@@ -144,10 +138,8 @@ void intercept::getorbitsoffset(int *ifullorbits,int *ihalforbits) const
 }
 
 void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double craftorbitsahead)
-
 // Updates the intercept structure holding closest approach between 'craft' and target. 'craft' may be hypothetical or actual
 // Only one orbit may be hyperbolic
-
 //To be broken up into submethods next time it's revised
 {
 	if (!craft.isvalid() || !target.isvalid()) return;//Ensure no void updates!
@@ -165,7 +157,6 @@ void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double c
 
 	//First option is to check to see whether the plane intercept vector is a good first guess.
 	//
-
 
 	const ORBIT *alpha, *beta;
 	//The inversion functionality no longer matters - timetovectors is now good enough to avoid the problem
@@ -227,7 +218,6 @@ void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double c
 	beta->timetovectors(timeb,&betatime);
 	alphatime.getposvel(&betaposa,&betavela);
 	betatime.getposvel(&betaposb,&betavelb);
-
 
 	bool abetter=(vectorsize2(betaposa-alphaposa)<vectorsize2(betaposb-alphaposb)); //Picks best on grounds of distance
 	if (timea<timeoffset)
@@ -316,7 +306,6 @@ void intercept::getvelocities(VECTOR3 *craftvel, VECTOR3 *targetvel) const
 	*craftvel=icraftvel;
 	*targetvel=itargetvel;
 }
-
 
 double intercept::gettimeintercept() const
 {

@@ -7,6 +7,7 @@
 #include "cmdnugget.h"
 #include <deque>
 #define NUMFUNCTIONS 100
+#define SECONDS_PER_DAY 86400
 
 class transxstate:private MFDFunction {
 public:
@@ -22,7 +23,6 @@ public:
 	bool restoresave(FILEHANDLE scn);
 
 	class TransxMFD *GetMFDpointer();//Returns pointer to current MFD
-	//class basefunction *GetCurrFunction(); //Returns the current function
 	class MFDvarhandler *GetVarhandler(int currvarfunction); //Gets the variable handler for the current function
 	class MFDvariable *GetCurrVariable(int currvarfunction,int currviewmode); //Gets the current variable in the current function
 	static void updatefocusvessel(OBJHANDLE newfocus); //Updates handles when vessel changes
@@ -57,13 +57,9 @@ private:
 	int actionframe;
 	class TransxMFD *mfdpointer;
 	class shipptrs *shipptrs;//List of viewstates for this transxstate
-
 	class MFDvarhandler vars;
 	class MFDvarshiplist m_ships;
-
-
 	class mapfunction *mappointer;//The mapfunction pointer
-	//static bool statelistinitflag;//Has the list been initialised?
 	OBJHANDLE hcraft;
 	std::deque<class basefunction*> baselist,todeletelist;
 };

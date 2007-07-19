@@ -5,24 +5,6 @@
 #include "mfdvariable.h"
 #include "doublelink.h"
 
-/*class MFDvarbody : public MFDvariable {
-protected:
-	OBJHANDLE pointer;
-	char label[40];
-public:
-	MFDvarbody();
-	void init(MFDvarhandler *vars,int viewmode1,int viewmode2, char *vname,char *vlabel);
-	~MFDvarbody();
-	void sethandle(OBJHANDLE tpointer);
-	virtual OBJHANDLE gethandle() const;
-	bool flip_variable();
-	bool SetVariableBody(char *str);
-	virtual bool show(HDC hDC, int width, int line) const;
-	virtual void getsaveline(char *buffer) const;
-	virtual bool loadvalue(char *buffer);
-};*/
-
-
 class liststring : public listelement
 {
 	char buffer[40];
@@ -57,10 +39,6 @@ public:
 	virtual bool loadvalue(char *buffer){return true;};//
 };
 	
-
-
-
-
 class MFDvarmoon : public MFDvariable {
 protected:
 	OBJHANDLE pointer;
@@ -79,8 +57,6 @@ public:
 	virtual void ch_adjmode();
 	virtual void chm_adjmode();
 	virtual void showadjustment(HDC hDC, int width, int line) const;
-
-
 	virtual int getivalue() const;
 	virtual OBJHANDLE gethandle() const;
 	virtual bool loadvalue(char *buffer);
@@ -166,9 +142,6 @@ public:
 
 	~MFDsemiintdiscrete();
 };
-
-
-
 
 class MFDvarangle: public MFDvariable {
 private:

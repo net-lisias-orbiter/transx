@@ -17,7 +17,6 @@ public:
 	void drawtwovector(HDC hDC, const VECTOR3 &line1, const VECTOR3 &line2);//Draw two vectors using current projection & scaling
 	void draworbit(const class orbitelements &element, HDC hDC, bool drawradius);//Calls draworbit in orbitelements
 	double vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VESSEL *vessel, bool isposition);//Nice little pointer utility
-	//void init(DWORD w, DWORD h);
 	void setviewscale(const class orbitelements &orbit);//Set scale of picture using orbit size
 	void setviewscale(double temp);//Set scale using a number
 	void setviewscalesize(double temp);//Set scale using a distance size
