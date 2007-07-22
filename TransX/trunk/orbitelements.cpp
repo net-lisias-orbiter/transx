@@ -197,10 +197,7 @@ void orbitelements::init(OBJHANDLE hmajor, OBJHANDLE hminor)
 		VECTOR3 craftpos, craftvel;
 		mapfunction *map = mapfunction::getthemap();
 		VECTOR3 minbary, majbary, minvel, majvel;
-		if(oapiGetObjectType(hmajor) == OBJTP_PLANET)
-			majbary = map->getbarycentre(hmajor);
-		else
-			oapiGetGlobalPos(hmajor, &majbary);
+		oapiGetGlobalPos(hmajor, &majbary);
 		minbary = map->getbarycentre(hminor);
 		craftpos = minbary - majbary;
 
