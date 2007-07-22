@@ -176,7 +176,7 @@ void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double c
 	double betacos=beta->getcurrcosthi();
 	double alphacos=alpha->getcurrcosthi();
 	double alphasin;
-	if (newintercept)
+	if (newintercept || iceptradius != iceptradius)
 	{
 		iceptradius=beta->getcurrradius();
 		newintercept=false;

@@ -388,3 +388,41 @@ void mapfunction::mergelists(GBODY *list1, GBODY *endlist1, GBODY *list2, GBODY 
 	}
 }
 
+VECTOR3 mapfunction::getweightedvector(OBJHANDLE body, void (*func)(OBJHANDLE, VECTOR3*))
+{
+	OBJHANDLE moon = getfirstmoon(body);
+	double totalmass = oapiGetMass(body), bodymass;
+	VECTOR3 barycentre = {0,0,0}, bodypos;
+	func(body, &bodypos);
+	barycentre.x += bodypos.x * totalmass;
+	barycentre.y += bodypos.y * totalmass;
+	barycentre.z += bodypos.z * totalmass;
+
+	while(moon)
+	{
+		func(moon, &bodypos);
+		bodymass = oapiGetMass(moon);
+		barycentre.x += bodypos.x * bodymass;
+		barycentre.y += bodypos.y * bodymass;
+		barycentre.z += bodypos.z * bodymass;
+		totalmass += bodymass;
+		
+		moon = getnextpeer(moon);
+	}
+
+	barycentre.x /= totalmass;
+	barycentre.y /= totalmass;
+	barycentre.z /= totalmass;
+
+	return barycentre;
+}
+
+VECTOR3 mapfunction::getbarycentrevel(OBJHANDLE body)
+{
+	return getweightedvector(body, &oapiGetGlobalVel);
+}
+
+VECTOR3 mapfunction::getbarycentre(OBJHANDLE body)
+{
+	return getweightedvector(body, &oapiGetGlobalPos);
+}

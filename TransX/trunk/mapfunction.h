@@ -41,6 +41,7 @@ private:
 	void findmajor(int position);
 	mapfunction();
 	~mapfunction();
+	VECTOR3 getweightedvector(OBJHANDLE, void(OBJHANDLE, VECTOR3*));
 public:
 	static class mapfunction *getthemap();
 	virtual void dolowpriaction();
@@ -54,7 +55,8 @@ public:
 	double getsoisize(OBJHANDLE handle);//Gets the size of the SOI for this body
 	OBJHANDLE getcurrbody(OBJHANDLE vessel);//Get current body for arbitrary vessel
 	friend class shipptrs;//Allows the map to be deleted by this object
-
+	VECTOR3 getbarycentre(OBJHANDLE body); // Gets the global pos of the barycentre of the system with body as the main object
+	VECTOR3 getbarycentrevel(OBJHANDLE body); // Gets the global velocity of the barycentre of the system with body as the main object
 };
 
 #endif

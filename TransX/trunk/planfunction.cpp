@@ -123,7 +123,7 @@ void slingshot::calculate(class MFDvarhandler *vars,basefunction *base)
 	}
 	//We now have both vectors
 	double sinfirst;
-	if (periapsisguess<0)
+	if (periapsisguess<0 || periapsisguess != periapsisguess) // go into this section if NaN
 	{//No guess before
 		//get angle between the vectors
 		double cos2a=cosangle(inward,ejectvector);

@@ -8,6 +8,7 @@
 #include "graph.h"
 #include "orbitelements.h"
 #include "intercept.h"
+#include "mapfunction.h"
 
 extern double debug;
 
@@ -189,9 +190,24 @@ void orbitelements::init(OBJHANDLE hmajor, OBJHANDLE hminor)
 	valid=false;
 	if (hmajor !=NULL && hminor !=NULL && hmajor!=hminor)
 	{
+		// derive orbits of the barycentre of the minor about the major.
+		// There seems to be a problem about deriving them about the barycentre of the major. I don't
+		// know why it appears to throw the orbits off, so use the global pos and vel of the major
+
 		VECTOR3 craftpos, craftvel;
-		oapiGetRelativePos(hminor, hmajor, &craftpos);
-		oapiGetRelativeVel(hminor, hmajor, &craftvel);
+		mapfunction *map = mapfunction::getthemap();
+		VECTOR3 minbary, majbary, minvel, majvel;
+		if(oapiGetObjectType(hmajor) == OBJTP_PLANET)
+			majbary = map->getbarycentre(hmajor);
+		else
+			oapiGetGlobalPos(hmajor, &majbary);
+		minbary = map->getbarycentre(hminor);
+		craftpos = minbary - majbary;
+
+		oapiGetGlobalVel(hmajor, &majvel);
+		minvel = map->getbarycentrevel(hminor);
+		craftvel = minvel - majvel;
+
 		double gmmajor=GRAVITY*oapiGetMass(hmajor);
 		double timestamp=oapiGetSimTime();
 		init(craftpos, craftvel, timestamp, gmmajor);
@@ -944,6 +960,12 @@ void orbitelements::improvebysubdivision(double timetarget,double topthi,double 
 
 bool orbitelements::improve(double timetarget,ORBITTIME *posvel) const
 {
+	// Prevent NaN errors
+	if(posvel->currangle != posvel->currangle)
+		posvel->currangle = 0;
+	if(posvel->icosthi != posvel->icosthi)
+		posvel->icosthi = 0;
+
 	double angmomentum=sqrt(angularmomentum2);
 	double timeerr,iradius,iangleerr,icosthi;
 	VECTOR3 *tpos=&(posvel->pos);
