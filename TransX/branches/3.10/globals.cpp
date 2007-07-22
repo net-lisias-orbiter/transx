@@ -46,9 +46,9 @@ using namespace std;
 
 DLLCLBK void InitModule (HINSTANCE hDLL)
 {
-	const char name[] = "TransX";
+	static char name[] = "TransX";
 	MFDMODESPEC spec;
-	spec.name    = (char*)name;
+	spec.name    = name;
 	spec.msgproc = TransxMFD::MsgProc;
 	//Code contributed by Dave Robotham
 	ifstream kstream;
