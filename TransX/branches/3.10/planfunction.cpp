@@ -379,7 +379,7 @@ void slingshot::wordupdate(HDC hDC, int width, int height, basefunction *base)
 	//Calculate reqd delta using energy calculation
 	double craftreqvel=craft.getvelocityatdist(planorbit.getpedistance());
 	double outplanpevel=sqrt(ejectvelocity2+2*planorbit.getgmplanet()/planorbit.getpedistance());
-	if (fabs(outplanpevel-craftreqvel)>0.1)//Only show if a manoevre is required
+	if (fabs(outplanpevel-craftreqvel)>0.1)//Only show if a manoeuvre is required
 	{
 		TextShow(hDC,"Delta V:",0,pos,outplanpevel-craftreqvel);
 		pos+=linespacing;
@@ -396,8 +396,8 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 {
 	int linespacing=height/24;
 	int pos=15*linespacing;
-	ORBIT craft=base->getmanoevreorbit();
-	if (!craft.isvalid()) craft=base->getcraftorbit();//Gets manoevre if it's valid, otherwise craft
+	ORBIT craft=base->getmanoeuvreorbit();
+	if (!craft.isvalid()) craft=base->getcraftorbit();//Gets manoeuvre if it's valid, otherwise craft
 
 	OBJHANDLE hmajor=base->gethmajor();
 	double radius=oapiGetSize(hmajor);
