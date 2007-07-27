@@ -431,7 +431,7 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 			VECTOR3 position,velocity;
 			craft.radiustovectors(radius,false,&position,&velocity);
 			double distfrombase=vectorsize(position-baseposition);
-			TextShow(hDC,"L.site dist to Base",0,pos,distfrombase);
+			TextShow(hDC,"L.site dist to Base:",0,pos,distfrombase);
 			pos+=linespacing;
 		}
 	}

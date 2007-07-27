@@ -74,7 +74,6 @@ void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &ta
 	double diff=crafttimeest-targettimeest;
 	orbitnumber=floor(diff/orbittime+0.5);
 	diff-=orbitnumber*orbittime;
-	;
 	//
 	//Now correcting the costhi of the craft to account for the time error
 	//
@@ -89,6 +88,19 @@ void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &ta
 	// Get vectors for angles now that time error has been reduced
 	craft.thitovectors(craftcosthi,craftsinthi,&icraftpos,&icraftvel);
 	target.thitovectors(targetcosthi,targetsinthi,&itargetpos,&itargetvel);
+	ORBIT *targetaboutbarycentreorbit = target.getminorbarycentricorbit();
+
+	// modify orbit if it target is based around the barycentre.
+	if(targetaboutbarycentreorbit != NULL)
+	{
+	VECTOR3 pos, vel;
+	targetaboutbarycentreorbit->timetovectors(diff, &pos, &vel);
+	if(pos.x == pos.x)
+		itargetpos += pos;
+	if(vel.x == vel.x)
+		itargetvel += vel;
+	}
+
 	//Find the (Now reduced) time error again
 	crafttimeest=craft.GetTimeToThi(craftcosthi,craftsinthi,fullorbits,halforbits)+timeoffset;
 	if (crafttimeest-icepttimeoffset>craftorbittime/4)

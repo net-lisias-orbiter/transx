@@ -12,6 +12,18 @@
 
 extern double debug;
 
+
+orbitelements::orbitelements() : minoraboutbarycentre(0)
+{
+	valid=false; //Not a valid orbit yet
+}
+
+orbitelements::~orbitelements()
+{
+	if(minoraboutbarycentre != NULL)
+		delete minoraboutbarycentre;
+}
+
 void orbitelements::gettimeorbit(int *orbitnumber,double *orbittime, double timefromnow) const
 {
 	*orbittime=orbitconstant*2*PI;
@@ -166,13 +178,6 @@ void orbitelements::thitovectors(double costhi, double sinthi,VECTOR3 *position,
 	*velocity=outward*outvel+roundward*(angmom/radius);
 }
 
-
-
-orbitelements::orbitelements()
-{
-	valid=false; //Not a valid orbit yet
-}
-
 orbitelements::orbitelements(OBJHANDLE hmajor, OBJHANDLE hminor)
 {
 	init(hmajor,hminor);
@@ -205,9 +210,20 @@ void orbitelements::init(OBJHANDLE hmajor, OBJHANDLE hminor)
 		minvel = map->getbarycentrevel(hminor);
 		craftvel = minvel - majvel;
 
-		double gmmajor=GRAVITY*oapiGetMass(hmajor);
+		double gmmajor=GRAVITY*(oapiGetMass(hmajor) + oapiGetMass(hminor)); // use the sum of the masses (see "reduced mass")
 		double timestamp=oapiGetSimTime();
 		init(craftpos, craftvel, timestamp, gmmajor);
+		// initialise the orbit of the minor body around its barycentre
+		if(minoraboutbarycentre == NULL)
+			minoraboutbarycentre = new orbitelements();
+		VECTOR3 mintruepos, mintruevel;
+		oapiGetGlobalPos(hminor, &mintruepos);
+		oapiGetGlobalVel(hminor, &mintruevel);
+		double m2 = 0;// the mass of the most massive satellite of the minor body
+		if(map->getfirstmoon(hminor))
+			m2 = oapiGetMass(map->getfirstmoon(hminor)); 
+		double m1 = oapiGetMass(hminor); // the mass of the minor body
+		minoraboutbarycentre->init(mintruepos - minbary, mintruevel - minvel, GRAVITY * pow(m2, 3) / pow((m1 + m2), 2));
 	}
 }
 

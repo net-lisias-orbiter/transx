@@ -22,11 +22,13 @@ private:
 	bool valid; //Whether the orbit class is valid or not
 	double simpletimetoradius(double radius) const;
 	double simpletimetothi(double costhi, double sinthi) const;//private time calculation function
+	orbitelements *minoraboutbarycentre;
 public:
 	void improvebyradius(double timetarget,double topthi,double timeattopthi,class orbittime *posvel) const;
 	void improvebysubdivision(double timetarget,double topthi,double timeattopthi,class orbittime *posvel) const;
 	bool improve(double timetarget,class orbittime *posvel) const;
 public:
+	virtual ~orbitelements();
 	orbitelements(); // Default constructor
 	void gettimeorbit(int *orbitnumber,double *orbittime, double timefromnow) const;
 	orbitelements(OBJHANDLE hmajor, OBJHANDLE hminor); //Constructor
@@ -72,6 +74,8 @@ public:
 	double getpedistance() const;
 	double getapodistance() const;
 	VECTOR3 getintersectvector(const class orbitelements &torbit) const;//vector along line of intersection of two orbits (like align MFD)
+	orbitelements *getminorbarycentricorbit() const {return minoraboutbarycentre;};
+	int const foo() {int i;return i;};
 } ORBIT;
 
 typedef class orbittime{
