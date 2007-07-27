@@ -341,6 +341,13 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 			angle=90-angle;
 		}
 		if (angle<0) angle+=360;
+		OBJHANDLE hmajor = base->gethmajor();
+		if(oapiGetPlanetPeriod(hmajor) < 0) // retrograde rotation
+		{
+			angle += 180;
+			if(angle > 360)
+				angle -= 360;
+		}
 		length=sprintf(buffer,"Heading:%.4g'", angle);
 	}
 	else
