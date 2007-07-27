@@ -18,10 +18,19 @@ orbitelements::orbitelements() : minoraboutbarycentre(0)
 	valid=false; //Not a valid orbit yet
 }
 
+orbitelements::orbitelements(OBJHANDLE hmajor, OBJHANDLE hminor) : minoraboutbarycentre(0)
+{
+	init(hmajor,hminor);
+}
+
 orbitelements::~orbitelements()
 {
-	if(minoraboutbarycentre != NULL)
+	static orbitelements* lastdeleted = NULL; // Hack. Due to copy constructors (I guess), need to check we're not deleting twice
+	if(minoraboutbarycentre != NULL && lastdeleted != minoraboutbarycentre)
+	{
 		delete minoraboutbarycentre;
+		lastdeleted = minoraboutbarycentre;
+	}
 }
 
 void orbitelements::gettimeorbit(int *orbitnumber,double *orbittime, double timefromnow) const
@@ -177,13 +186,6 @@ void orbitelements::thitovectors(double costhi, double sinthi,VECTOR3 *position,
 	double outvel=eccentricity*planet*sinthi/angmom;
 	*velocity=outward*outvel+roundward*(angmom/radius);
 }
-
-orbitelements::orbitelements(OBJHANDLE hmajor, OBJHANDLE hminor)
-{
-	init(hmajor,hminor);
-}
-
-
 
 orbitelements::orbitelements(VECTOR3 rposition, VECTOR3 rvelocity, double gmplanet)
 {
