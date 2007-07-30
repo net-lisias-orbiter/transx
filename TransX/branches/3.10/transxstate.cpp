@@ -31,23 +31,23 @@
 #include "shiplist.h"
 #include "transxstate.h"
 
-MFDvarhandler *transxstate::GetVarhandler(int currvarfunction)
+MFDvarhandler *transxstate::GetVarhandler(unsigned int curvarfunction)
 {
-	if (currvarfunction==0 || baselist.empty()) return &vars;
-	if (currvarfunction<1 || currvarfunction>baselist.size()) currvarfunction=1;
-	class basefunction *cfunction=baselist[currvarfunction-1];
+	if (curvarfunction==0 || baselist.empty()) return &vars;
+	if (curvarfunction<1 || curvarfunction>baselist.size()) curvarfunction=1;
+	class basefunction *cfunction=baselist[curvarfunction-1];
 	return cfunction->getvariablehandler();
 }
 
-MFDvariable *transxstate::GetCurrVariable(int currvarfunction,int currviewmode)
+MFDvariable *transxstate::GetCurrVariable(unsigned int curvarfunction,int currviewmode)
 {
-	if (currvarfunction==0 || baselist.empty()) return vars.getcurrent(2);//return the variables for this
-	if (currvarfunction<1 || currvarfunction>baselist.size()) currvarfunction=1;
-	class basefunction *cfunction=baselist[currvarfunction-1];
+	if (curvarfunction==0 || baselist.empty()) return vars.getcurrent(2);//return the variables for this
+	if (curvarfunction<1 || curvarfunction>baselist.size()) curvarfunction=1;
+	class basefunction *cfunction=baselist[curvarfunction-1];
 	return cfunction->getcurrentvariable(currviewmode);
 }
 
-int transxstate::movetonextfunction(int curvarfunction)
+int transxstate::movetonextfunction(unsigned int curvarfunction)
 {
 	//Check for validity of passed curvarfunction
 	if (baselist.empty())
@@ -75,7 +75,7 @@ int transxstate::movetonextfunction(int curvarfunction)
 		else
 		{//function does not match, therefore
 			//Move all functions beyond this point to the delete list
-			for (int a=curvarfunction;a<baselist.size();a++)
+			for (unsigned int a=curvarfunction;a<baselist.size();a++)
 			{
 				todeletelist.push_back(baselist[a]);
 				baselist[a]->delist();
@@ -105,7 +105,7 @@ bool transxstate::checkdelete()
 	return true;
 }
 
-int transxstate::movetopreviousfunction(int curvarfunction)
+int transxstate::movetopreviousfunction(unsigned int curvarfunction)
 {
 	if (curvarfunction<1 || curvarfunction>baselist.size()) return 1;
 	if (curvarfunction==1)
@@ -117,10 +117,10 @@ int transxstate::movetopreviousfunction(int curvarfunction)
 	return curvarfunction-1;
 }
 
-int transxstate::inc_viewmode(int currfunction,int currview)
+int transxstate::inc_viewmode(unsigned int curfunction,int currview)
 {
-	if (currfunction<1 || currfunction>baselist.size()) return 2;//Also correct for case 0
-	return baselist[currfunction-1]->calcnewview(currview,currfunction==1);
+	if (curfunction<1 || curfunction>baselist.size()) return 2;//Also correct for case 0
+	return baselist[curfunction-1]->calcnewview(currview,curfunction==1);
 }
 
 void transxstate::dolowpriaction()
@@ -185,7 +185,7 @@ bool transxstate::checkbasefunction()
 
 bool transxstate::restartallfunctions()
 {
-	for (int a=0;a<baselist.size();a++)
+	for (unsigned int a=0;a<baselist.size();a++)
 	{
 		todeletelist.push_back(baselist[a]);
 		baselist[a]->delist();
@@ -203,7 +203,7 @@ class TransxMFD *transxstate::GetMFDpointer()
 
 void transxstate::updateownfocusvessel(OBJHANDLE newfocus)
 {
-	for (int a=0;a<baselist.size();a++)
+	for (unsigned int a=0;a<baselist.size();a++)
 		baselist[a]->sethcraft(newfocus);
 	hcraft=newfocus;
 	m_ships.initbybody(newfocus,true);
@@ -234,7 +234,7 @@ bool transxstate::restoresave(FILEHANDLE scn)
 		return true;
 	}
 	parser.parseline(buffer);
-	int numfunctions;
+	unsigned int numfunctions;
 	if (parser.getlineelement(1,&member,&length))
 	{
 		sscanf(member,"%i",&numfunctions);
@@ -251,7 +251,7 @@ bool transxstate::restoresave(FILEHANDLE scn)
 		return true;
 	}
 	bool success=true;
-	int a;
+	unsigned int a;
 	basefunction *temp=NULL;
 	for (a=0;a<numfunctions;a++)
 	{
@@ -386,7 +386,7 @@ basefunction *transxstate::getpreviousfunction(int positionnumber)
 	return getbasefn(positionnumber);
 }
 
-basefunction *transxstate::getbasefn(int stagenumber)
+basefunction *transxstate::getbasefn(unsigned int stagenumber)
 {
 	if (stagenumber<1 || stagenumber>baselist.size()) return NULL;
 	return baselist[stagenumber-1];
@@ -400,15 +400,15 @@ basefunction *transxstate::getnextfunction(int positionnumber)
 
 transxstate::~transxstate()
 {
-	for (int a=0;a<baselist.size();a++)
+	for (unsigned int a=0;a<baselist.size();a++)
 		delete baselist[a];
-	for (int a=0;a<todeletelist.size();a++)
+	for (unsigned int a=0;a<todeletelist.size();a++)
 		delete todeletelist[a];
 	baselist.clear();
 	todeletelist.clear();
 }
 
-bool transxstate::doupdate(HDC hDC, int tw, int th,int currfunction,int currview, int curvarfunction, int currvarview,TransxMFD *tmfdpointer)
+bool transxstate::doupdate(HDC hDC, int tw, int th,unsigned int curfunction,int currview, unsigned int curvarfunction, int currvarview,TransxMFD *tmfdpointer)
 {
 	saveflag=false;
 	selectshipvars=(curvarfunction<1);
@@ -457,9 +457,9 @@ bool transxstate::doupdate(HDC hDC, int tw, int th,int currfunction,int currview
 	{
 		if (!initfunctions()) return false;
 	}
-	if (currfunction<0 || currfunction > baselist.size()) currfunction=1;
-	class basefunction *cfunction=baselist[currfunction-1];
-	if (curvarfunction <0 || curvarfunction > baselist.size()) curvarfunction=currfunction;
+	if (curfunction<0 || curfunction > baselist.size()) curfunction=1;
+	class basefunction *cfunction=baselist[curfunction-1];
+	if (curvarfunction <0 || curvarfunction > baselist.size()) curvarfunction=curfunction;
 	class basefunction *cvarfunction=baselist[curvarfunction-1];
 	if (currcalcfunction==-1) addaction(0);
 	initflag=true;
@@ -489,7 +489,7 @@ bool transxstate::doupdate(HDC hDC, int tw, int th,int currfunction,int currview
 		cfunction->doupdate(hDC,tw,th,currview);
 	}
 	char buffer[20];
-	int length=sprintf(buffer,"Stage %i:%i",currfunction,baselist.size());
+	int length=sprintf(buffer,"Stage %i:%i",curfunction,baselist.size());
 	TextOut(hDC,tw/2,0,buffer,length);
 	length=sprintf(buffer,"Vars Stage %i",curvarfunction);
 	TextOut(hDC,tw/2,4*linespacing,buffer,length);
