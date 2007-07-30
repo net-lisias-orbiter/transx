@@ -75,7 +75,6 @@ public:
 	double getapodistance() const;
 	VECTOR3 getintersectvector(const class orbitelements &torbit) const;//vector along line of intersection of two orbits (like align MFD)
 	orbitelements *getminorbarycentricorbit() const {return minoraboutbarycentre;};
-	int const foo() {int i;return i;};
 } ORBIT;
 
 typedef class orbittime{

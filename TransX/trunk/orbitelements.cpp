@@ -24,14 +24,8 @@ orbitelements::orbitelements(OBJHANDLE hmajor, OBJHANDLE hminor) : minoraboutbar
 }
 
 orbitelements::~orbitelements()
-{
-	static orbitelements* lastdeleted = NULL; // Hack. Due to copy constructors (I guess), need to check we're not deleting twice
-	if(minoraboutbarycentre != NULL && lastdeleted != minoraboutbarycentre)
-	{
-		delete minoraboutbarycentre;
-		lastdeleted = minoraboutbarycentre;
-	}
-}
+{} // cannot delete the pointer minaboutbarycentre as it may have been copied and still being used.
+// This causes a memory leak once per new stage, so not major but still needs to be sorted out
 
 void orbitelements::gettimeorbit(int *orbitnumber,double *orbittime, double timefromnow) const
 {
