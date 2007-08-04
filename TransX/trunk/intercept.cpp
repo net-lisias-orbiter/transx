@@ -45,6 +45,12 @@ void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &ta
 {
 	//int fullorbits=int(floor(craftorbitsahead));
 	//int halforbits=int((craftorbitsahead-fullorbits)*2);
+	// Fix for if iceptalpha is NaN
+	if(iceptalpha.x != iceptalpha.x)
+		iceptalpha.x = iceptalpha.y = iceptalpha.z = 0;
+	if(iceptbeta.x != iceptbeta.x)
+		iceptbeta.x = iceptbeta.y = iceptbeta.z = 0;
+
 	double craftorbittime;
 	if (craft.geteccentricity()<1)
 	{

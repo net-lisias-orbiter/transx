@@ -520,6 +520,12 @@ void orbitelements::vectortothi(const VECTOR3 &vector,double *costhi,double *sin
 	double scaling=sqrt(majorsize*majorsize+minorsize*minorsize);
 	*costhi=majorsize/scaling;
 	*sinthi=minorsize/scaling;
+
+	if(scaling == 0)
+	{
+		*costhi = 1;
+		*sinthi = 0;
+	}
 }
 
 double orbitelements::thitoradius(double costhi) const
