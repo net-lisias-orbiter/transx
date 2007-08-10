@@ -24,8 +24,17 @@ orbitelements::orbitelements(OBJHANDLE hmajor, OBJHANDLE hminor) : minoraboutbar
 }
 
 orbitelements::~orbitelements()
-{} // cannot delete the pointer minaboutbarycentre as it may have been copied and still being used.
-// This causes a memory leak once per new stage, so not major but still needs to be sorted out
+{
+	// cannot delete the pointer minaboutbarycentre as it may have been copied and still being used.
+	// This causes a memory leak once per new stage, so not major but still needs to be sorted out
+	// Instead explicitely call release when the orbit is disposed of
+}
+
+void orbitelements::release()
+{
+	if(minoraboutbarycentre)
+		delete minoraboutbarycentre;
+}
 
 void orbitelements::gettimeorbit(int *orbitnumber,double *orbittime, double timefromnow) const
 {

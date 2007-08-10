@@ -26,6 +26,7 @@ basefunction::basefunction(class transxstate *tstate, class basefunction *tprevi
 	previousexists=false;//until we find otherwise
 	valid=initialisevars();
 	mappointer=mapfunction::getthemap();
+	target.release(); // release any shared memory in the target
 }
 
 basefunction::basefunction(class transxstate *tstate, class basefunction *tpreviousfunc, class basefunction *templbase, OBJHANDLE thcraft)

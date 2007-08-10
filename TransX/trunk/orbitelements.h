@@ -27,6 +27,7 @@ public:
 	void improvebyradius(double timetarget,double topthi,double timeattopthi,class orbittime *posvel) const;
 	void improvebysubdivision(double timetarget,double topthi,double timeattopthi,class orbittime *posvel) const;
 	bool improve(double timetarget,class orbittime *posvel) const;
+	void release();
 public:
 	virtual ~orbitelements();
 	orbitelements(); // Default constructor
