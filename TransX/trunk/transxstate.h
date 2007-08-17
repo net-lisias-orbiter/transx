@@ -1,3 +1,23 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #ifndef __TRANSXSTATE_H
 #define __TRANSXSTATE_H
 
@@ -7,6 +27,7 @@
 #include "cmdnugget.h"
 #include <deque>
 #define NUMFUNCTIONS 100
+#define SECONDS_PER_DAY 86400
 
 class transxstate:private MFDFunction {
 public:
@@ -17,26 +38,25 @@ public:
 
 	virtual void dolowpriaction();
 
-	bool doupdate(HDC hDC,int tw, int th, int currfunction,int currview, int curvarfunction, int currvarview,class TransxMFD *tmfdpointer);
+	bool doupdate(HDC hDC,int tw, int th, unsigned int curfunction,int currview, unsigned int curvarfunction, int currvarview,class TransxMFD *tmfdpointer);
 	void savecurrent(FILEHANDLE scn);
 	bool restoresave(FILEHANDLE scn);
 
 	class TransxMFD *GetMFDpointer();//Returns pointer to current MFD
-	//class basefunction *GetCurrFunction(); //Returns the current function
-	class MFDvarhandler *GetVarhandler(int currvarfunction); //Gets the variable handler for the current function
-	class MFDvariable *GetCurrVariable(int currvarfunction,int currviewmode); //Gets the current variable in the current function
+	class MFDvarhandler *GetVarhandler(unsigned int curvarfunction); //Gets the variable handler for the current function
+	class MFDvariable *GetCurrVariable(unsigned int curvarfunction,int currviewmode); //Gets the current variable in the current function
 	static void updatefocusvessel(OBJHANDLE newfocus); //Updates handles when vessel changes
 	void updateownfocusvessel(OBJHANDLE newfocus); //Non-void section that updates focus vessel in every function
 	bool sethelpsystem(bool thelpsystem) {helpsystem=thelpsystem;};
 	bool fliphelpsystem(){return helpsystem=!helpsystem;};
 	void togglefunctionswitch();
 	int getnumfunctions(){return baselist.size();};
-	int movetonextfunction(int curvarfunction);//Step forward to next function, creating one if needed/possible
-	int movetopreviousfunction(int curvarfunction);//Step back to previous function
-	int inc_viewmode(int currfunction, int currview);//Increment viewmode
+	int movetonextfunction(unsigned int curvarfunction);//Step forward to next function, creating one if needed/possible
+	int movetopreviousfunction(unsigned int curvarfunction);//Step back to previous function
+	int inc_viewmode(unsigned int curfunction, int currview);//Increment viewmode
 	class basefunction *getnextfunction(int positionnumber);
 	class basefunction *getpreviousfunction(int positionnumber);
-	class basefunction *getbasefn(int stagenumber);
+	class basefunction *getbasefn(unsigned int stagenumber);
 	class shipptrs *getshipptrs(){return shipptrs;};
 	void setshipptrs(class shipptrs *ptr){shipptrs=ptr;};
 	void showinitialstage(HDC hDC,int linespacing,int tw);
@@ -53,17 +73,13 @@ private:
 	bool functionswitch;//whether to switch view with the variables
 	bool mfdactive;
 	int eastereggswitch;//Choose which Easter Egg to use
-	int currcalcfunction;
+	unsigned int currcalcfunction;
 	int actionframe;
 	class TransxMFD *mfdpointer;
 	class shipptrs *shipptrs;//List of viewstates for this transxstate
-
 	class MFDvarhandler vars;
 	class MFDvarshiplist m_ships;
-
-
 	class mapfunction *mappointer;//The mapfunction pointer
-	//static bool statelistinitflag;//Has the list been initialised?
 	OBJHANDLE hcraft;
 	std::deque<class basefunction*> baselist,todeletelist;
 };

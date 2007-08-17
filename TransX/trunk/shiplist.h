@@ -1,9 +1,31 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #ifndef __SHIPLIST_H
 #define __SHIPLIST_H
 
 #include "viewstate.h"
-//#include "transxstate.h"
 #include "transx.h"
+
+#define SHIPNAME_LENGTH	50
+#define	MFDLIST_LENGTH	20
 
 class transxstate;
 
@@ -15,9 +37,9 @@ class shipptrs
 	shipptrs *previous,*next;
 	static shipptrs *current;//Used in background task
 	void subcreate();
-	class viewstate *mfdlist[20];
+	class viewstate *mfdlist[MFDLIST_LENGTH];
 	class transxstate *state;
-	char shipname[50];//ship name - needs to be long enough to have good chance of being complete
+	char shipname[SHIPNAME_LENGTH];//ship name - needs to be long enough to have good chance of being complete
 	static bool saved;//whether a save has been performed since last timestep
 public:
 	static void refreshsave(){saved=false;};

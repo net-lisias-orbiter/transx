@@ -1,3 +1,23 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #define STRICT
 
 #include "orbitersdk.h"
@@ -7,7 +27,6 @@
 #include "mfd.h"
 
 #include "transx.h"
-
 
 extern double debug;
 
@@ -392,15 +411,15 @@ bool basefunction::initialisevars()
 	m_planthrough.init(&vars,2,2,"Plan",0,2,"None","Slingshot","Encounter","","");//Hyp approach
 	m_planminor.init(&vars,2,2,"Plan",0,2,"None","Eject","Sling Direct","","");//Minor body defined
 	m_minor.init(&vars,2,2,"Select Minor",hmajor);
-	m_manoevremode.init(&vars,4,4,"Manoevre mode",0,1,"Off","On","","","");
+	m_manoeuvremode.init(&vars,4,4,"Manoeuvre mode",0,1,"Off","On","","","");
 	m_updbaseorbit.init(&vars,4,4,"Base Orbit",1,1,"++ Updates","Updating","","","");
 	m_prograde.init(&vars,4,4,"Prograde vel.", 1, 0, -1e8, 1e8, 0.1, 1000);
 	m_ejdate.init(&vars,4,4,"Man. date", 1, 0, 0, 1e20, 0.00001, 1000000);
 	m_outwardvel.init(&vars,4,4,"Outward vel.", 1, 0,-1e8,1e8,0.1,1000);
 	m_chplvel.init(&vars,4,4,"Ch. plane vel.", 1, 0, -1e8, 1e8, 0.1,1000);
-	m_intwith.init(&vars,2,2,"Intercept with",0,3,"Auto","Plan","Manoevre","Focus","");
+	m_intwith.init(&vars,2,2,"Intercept with",0,3,"Auto","Plan","Manoeuvre","Focus","");
 	m_orbitsahead.init(&vars,2,2,"Orbits to Icept",0);
-	m_graphprj.init(&vars,2,2,"Graph projection",0,3, "Ecliptic","Focus","Manoevre","Plan","");
+	m_graphprj.init(&vars,2,2,"Graph projection",0,3, "Ecliptic","Focus","Manoeuvre","Plan","");
 	m_scale.init(&vars,2,2,"Scale to view",0,2,"All","Target","Craft","","");
 	m_advanced.init(&vars,2,2,"Advanced",0,1,"Off","On","","","");
 	valid=true;
@@ -439,8 +458,8 @@ bool basefunction::initialisevars()
 	m_minor.sethelpstrings(
 		"Advanced:Set minor body",
 		"");
-	m_manoevremode.sethelpstrings(
-		"Enable manoevre settings",
+	m_manoeuvremode.sethelpstrings(
+		"Enable manoeuvre settings",
 		"");
 	m_advanced.sethelpstrings(
 		"Enable advanced settings",
@@ -449,7 +468,7 @@ bool basefunction::initialisevars()
 		"Set to 'Target' to obtain better",
 		"view when target is small");
 	m_updbaseorbit.sethelpstrings(
-		"Orbit on which manoevres",
+		"Orbit on which manoeuvres",
 		"are based. ++ sets to focus orbit");
 	m_prograde.sethelpstrings(
 		"Positive numbers to outer planets.",
@@ -476,7 +495,7 @@ bool basefunction::initialisevars()
 		"This plan (None) is used largely for",
 		"simple cruise to a target.",
 		"Select an alternative plan for more",
-		"complex manoevres. Use FWD to",
+		"complex manoeuvres. Use FWD to",
 		"create next stage.");
 
 	return true;
@@ -486,7 +505,7 @@ void basefunction::processvisiblevars()
 {//Deals with changes in variable visibility
 	switchadvanced();
 	switchplantype();
-	switchmanoevremode();
+	switchmanoeuvremode();
 	autoplan();
 }
 
@@ -509,9 +528,9 @@ void basefunction::switchplantype()
 }
 
 
-void basefunction::switchmanoevremode()
+void basefunction::switchmanoeuvremode()
 {
-	if (m_manoevremode==1)
+	if (m_manoeuvremode==1)
 	{
 		m_updbaseorbit.setshow(true);
 		m_prograde.setshow(true);
@@ -562,11 +581,11 @@ void basefunction::getcraftorbitattarget(ORBIT *tcraft)
 	{//hypothetical
 		if (getpreviousfunc()==NULL)
 		{
-			tcraft->majortominorinit(hmajtarget,hcraft, primary,mappointer->getsoisize(hmajtarget));//compensates better this way when it's actually time to burn a manoevre
+			tcraft->majortominorinit(hmajtarget,hcraft, primary,mappointer->getsoisize(hmajtarget));//compensates better this way when it's actually time to burn a manoeuvre
 		}
 		else
 		{
-			tcraft->majortominorinit(hmajtarget,NULL, primary,mappointer->getsoisize(hmajtarget));//compensates better this way when it's actually time to burn a manoevre
+			tcraft->majortominorinit(hmajtarget,NULL, primary,mappointer->getsoisize(hmajtarget));//compensates better this way when it's actually time to burn a manoeuvre
 		}
 	}
 }
@@ -691,7 +710,7 @@ void basefunction::calculate(VECTOR3 *targetvel)
 		hmajtarget=NULL;
 	}
 
-	if ((!basisorbit.isvalid() || m_updbaseorbit==1 || m_manoevremode==0) && craft.isvalid())
+	if ((!basisorbit.isvalid() || m_updbaseorbit==1 || m_manoeuvremode==0) && craft.isvalid())
 	{
 		basisorbit=craft;//set the basis orbit even if we're not using it
 		m_updbaseorbit=0;
@@ -751,8 +770,6 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 {
 	if (!valid) return;
 	if (!m_target.validate()) hmajtarget=NULL;
-	//W=tw;
-	//H=th;
 	int linespacing=th/24;
 	VECTOR3 targetvel;
 	calculate(&targetvel);
@@ -796,7 +813,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 			//No break here
 		}
 	case 4:
-		strcpy(buffer,"View:Manoevre");
+		strcpy(buffer,"View:Manoeuvre");
 		break;
 	default:
 		strcpy(buffer,"View:Setup");
@@ -806,11 +823,10 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 	TextOut(hDC,wpos,hpos,buffer,strlen(buffer));
 	if (viewmode==1 && hypormaj.isvalid())//Target view
 	{
-		double timeoffset=(m_ejdate-simstartMJD)*86400-craft.gettimestamp();
+		double timeoffset=(m_ejdate-simstartMJD)*SECONDS_PER_DAY-craft.gettimestamp();
 		VECTOR3 craftpos,craftvel;
 		craft.timetovectors(timeoffset,&deltavel);//New eccentricity insensitive timetovectors
 		deltavel.getposvel(&craftpos,&craftvel);
-		//craft.getcurrentvectors(&craftpos,&craftvel);
 		VESSEL *pV=oapiGetVesselInterface(hcraft);
 		double rvel=graph.vectorpointdisplay(hDC, targetvel-craftvel, state->GetMFDpointer(), pV, false);
 		TextShow(hDC,"Rel V: ",0,18*linespacing,rvel);
@@ -876,7 +892,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		pen=SelectDefaultPen(hDC,i);
 		graph.draworbit(rmin, hDC, true);
 
-		//Draw the hypothetical manoevre orbit
+		//Draw the hypothetical manoeuvre orbit
 		if (hypormaj.isvalid())
 		{
 			i=3;
@@ -949,7 +965,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 				}
 				hpos+=linespacing;
 				char buffer[20];
-				int length=sprintf(buffer,"Pe MJD %.4f",(craft.getpedeltatime()+craft.gettimestamp())/86400+simstartMJD);
+				int length=sprintf(buffer,"Pe MJD %.4f",(craft.getpedeltatime()+craft.gettimestamp())/SECONDS_PER_DAY+simstartMJD);
 				TextOut(hDC,wpos,hpos,buffer, length);
 				hpos+=linespacing;
 			}
@@ -957,7 +973,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 			{
 				TextShow(hDC,"Hyp Ped ",wpos,hpos,hypormaj.getpedistance());
 				hpos+=linespacing;
-				double timeatped=(hypormaj.gettimestamp()+hypormaj.getpedeltatime())/86400+simstartMJD;
+				double timeatped=(hypormaj.gettimestamp()+hypormaj.getpedeltatime())/SECONDS_PER_DAY+simstartMJD;
 				int length=sprintf(buffer,"H. Pe MJD %.2f",timeatped);
 				TextOut(hDC,wpos,hpos,buffer,length);
 			}
@@ -971,15 +987,13 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 
 
 void basefunction::Getmode2hypo(VECTOR3 *targetvel)
-
 // This obtains the current hypothetical orbit in rmin influence
-
 {
 	hypormaj.setinvalid();
 	if (!basisorbit.isvalid()) return;
 	if (m_prograde*m_prograde+m_outwardvel*m_outwardvel+m_chplvel*m_chplvel<0.0001) return;//No need to calculate if result is less than 1 cm per second!
 	// New section
-	double difftime=(m_ejdate-simstartMJD)*86400-basisorbit.gettimestamp();//Converts to seconds from present time
+	double difftime=(m_ejdate-simstartMJD)*SECONDS_PER_DAY-basisorbit.gettimestamp();//Converts to seconds from present time
 	VECTOR3 ejradius, ejvel;
 
 	basisorbit.timetovectors(difftime,&mode2orbittime);
@@ -998,7 +1012,7 @@ void basefunction::Getmode2hypo(VECTOR3 *targetvel)
 	*targetvel=hypovel;
 
 	//Create hypothetical orbit in rmaj
-	hypormaj.init(hypopos, hypovel, (m_ejdate-simstartMJD)*86400, basisorbit.getgmplanet());
+	hypormaj.init(hypopos, hypovel, (m_ejdate-simstartMJD)*SECONDS_PER_DAY, basisorbit.getgmplanet());
 }
 
 

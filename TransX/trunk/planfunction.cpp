@@ -1,3 +1,23 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #define STRICT
 #include <windows.h>
 #include <stdio.h>
@@ -9,8 +29,6 @@
 #include "transxstate.h"
 #include "basefunction.h"
 #include "planfunction.h"
-
-//extern double debug;
 
 bool minorejectplan::init(class MFDvarhandler *vars, class basefunction *base)
 {
@@ -75,9 +93,7 @@ void slingshot::calculate(class MFDvarhandler *vars,basefunction *base)
 	ORBIT craft=base->getcraftorbit();
 	VECTOR3 inward={0,0,0};
 	if (craft.isvalid())
-	{
-		craft.getinfinityvelvector(false,&inward);//
-	}
+		craft.getinfinityvelvector(false,&inward);
 	mapfunction *map=mapfunction::getthemap();
 	OBJHANDLE hmajor=base->gethmajor();
 
@@ -106,9 +122,7 @@ void slingshot::calculate(class MFDvarhandler *vars,basefunction *base)
 			ejectvelocity2=vectorsize2(ejectvector);
 		}
 		else
-		{
 			return;
-		}
 	}
 	else
 	{
@@ -118,9 +132,7 @@ void slingshot::calculate(class MFDvarhandler *vars,basefunction *base)
 	if (!craft.isvalid()) return;
 	inwardvelocity=vectorsize(inward);
 	if (ejectvelocity2<1 || inwardvelocity<1)
-	{
 		return;
-	}
 	//We now have both vectors
 	double sinfirst;
 	if (periapsisguess<0 || periapsisguess != periapsisguess) // go into this section if NaN
@@ -146,13 +158,9 @@ void slingshot::calculate(class MFDvarhandler *vars,basefunction *base)
 			sinsecond=1/ecc;
 			totalangle=asin(sinfirst)+asin(sinsecond);
 			if (totalangle<PI/2)
-			{
 				periapsisguess=periapsisguess*totalangle/reqdangle;
-			}
 			else
-			{
 				periapsisguess=periapsisguess*(PI-reqdangle)/(PI-totalangle);
-			}
 			goodness=totalangle/reqdangle;
 		}
 		while (fabs(goodness-1)>1e-5);
@@ -166,13 +174,9 @@ void slingshot::calculate(class MFDvarhandler *vars,basefunction *base)
 	VECTOR3 peposition=(rightangletovel*cosfirst+asvel*sinfirst)*periapsisguess;
 	VECTOR3 pevel=rightangletovel*(-sinfirst)+asvel*cosfirst;
 	if (m_selectorbit==0)
-	{
 		pevel=pevel*sqrt(inwardvelocity*inwardvelocity+2*gmhmajor/periapsisguess);
-	}
 	else
-	{
 		pevel=pevel*sqrt(ejectvelocity2+2*gmhmajor/periapsisguess);
-	}
 	
 	planorbit.init(peposition,pevel,ejecttime,gmhmajor);
 }
@@ -181,9 +185,7 @@ void slingshot::calculate(class MFDvarhandler *vars,basefunction *base)
 void minorejectplan::graphscale(GRAPH *graph)
 {//Needs revising to remove references to focus vessel. OK for now.
 	if (planorbit.isvalid())
-	{
 		graph->setviewscale(planorbit);
-	}
 	if (m_equatorial==0) return;
 	VESSEL *vessel;
 	vessel=oapiGetFocusInterface();
@@ -214,9 +216,7 @@ void minorejectplan::graphscale(GRAPH *graph)
 void slingshot::graphscale(GRAPH *graph)
 {
 	if (planorbit.isvalid())
-	{
 		graph->setviewscale(planorbit);
-	}
 }
 
 bool minorejectplan::maingraph(HDC hDC,GRAPH *graph, basefunction *base)
@@ -333,13 +333,9 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 		VECTOR3 tintersectvector=planorbit.getintersectvector(craft);//Gets intersection vector
 		tpos=status.rpos;
 		if (dotproduct(tintersectvector,tpos)<0)
-		{
 			angle+=90;
-		}
 		else
-		{
 			angle=90-angle;
-		}
 		if (angle<0) angle+=360;
 		OBJHANDLE hmajor = base->gethmajor();
 		if(oapiGetPlanetPeriod(hmajor) < 0) // retrograde rotation
@@ -407,7 +403,7 @@ void slingshot::wordupdate(HDC hDC, int width, int height, basefunction *base)
 	//Calculate reqd delta using energy calculation
 	double craftreqvel=craft.getvelocityatdist(planorbit.getpedistance());
 	double outplanpevel=sqrt(ejectvelocity2+2*planorbit.getgmplanet()/planorbit.getpedistance());
-	if (fabs(outplanpevel-craftreqvel)>0.1)//Only show if a manoevre is required
+	if (fabs(outplanpevel-craftreqvel)>0.1)//Only show if a manoeuvre is required
 	{
 		TextShow(hDC,"Delta V:",0,pos,outplanpevel-craftreqvel);
 		pos+=linespacing;
@@ -424,8 +420,8 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 {
 	int linespacing=height/24;
 	int pos=15*linespacing;
-	ORBIT craft=base->getmanoevreorbit();
-	if (!craft.isvalid()) craft=base->getcraftorbit();//Gets manoevre if it's valid, otherwise craft
+	ORBIT craft=base->getmanoeuvreorbit();
+	if (!craft.isvalid()) craft=base->getcraftorbit();//Gets manoeuvre if it's valid, otherwise craft
 
 	OBJHANDLE hmajor=base->gethmajor();
 	double radius=oapiGetSize(hmajor);
@@ -480,9 +476,6 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 }
 
 
-
-
-
 void majejectplan::wordupdate(HDC hDC,int width, int height, basefunction *base)
 {
 	if (ratioorbit>0)
@@ -504,9 +497,7 @@ void minorejectplan::graphupdate(HDC hDC, GRAPH *graph,basefunction *base)
 void majejectplan::graphscale(GRAPH *graph)
 {
 	if (planorbit.isvalid())
-	{
 		graph->setviewscale(planorbit);
-	}
 }
 
 void majejectplan::graphupdate(HDC hDC, GRAPH *graph,basefunction *base)
@@ -594,13 +585,9 @@ void slingejectplan::calcejectvector(const VECTOR3 &rminplane,const VECTOR3 &min
 	VECTOR3 sideward=unitise(rminplane)*m_incangle.getsin();
 	ejectvector=forward+outward+sideward;
 	if (m_inheritvel==0 && inheritedvelocity>0)
-	{
 		ejectvector=ejectvector*inheritedvelocity;
-	}
 	else
-	{
 		ejectvector=ejectvector*m_totalvel;
-	}
 }
 
 
@@ -629,12 +616,10 @@ void majejectplan::calculate(class MFDvarhandler *vars,basefunction *base)
 		ratioorbit=previousplan->getratio2radius();
 		timefromnow=previousplan->geteventtime();
 		if (m_inheritvel==0 && craftinrmin.isvalid())
-		{
-			m_ejdate=timefromnow/86400+oapiTime2MJD(0);
-		}
+			m_ejdate=timefromnow/SECONDS_PER_DAY+oapiTime2MJD(0);
 		previous->addaction(0);//Schedules an update for previous function - helps fluidity of slingshots
 	}
-	timefromnow=(m_ejdate-oapiTime2MJD(0))*86400;
+	timefromnow=(m_ejdate-oapiTime2MJD(0))*SECONDS_PER_DAY;
 	rmin.timetovectors(timefromnow-rmin.gettimestamp(),&minorplanetattime);
 	minorplanetattime.getposvel(&minorpos,&minorvel);
 	//rmin.timetovectors(timefromnow-rmin.gettimestamp(),&minorpos,&minorvel);
@@ -644,13 +629,9 @@ void majejectplan::calculate(class MFDvarhandler *vars,basefunction *base)
 	double ejectvector2=vectorsize2(ejectvector);
 	if (ejectvector2<1) return;
 	if (fabs(ejectvector2-escvel*escvel)*20<escvel*escvel && craftinrmin.isvalid())
-	{
 		planorbit.minortomajorinit(craftinrmin,rmin,soisize);
-	}
 	else
-	{
 		planorbit.init(minorpos,minorvel+ejectvector,timefromnow,rmin.getgmplanet());
-	}
 }
 
 VECTOR3 plan::getvelocityvector()
@@ -681,21 +662,15 @@ class plan *minorejectplan::iclone()
 void slingshot::getplanorbit(ORBIT *tplanorbit)
 {//Only pass on plan orbit if it's basically correct
 	if (goodness<1.01 && goodness>0.99)
-	{
 		*tplanorbit=planorbit;
-	}
 	else
-	{
 		tplanorbit->setinvalid();
-	}
 }
 
 VECTOR3 majejectplan::getvelocityvector()
 {
 	return ejectvector;
 }
-
-
 
 void minorejectplan::calculate(class MFDvarhandler *vars,basefunction *base)
 {
@@ -728,7 +703,6 @@ void minorejectplan::calculate(class MFDvarhandler *vars,basefunction *base)
 	{//checks if a velocity has been set!
 		return;
 	}
-
 
 	//Set up temporary coordinate system
 	VECTOR3 rminplane=(base->getcontextorbit()).getplanevector();
@@ -764,7 +738,6 @@ void minorejectplan::calculate(class MFDvarhandler *vars,basefunction *base)
 	//use that and the rotation vector to generate the required vectors
 	//make the orbit, then track back to also give parameters to pass to the major function
 }
-
 
 void minorejectplan::getplanorbit(ORBIT *tplanorbit)
 {

@@ -1,3 +1,23 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #define STRICT
 #include <windows.h>
 #include <stdio.h>
@@ -52,8 +72,6 @@ void MFDvariable::setall(class MFDvariable *var)
 	sethandle(var->gethandle());
 }
 
-
-
 bool MFDvariable::getshow()
 {
 	return showvariable;
@@ -69,7 +87,7 @@ void MFDvariable::setcmdnugget(cmdnugget *nugget)
 bool MFDvariable::showgeneric(HDC hDC,int width,int line, char *inbuff)
 {
 // This is a helper function that formats output to the MFD screen
-	char buffer[20];
+	char buffer[MAX_NAME_LENGTH];
 	int linecentre=(int) width/2;
 	int linepos= 6*line;
 	int inlength=strlen(inbuff);
@@ -99,11 +117,9 @@ bool MFDvariable::showgeneric(HDC hDC,int width,int line, char *inbuff)
 }
 
 bool MFDvariable::show(HDC hDC, int width, int line)
-
 //This is a virtual function that will not normally be used. Although MFDvariable is not
 // a pure virtual class, it is only the derived classes that are created in practice.
 // All these show() functions describe the MFDvariable on the screen
-
 {
 	return showgeneric(hDC,width,line," ");
 }
@@ -128,7 +144,6 @@ void MFDvariable::getname(char *buffer) const
 {
 	strcpy(buffer,name);
 }
-
 
 void MFDvariable::setadjmode(int tadjmode)
 {
@@ -158,11 +173,9 @@ int MFDvariable::getadjmode() const
 }
 
 void MFDvariable::showadjustment(HDC hDC, int width, int line) const
-
 // This shows the mode of adjustment currently in force for the current MFDvariable
-
 {
-	char buffer[20];
+	char buffer[MAX_NAME_LENGTH];
 	int ypos=int(7*line);
 	int xpos=int(width/2);
 	int length;
@@ -198,9 +211,7 @@ void MFDvariable::showadjustment(HDC hDC, int width, int line) const
 
 
 void MFDvariable::ch_adjmode()
-
 // Change the adjustment mode of this MFDvariable
-
 {
 	if (adjmode==0) return;
 	if (++adjmode>7) adjmode=1;
@@ -252,7 +263,6 @@ double MFDvariable::getcos() const
 {
 	return (double) 1;
 }
-
 
 void MFDvariable::setvalue(double tvalue)
 {}

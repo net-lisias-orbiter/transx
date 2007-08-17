@@ -1,3 +1,23 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #define STRICT
 
 #include <windows.h>
@@ -7,7 +27,6 @@
 #include "parser.h"
 #include "mapfunction.h"
 #include "shiplist.h"
-//#include <math.h>
 
 class shipptrs* shipptrs::first=NULL;
 class shipptrs* shipptrs::current=NULL;
@@ -16,22 +35,16 @@ bool shipptrs::saved=false;
 shipptrs::shipptrs()
 {
 	OBJHANDLE hcraft=oapiGetFocusObject();//Sets up new shipptrs for focus object
-	for (int a=0;a<50;a++)
-	{
-		shipname[a]=0;
-	}
-	oapiGetObjectName(hcraft,shipname,49);
+	ZeroMemory(shipname, SHIPNAME_LENGTH);
+	oapiGetObjectName(hcraft,shipname,SHIPNAME_LENGTH - 1); // Why is this -1?
 	subcreate();
 	state=new transxstate(hcraft,this);//A new plan base for this vessel
 }
 
 shipptrs::shipptrs(OBJHANDLE hcraft)
 {
-	for (int a=0;a<50;a++)
-	{
-		shipname[a]=0;
-	}
-	oapiGetObjectName(hcraft,shipname,49);
+	ZeroMemory(shipname, SHIPNAME_LENGTH);	
+	oapiGetObjectName(hcraft,shipname,SHIPNAME_LENGTH - 1);
 	state=new transxstate(hcraft,this);//A new plan base for this vessel
 	subcreate();
 }
@@ -39,23 +52,17 @@ shipptrs::shipptrs(OBJHANDLE hcraft)
 void shipptrs::subcreate()
 {
 	previous=NULL;
-	for (int a=0;a<20;a++)
-	{
+	for (int a=0;a<MFDLIST_LENGTH;a++)
 		mfdlist[a]=NULL;//No views yet
-	}
 	next=first;
 	first=this;
 	if (next!=NULL)next->previous=this;
 }
 
-
-
 shipptrs::~shipptrs()
 {
-	for (int a=0;a<20;a++)
-	{
+	for (int a=0;a<MFDLIST_LENGTH;a++)
 		delete mfdlist[a];
-	}
 	delete state;
 	if (first==this) first=next;
 	if (next!=NULL) next->previous=previous;
@@ -133,7 +140,6 @@ void shipptrs::restoreallships(FILEHANDLE scn)
 }
 
 	
-
 void shipptrs::savecurrent(FILEHANDLE scn)
 {
 	oapiWriteScenario_string(scn,"Ship ",shipname);
@@ -144,17 +150,13 @@ void shipptrs::restorecurrent(FILEHANDLE scn)
 {
 	state->restoresave(scn);
 }
-
-
 	
 class shipptrs *shipptrs::getshipptrs()
 {
 	OBJHANDLE hcraft=oapiGetFocusObject();
 	class shipptrs *ptr=findship(hcraft);
 	if (ptr==NULL)
-	{
 		ptr=new shipptrs();
-	}
 	return ptr;
 }
 
@@ -169,35 +171,27 @@ void shipptrs::destroyshipptrs()
 	//Also destroys the map
 	class mapfunction *map=mapfunction::themap;
 	if (map!=NULL)
-	{
 		delete map;
-	}
 }
 
 void shipptrs::downshift()
 {
-	for (int a=0;a<20;a++)
-	{
+	for (int a=0; a<MFDLIST_LENGTH; a++)
 		if (mfdlist[a]!=NULL) mfdlist[a]->selfdownshift();
-	}
 }
 
 void shipptrs::resetshift()
 {
-	for (int a=0;a<20;a++)
-	{
+	for (int a=0;a<MFDLIST_LENGTH;a++)
 		if (mfdlist[a]!=NULL) mfdlist[a]->resetshift();
-	}
 }
 
 
 class viewstate *shipptrs::getviewstate(int mfdpos,class TransxMFD *mfdptr)
 {
-	if (mfdpos<0 || mfdpos>19) mfdpos=0;
+	if (mfdpos<0 || mfdpos>MFDLIST_LENGTH - 1) mfdpos=0;
 	if (mfdlist[mfdpos]==NULL)
-	{
 		mfdlist[mfdpos]=new viewstate(mfdpos,mfdptr,this);
-	}
 	return mfdlist[mfdpos];
 }
 

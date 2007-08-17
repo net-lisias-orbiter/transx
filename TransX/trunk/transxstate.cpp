@@ -1,8 +1,25 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #define STRICT
 
-//#include <windows.h>
-//#include <stdio.h>
-//#include <math.h>
 #include "orbitersdk.h"
 #include <deque>
 #include "mfd.h"
@@ -14,31 +31,23 @@
 #include "shiplist.h"
 #include "transxstate.h"
 
-//bool transxstate::statelistinitflag=false;
-
-
-//double debug;
-
-
-MFDvarhandler *transxstate::GetVarhandler(int currvarfunction)
+MFDvarhandler *transxstate::GetVarhandler(unsigned int curvarfunction)
 {
-	if (currvarfunction==0 || baselist.empty()) return &vars;
-	if (currvarfunction<1 || currvarfunction>baselist.size()) currvarfunction=1;
-	class basefunction *cfunction=baselist[currvarfunction-1];
+	if (curvarfunction==0 || baselist.empty()) return &vars;
+	if (curvarfunction<1 || curvarfunction>baselist.size()) curvarfunction=1;
+	class basefunction *cfunction=baselist[curvarfunction-1];
 	return cfunction->getvariablehandler();
 }
 
-MFDvariable *transxstate::GetCurrVariable(int currvarfunction,int currviewmode)
+MFDvariable *transxstate::GetCurrVariable(unsigned int curvarfunction,int currviewmode)
 {
-	if (currvarfunction==0 || baselist.empty()) return vars.getcurrent(2);//return the variables for this
-	if (currvarfunction<1 || currvarfunction>baselist.size()) currvarfunction=1;
-	class basefunction *cfunction=baselist[currvarfunction-1];
+	if (curvarfunction==0 || baselist.empty()) return vars.getcurrent(2);//return the variables for this
+	if (curvarfunction<1 || curvarfunction>baselist.size()) curvarfunction=1;
+	class basefunction *cfunction=baselist[curvarfunction-1];
 	return cfunction->getcurrentvariable(currviewmode);
 }
 
-
-
-int transxstate::movetonextfunction(int curvarfunction)
+int transxstate::movetonextfunction(unsigned int curvarfunction)
 {
 	//Check for validity of passed curvarfunction
 	if (baselist.empty())
@@ -70,7 +79,7 @@ int transxstate::movetonextfunction(int curvarfunction)
 		else
 		{//function does not match, therefore
 			//Move all functions beyond this point to the delete list
-			for (int a=curvarfunction;a<baselist.size();a++)
+			for (unsigned int a=curvarfunction;a<baselist.size();a++)
 			{
 				todeletelist.push_back(baselist[a]);
 				baselist[a]->delist();
@@ -91,7 +100,6 @@ int transxstate::movetonextfunction(int curvarfunction)
 	return curvarfunction+1;
 }
 
-
 bool transxstate::checkdelete()
 {
 	if (todeletelist.empty()) return false;
@@ -101,8 +109,7 @@ bool transxstate::checkdelete()
 	return true;
 }
 
-
-int transxstate::movetopreviousfunction(int curvarfunction)
+int transxstate::movetopreviousfunction(unsigned int curvarfunction)
 {
 	if (curvarfunction<1 || curvarfunction>baselist.size()) return 1;
 	if (curvarfunction==1)
@@ -114,12 +121,11 @@ int transxstate::movetopreviousfunction(int curvarfunction)
 	return curvarfunction-1;
 }
 
-int transxstate::inc_viewmode(int currfunction,int currview)
+int transxstate::inc_viewmode(unsigned int curfunction,int currview)
 {
-	if (currfunction<1 || currfunction>baselist.size()) return 2;//Also correct for case 0
-	return baselist[currfunction-1]->calcnewview(currview,currfunction==1);
+	if (curfunction<1 || curfunction>baselist.size()) return 2;//Also correct for case 0
+	return baselist[curfunction-1]->calcnewview(currview,curfunction==1);
 }
-
 
 void transxstate::dolowpriaction()
 {
@@ -133,7 +139,7 @@ void transxstate::dolowpriaction()
 		addaction(0);
 		return;
 	}
-	actionframe=0;//10;
+	actionframe=0;
 	if (currcalcfunction<0)
 	{
 		currcalcfunction=0;
@@ -183,7 +189,7 @@ bool transxstate::checkbasefunction()
 
 bool transxstate::restartallfunctions()
 {
-	for (int a=0;a<baselist.size();a++)
+	for (unsigned int a=0;a<baselist.size();a++)
 	{
 		todeletelist.push_back(baselist[a]);
 		baselist[a]->delist();
@@ -199,18 +205,13 @@ class TransxMFD *transxstate::GetMFDpointer()
 	return mfdpointer;
 }
 
-
 void transxstate::updateownfocusvessel(OBJHANDLE newfocus)
 {
-	for (int a=0;a<baselist.size();a++)
-	{
+	for (unsigned int a=0;a<baselist.size();a++)
 		baselist[a]->sethcraft(newfocus);
-	}
 	hcraft=newfocus;
 	m_ships.initbybody(newfocus,true);
 }
-
-
 
 void transxstate::savecurrent(FILEHANDLE scn)
 
@@ -223,12 +224,8 @@ void transxstate::savecurrent(FILEHANDLE scn)
 	oapiWriteScenario_int(scn,buffer,baselist.size());
 	std::deque<class basefunction*>::iterator a;
 	for (a=baselist.begin();a!=baselist.end();a++)
-	{
 		(*a)->saveself(scn);
-	}
 }
-
-
 
 bool transxstate::restoresave(FILEHANDLE scn)
 {
@@ -241,7 +238,7 @@ bool transxstate::restoresave(FILEHANDLE scn)
 		return true;
 	}
 	parser.parseline(buffer);
-	int numfunctions;
+	unsigned int numfunctions;
 	if (parser.getlineelement(1,&member,&length))
 	{
 		sscanf(member,"%i",&numfunctions);
@@ -258,7 +255,7 @@ bool transxstate::restoresave(FILEHANDLE scn)
 		return true;
 	}
 	bool success=true;
-	int a;
+	unsigned int a;
 	basefunction *temp=NULL;
 	for (a=0;a<numfunctions;a++)
 	{
@@ -269,29 +266,21 @@ bool transxstate::restoresave(FILEHANDLE scn)
 			break;
 		}
 		baselist.push_back(temp);
-		//temp->initialisevars();
 	}
 	if (success)
 	{
 		for (a=0;a<numfunctions;a++)
-		{
 			baselist[a]->restoreself(scn);
-		}
 	}
 	else
 	{
 		for (a=0;a<baselist.size();a++)
-		{
 			delete baselist[a];
-		}
 		baselist.clear();
-		//addaction(0);//start process of deleting functions
 	}
 	currcalcfunction=-1;
 	return true;
 }
-
-
 
 transxstate::transxstate(OBJHANDLE thcraft, class shipptrs *tshipptrs)
 {
@@ -308,7 +297,7 @@ transxstate::transxstate(OBJHANDLE thcraft, class shipptrs *tshipptrs)
 	saveflag=false;
 	actionframe=0;
 	selectshipvars=false;
-	eastereggswitch=long(oapiGetSimMJD()*86400)%5-1;
+	eastereggswitch=long(oapiGetSimMJD()*SECONDS_PER_DAY)%5-1;
 	initialisevars();
 	initfunctions();
 }
@@ -318,9 +307,7 @@ void copytransxstatecmd::execute()
 {
 	OBJHANDLE craft=ivar->gethandle();//Get the handle this is based on
 	if (craft!=NULL)
-	{
 		mytxstate->baseonvessel(craft);
-	}
 }
 
 
@@ -368,7 +355,6 @@ bool transxstate::baseonexisting(class transxstate *existing)
 bool transxstate::initialisevars()
 {
 	m_ships.init(&vars,2,2,"Inherit from");
-	//setnumberviews(2);
 	//Make invisible all variables that sometimes are invisible
 
 	//set up help system
@@ -379,9 +365,6 @@ bool transxstate::initialisevars()
 	nugget->settransxstate(this);
 	m_ships.setcmdnugget(nugget);
 
-	/*sethelp(
-		"Use these variables for broad ",
-		"changes to your plan.","","","");*/
 	return true;
 }
 
@@ -407,7 +390,7 @@ basefunction *transxstate::getpreviousfunction(int positionnumber)
 	return getbasefn(positionnumber);
 }
 
-basefunction *transxstate::getbasefn(int stagenumber)
+basefunction *transxstate::getbasefn(unsigned int stagenumber)
 {
 	if (stagenumber<1 || stagenumber>baselist.size()) return NULL;
 	return baselist[stagenumber-1];
@@ -421,20 +404,15 @@ basefunction *transxstate::getnextfunction(int positionnumber)
 
 transxstate::~transxstate()
 {
-	for (int a=0;a<baselist.size();a++)
-	{
+	for (unsigned int a=0;a<baselist.size();a++)
 		delete baselist[a];
-	}
-	for (int a=0;a<todeletelist.size();a++)
-	{
+	for (unsigned int a=0;a<todeletelist.size();a++)
 		delete todeletelist[a];
-	}
 	baselist.clear();
 	todeletelist.clear();
 }
 
-
-bool transxstate::doupdate(HDC hDC, int tw, int th,int currfunction,int currview, int curvarfunction, int currvarview,TransxMFD *tmfdpointer)
+bool transxstate::doupdate(HDC hDC, int tw, int th,unsigned int curfunction,int currview, unsigned int curvarfunction, int currvarview,TransxMFD *tmfdpointer)
 {
 	saveflag=false;
 	selectshipvars=(curvarfunction<1);
@@ -483,9 +461,9 @@ bool transxstate::doupdate(HDC hDC, int tw, int th,int currfunction,int currview
 	{
 		if (!initfunctions()) return false;
 	}
-	if (currfunction<0 || currfunction > baselist.size()) currfunction=1;
-	class basefunction *cfunction=baselist[currfunction-1];
-	if (curvarfunction <0 || curvarfunction > baselist.size()) curvarfunction=currfunction;
+	if (curfunction<0 || curfunction > baselist.size()) curfunction=1;
+	class basefunction *cfunction=baselist[curfunction-1];
+	if (curvarfunction <0 || curvarfunction > baselist.size()) curvarfunction=curfunction;
 	class basefunction *cvarfunction=baselist[curvarfunction-1];
 	if (currcalcfunction==-1) addaction(0);
 	initflag=true;
@@ -515,7 +493,7 @@ bool transxstate::doupdate(HDC hDC, int tw, int th,int currfunction,int currview
 		cfunction->doupdate(hDC,tw,th,currview);
 	}
 	char buffer[20];
-	int length=sprintf(buffer,"Stage %i:%i",currfunction,baselist.size());
+	int length=sprintf(buffer,"Stage %i:%i",curfunction,baselist.size());
 	TextOut(hDC,tw/2,0,buffer,length);
 	length=sprintf(buffer,"Vars Stage %i",curvarfunction);
 	TextOut(hDC,tw/2,4*linespacing,buffer,length);

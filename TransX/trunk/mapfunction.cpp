@@ -1,3 +1,23 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #define STRICT
 
 #include <windows.h>
@@ -144,7 +164,7 @@ void mapfunction::sorthandles()
 void mapfunction::initialisehashtable()
 {
 	HASHENTRY *pointer=hashtable;
-	for (int a=0;a<101;a++)
+	for (int a=0;a<MAX_BODIES;a++)
 	{
 		pointer->bodyhandle=NULL;
 		pointer->pointer=-1;
@@ -163,7 +183,7 @@ void mapfunction::populatehashtable()
 
 void mapfunction::homegbody(int listmember, OBJHANDLE handle)
 {
-	int hashpoint=int(handle)%101;//Convert pointer, and get position in hashtable
+	int hashpoint=int(handle)%MAX_BODIES;//Convert pointer, and get position in hashtable
 	if (hashtable[hashpoint].bodyhandle==NULL)
 	{
 		//Enter pointer to ourselves directly in hash table
@@ -182,7 +202,7 @@ void mapfunction::homegbody(int listmember, OBJHANDLE handle)
 	
 int mapfunction::getbodybyhandle(OBJHANDLE handle)
 {
-	int hashpoint=int(handle)%101;
+	int hashpoint=int(handle)%MAX_BODIES;
 	if (hashtable[hashpoint].bodyhandle==NULL) return -1;//Handle not in table
 	if (hashtable[hashpoint].bodyhandle==handle)
 	{
@@ -250,12 +270,6 @@ void mapfunction::findmajor(int position)//Assumes majors already found for bodi
 	(array+position)->gravbodyratio2=pow((array+position)->mass/(array+currentsoi)->mass,0.8);
 	(array+position)->soisize2=currdistance2*(array+position)->gravbodyratio2;//Internal soi size
 }
-
-/*OBJHANDLE mapfunction::getcurrbody()
-{
-	OBJHANDLE tvessel=oapiGetFocusObject();
-	return getcurrbody(tvessel);
-}*/
 
 OBJHANDLE mapfunction::getcurrbody(OBJHANDLE vessel)//Finds current body for current focus vessel
 {

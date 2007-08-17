@@ -1,3 +1,23 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #define STRICT
 #define ORBITER_MODULE
 #include <windows.h>
@@ -13,7 +33,6 @@
 #include "viewstate.h"
 #include "shiplist.h"
 #include "transx.h"
-
 
 int TransxMFD::MfdCount=0;
 
@@ -32,7 +51,6 @@ TransxMFD::TransxMFD (DWORD w, DWORD h, VESSEL *vessel, UINT mfd)
 	viewstate=shptr->getviewstate(mfd,this);
 	viewstate->setmfdactive(true);
 	++MfdCount;
-	//debug=0;
 }
 
 TransxMFD::~TransxMFD()
@@ -44,8 +62,6 @@ TransxMFD::~TransxMFD()
 	}
 	--MfdCount;
 }
-
-
 
 // Called by Orbiter when a screen update is needed
 void TransxMFD::Update (HDC hDC)
@@ -84,12 +100,8 @@ int TransxMFD::getheight()
 	return H;
 }
 
-
-
 int TransxMFD::MsgProc (UINT msg, UINT mfd, WPARAM wparam, LPARAM lparam)
-
 // Standard message parser for messages passed from Orbiter
-
 {
 	switch (msg) {
 	case OAPI_MSG_MFD_OPENED:
@@ -99,18 +111,14 @@ int TransxMFD::MsgProc (UINT msg, UINT mfd, WPARAM wparam, LPARAM lparam)
 }
 
 char *TransxMFD::ButtonLabel (int bt)
-
 // Routine to pass button label back to Orbiter. Called by Orbiter
-
 {
 	char *label[11] = {"HLP","FWD","BCK", "VW","VAR","-VR", "ADJ", "-AJ","++", "--","EXE"};
 	return (bt < 11 ? label[bt] : 0);
 }
 
 int TransxMFD::ButtonMenu (const MFDBUTTONMENU **menu) const
-
 // Routine to pass menu description for buttons back to Orbiter. Called by Orbiter
-
 {
 	static const MFDBUTTONMENU mnu[11] = {
 		{"Toggle Help","On/Off",'H'},
@@ -130,30 +138,20 @@ int TransxMFD::ButtonMenu (const MFDBUTTONMENU **menu) const
 }
 
 bool TransxMFD::ConsumeKeyImmediate(char *kstate)
-
 // Routine which processes the keyboard state. Allows continuous change of variable.
-
 {
 	if (!valid) return false;
 	MFDvariable *varpointer=viewstate->GetCurrVariable();
 	if (varpointer==NULL) return false;
 	if  (*(kstate+OAPI_KEY_MINUS)==-128)
-	{
 		return varpointer->dec_variable();
-	}
 	if (*(kstate+OAPI_KEY_EQUALS)==-128)
-	{
 		return varpointer->inc_variable();
-	}
 	return false;
 }
 
-
-
 bool TransxMFD::ConsumeButton(int bt, int event)
-
 // Deal with mouse pressing of keys
-
 {
 	static const DWORD btkey[11]={OAPI_KEY_H, OAPI_KEY_F, OAPI_KEY_R, OAPI_KEY_W, OAPI_KEY_PERIOD, 
 		OAPI_KEY_COMMA, OAPI_KEY_LBRACKET, OAPI_KEY_RBRACKET, OAPI_KEY_EQUALS, OAPI_KEY_MINUS, OAPI_KEY_X};
@@ -170,13 +168,9 @@ bool TransxMFD::ConsumeButton(int bt, int event)
 	// At this point, only the possibility of immediate consumption...
 	if (!(event & PANEL_MOUSE_LBPRESSED)) return false; //Mouse button is down on 9 or 10
 	if (bt==9)
-	{
 		varpointer->dec_variable();
-	}
 	if (bt==8)
-	{
 		varpointer->inc_variable();
-	}
 	return true;
 }
 
@@ -231,16 +225,12 @@ bool TransxMFD::ConsumeKeyBuffered (DWORD key)
 	return false; //Key not one of cases above
 }
 
-
-
-
-
 void TransxMFD::WriteStatus(FILEHANDLE scn) const
 {
-	if (!valid) return;
+	if (!valid) 
+		return;
 	shipptrs::saveallships(scn);
 }
-
 
 void TransxMFD::ReadStatus(FILEHANDLE scn)
 {

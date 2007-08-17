@@ -1,16 +1,24 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #define STRICT
-
-/* ===============================================================
-
-  globals - holds global functions for the TransX project
-
-  Copyright Duncan Sharpe 2002-2003
-
-  See file transx.cpp for full license
-
-  ================================================================
-  */
-
 
 #include <windows.h>
 #include <stdio.h>
@@ -26,10 +34,6 @@
 #include "shiplist.h"
 #include "mfdfunction.h"
 
-//As included by Dave Robotham
-//#include <iostream.h>
-//#include <fstream.h>
-
 
 struct {
 	int mode;
@@ -40,9 +44,9 @@ using namespace std;
 // ==============================================================
 // API interface
 
-DLLCLBK void opcDLLInit (HINSTANCE hDLL)
+DLLCLBK void InitModule (HINSTANCE hDLL)
 {
-	static char name[7] = "TransX";
+	static char name[] = "TransX";
 	MFDMODESPEC spec;
 	spec.name    = name;
 	spec.msgproc = TransxMFD::MsgProc;
@@ -92,7 +96,6 @@ DLLCLBK void opcDLLInit (HINSTANCE hDLL)
 		catch( ... )
 		{
 			spec.key     = OAPI_KEY_J;
-
 		}
 	}
 
@@ -103,9 +106,8 @@ DLLCLBK void opcDLLInit (HINSTANCE hDLL)
 
 }//end code from Dave Robotham
 
-DLLCLBK void opcDLLExit (HINSTANCE hDLL)
+DLLCLBK void ExitModule (HINSTANCE hDLL)
 {
-
 	oapiUnregisterMFDMode (g_transxMFD.mode);
 }
 
@@ -125,10 +127,10 @@ DLLCLBK void opcOpenRenderViewport(HWND renderWnd,DWORD width,DWORD height,BOOL 
 
 DLLCLBK void opcFocusChanged(OBJHANDLE newfocus, OBJHANDLE oldfocus)
 {
-	//viewstate::updatefocusvessel(newfocus);
+
 }
 
-DLLCLBK void opcTimestep(double SimT, double SimDT, double mjd)
+DLLCLBK void opcPostStep(double SimT, double SimDT, double mjd)
 {
 	static int choose;
 	if (choose!=0)
@@ -149,8 +151,6 @@ bool SelectVariableBody(void *id, char *str, void *usrdata)
 {
 	return ((MFDvarmoon*)usrdata)->SetVariableBody(str);
 }
-
-
 
 void TextShow(HDC hDC,const char *label,int wpos,int hpos,OBJHANDLE handle)
 {
@@ -197,35 +197,6 @@ void TextShow(HDC hDC,const char *label, int wpos, int hpos, double value)
 	char buffer[30];
 	TextForm(buffer,label,value);
 
-	/*char index[2]=" ";
-	if (fabs(value)>1000)
-	{
-		value/=1000;
-		index[0]='k';
-	}
-	if (fabs(value)>1000)
-	{
-		value/=1000;
-		index[0]='M';
-	}
-	if (fabs(value)>1000)
-	{
-		value/=1000;
-		index[0]='G';
-	}
-	if (fabs(value)>1000)
-	{
-		value/=1000;
-		index[0]='T';
-	}
-	char buffer[30];
-	strcpy(buffer, label);
-	char buffer2[20];
-	sprintf(buffer2,"%.4g", value);
-	strcat(buffer2,index);
-	strcat(buffer, buffer2);*/
-
-
 	int length=strlen(buffer);
 	TextOut(hDC, wpos, hpos, buffer, length);
 }
@@ -234,7 +205,6 @@ void TextShow(HDC hDC,const char *label, int wpos, int hpos, double value)
 // Standard vector functions
 double dotproduct(const VECTOR3 &vector1, const VECTOR3 &vector2)
 {
-	
 	double temp=vector1.x*vector2.x+vector1.y*vector2.y+vector1.z*vector2.z;
 	return temp;
 }
@@ -297,7 +267,6 @@ void matrixmultiply(const MATRIX3 &first, const VECTOR3 &second, VECTOR3 *result
 
 void getinvrotmatrix(VECTOR3 arot, MATRIX3 *invrotmatrix)//arot not really a vector - see arot defn from vessel struct
 {
-	
 	double tcos=cos(arot.z);
 	double tsin=sin(arot.z);
 	MATRIX3 z={0,0,0,0,0,0,0,0,1};

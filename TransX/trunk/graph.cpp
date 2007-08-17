@@ -1,3 +1,23 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #define STRICT
 
 #include <windows.h>
@@ -62,9 +82,7 @@ void graphset::setviewscale(const ORBIT &orbit)
 }
 
 void graphset::setprojection(const VECTOR3 &txaxis, const VECTOR3 &tyaxis, const VECTOR3 &tzaxis)
-
 // Set projection vectors
-
 {
 	xaxis=unitise(txaxis);
 	yaxis=unitise(tyaxis);
@@ -79,10 +97,8 @@ void graphset::setprojection(const ORBIT &torbit)
 }
 
 void graphset::setprojection(const VECTOR3 &projection)
-
 //Set projection vectors using a viewpoint vector
 // Angle of peojection is set by the same method used by Orbiter
-
 {
 	if (projection.x==0 && projection.z==0)
 	{
@@ -110,7 +126,6 @@ void graphset::draworbit(const ORBIT &element, HDC hDC, bool drawradius)
 
 
 void graphset::drawtwovector(HDC hDC, const VECTOR3 &line1, const VECTOR3 &line2)
-
 // Draw two vectors from the planet centre
 {
 	const double xoffset=(ixstart+ixend)*0.5;
@@ -146,7 +161,6 @@ void graphset::drawvector(HDC hDC,const VECTOR3 &line1)
 
 
 void graphset::drawvectorline(HDC hDC, const VECTOR3 &line)
-
 // Draw a vector from the planet centre
 {
 	const double xoffset=(ixstart+ixend)*0.5;
@@ -227,7 +241,7 @@ double graphset::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VE
 	MoveToEx(hDC,ixstart,iystart+centre+lines,NULL);
 	LineTo(hDC, ixstart+edge,iystart+centre+lines);
 	double offsetsize=sqrt(trtarget.x*trtarget.x+trtarget.y*trtarget.y);
-	double scalar=0.707106781;
+	double scalar=sqrt(2.0) / 2;
 	double xang=trtarget.x/offsetsize;
 	double yang=-trtarget.y/offsetsize;
 	offsetsize=sqrt(offsetsize/trtarget.z);

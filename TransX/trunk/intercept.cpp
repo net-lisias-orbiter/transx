@@ -1,3 +1,23 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #define STRICT
 
 #include <windows.h>
@@ -6,8 +26,6 @@
 #include "orbitersdk.h"
 #include "mfd.h"
 #include "intercept.h"
-
-//extern double debug;
 
 intercept::intercept()
 {
@@ -43,8 +61,6 @@ void intercept::adjustorbitsdown()
 
 void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &target)
 {
-	//int fullorbits=int(floor(craftorbitsahead));
-	//int halforbits=int((craftorbitsahead-fullorbits)*2);
 	// Fix for if iceptalpha is NaN
 	if(iceptalpha.x != iceptalpha.x)
 		iceptalpha.x = iceptalpha.y = iceptalpha.z = 0;
@@ -117,7 +133,6 @@ void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &ta
 	//targettimeest=target.GetTimeToThi(targetcosthi,targetsinthi);
 	diff=crafttimeest-targettimeest;
 
-
 	orbitnumber=floor(diff/orbittime+0.5);
 	diff-=orbitnumber*orbittime;
 	//Remove this error linearly from the craft position vector
@@ -162,10 +177,8 @@ void intercept::getorbitsoffset(int *ifullorbits,int *ihalforbits) const
 }
 
 void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double craftorbitsahead)
-
 // Updates the intercept structure holding closest approach between 'craft' and target. 'craft' may be hypothetical or actual
 // Only one orbit may be hyperbolic
-
 //To be broken up into submethods next time it's revised
 {
 	if (!craft.isvalid() || !target.isvalid()) return;//Ensure no void updates!
@@ -183,7 +196,6 @@ void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double c
 
 	//First option is to check to see whether the plane intercept vector is a good first guess.
 	//
-
 
 	const ORBIT *alpha, *beta;
 	//The inversion functionality no longer matters - timetovectors is now good enough to avoid the problem
@@ -245,7 +257,6 @@ void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double c
 	beta->timetovectors(timeb,&betatime);
 	alphatime.getposvel(&betaposa,&betavela);
 	betatime.getposvel(&betaposb,&betavelb);
-
 
 	bool abetter=(vectorsize2(betaposa-alphaposa)<vectorsize2(betaposb-alphaposb)); //Picks best on grounds of distance
 	if (timea<timeoffset)
@@ -334,7 +345,6 @@ void intercept::getvelocities(VECTOR3 *craftvel, VECTOR3 *targetvel) const
 	*craftvel=icraftvel;
 	*targetvel=itargetvel;
 }
-
 
 double intercept::gettimeintercept() const
 {

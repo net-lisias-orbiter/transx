@@ -1,3 +1,23 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #define STRICT
 
 #include <windows.h>
@@ -9,8 +29,6 @@
 #include "doublelink.h"
 #include "basefunction.h"
 #include "shiplist.h"
-
-//extern double debug;
 
 liststring::liststring(bool manageme) : listelement(manageme)
 {
@@ -47,15 +65,14 @@ void MFDvarmoon::setall(class MFDvariable *var)
 	initvalidate();
 }
 
-
-MFDsemiintdiscrete::~MFDsemiintdiscrete(){}
+MFDsemiintdiscrete::~MFDsemiintdiscrete()
+{}
 
 bool MFDsemiintdiscrete::flipback_variable()
 {
 	if (value>0) value--;
 	return true;
 }
-
 
 MFDvarshiplist::MFDvarshiplist()
 {
@@ -68,9 +85,6 @@ MFDvarshiplist::~MFDvarshiplist()
 {
 	delete iterator;
 }
-
-
-
 
 void MFDvarshiplist::initbybody(OBJHANDLE craft,bool reset)
 {
@@ -111,8 +125,6 @@ void MFDvarshiplist::addtolist(char *name)
 	buffer[length]=0;
 	shiplisthead.addfront(temp);
 }
-
-
 
 bool MFDsemiintdiscrete::flip_variable()
 {
@@ -158,9 +170,7 @@ bool MFDvarmoon::flipback_variable()
 void MFDvarmoon::initvalidate()
 {
 	if (pointer!=NULL)
-	{
 		oapiGetObjectName(pointer,ibuffer,30);
-	}
 }
 
 bool MFDvarmoon::flip_variable()
@@ -173,9 +183,7 @@ bool MFDvarmoon::flip_variable()
 			pointer=mappointer->getlastmoon(centralbody);
 			initvalidate();
 			if (pointer==NULL)
-			{
 				ivalue=1;
-			}
 			return true;
 		case 1:
 			--ivalue;
@@ -208,11 +216,8 @@ void MFDvarmoon::chm_adjmode()
 	adjmode=1-adjmode;
 }
 
-
 void MFDvarmoon::showadjustment(HDC hDC, int width, int line) const
-
 // This shows the mode of adjustment currently in force for the current MFDvariable
-
 {
 	char buffer[20];
 	int ypos=int(7*line);
@@ -230,27 +235,18 @@ void MFDvarmoon::showadjustment(HDC hDC, int width, int line) const
 	TextOut(hDC, xpos, ypos, buffer, length);
 }
 
-
-
-
 void MFDvarmoon::getsaveline(char *buffer) const
 {
 	getsaveline1(buffer);
 	char tbuffer[30];
 	if (pointer!=NULL)
-	{
 		oapiGetObjectName(pointer,tbuffer,30);
-	}
 	else
 	{
 		if (ivalue==1)
-		{
 			strcpy(tbuffer,"Escape");
-		}
 		else
-		{
 			strcpy(tbuffer,"None");
-		}
 	}
 	strcat(buffer,tbuffer);
 }
@@ -278,13 +274,9 @@ bool MFDvarmoon::loadvalue(char *buffer)
 		ivalue=3;
 	}
 	if (pointer==NULL)
-	{
 		ivalue=0;
-	}
 	else
-	{
 		strcpy(ibuffer,buffer);
-	}
 	return true;
 }
 
@@ -293,16 +285,12 @@ bool MFDvarmoon::SetVariableBody(char *str)
 {
 	OBJHANDLE temp=oapiGetGbodyByName(str);
 	if (temp !=NULL)
-	{
 		return false;
-	}
 	temp=oapiGetObjectByName(str);
 	if (temp==NULL) return false;
 	OBJHANDLE temp2=mappointer->getcurrbody(temp);
 	if (temp2!=centralbody)
-	{
 		return false;
-	}
 	pointer=temp;
 	strcpy(ibuffer,str);
 	ivalue=3;
@@ -319,8 +307,6 @@ bool MFDvarmoon::validate()
 	return false;
 }
 
-
-
 bool MFDvarmoon::show(HDC hDC, int width, int line)
 {
 	char buffer[20];
@@ -332,13 +318,9 @@ bool MFDvarmoon::show(HDC hDC, int width, int line)
 	else
 	{
 		if (ivalue==1)
-		{
 			strcpy(buffer,"Escape");
-		}
 		else
-		{
 			strcpy(buffer,"None");
-		}
 	}
 	showgeneric(hDC,width,line,buffer);
 	return true;
@@ -349,13 +331,9 @@ OBJHANDLE MFDvarmoon::gethandle() const
 	if (ivalue!=1) return pointer;
 	OBJHANDLE temp=mappointer->getmajor(centralbody);
 	if (temp==centralbody)
-	{
 		return NULL;
-	}
 	else
-	{
 		return temp;
-	}
 }
 
 int MFDvarmoon::getivalue() const
@@ -366,11 +344,8 @@ int MFDvarmoon::getivalue() const
 MFDvarmoon::~MFDvarmoon()
 {}
 
-
-
 MFDvarfloat::MFDvarfloat()
-{
-}
+{}
 
 void MFDvarfloat::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname, int vadjmode, double vvalue, double vmin, double vmax, double vincrement, double vlogborder)
 {
@@ -384,23 +359,18 @@ void MFDvarfloat::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vna
 	logborder=vlogborder;
 }
 
-
 bool MFDvarshiplist::show(HDC hDC,int width,int line)
 {
 	char buffer[20];
 	liststring *entry=static_cast<liststring*>(iterator->current());//It is this type
 	if (entry==NULL)
-	{
 		strcpy(buffer,"New Plan");
-	}
 	else
 	{
 		char *shipname=entry->getbuffer();
 		int length=strlen(shipname);
 		if (length>19)
-		{
 			length=19;
-		}
 		strncpy(buffer,shipname,length);
 		buffer[length]=0;
 	}
@@ -412,9 +382,7 @@ OBJHANDLE MFDvarshiplist::gethandle() const
 {
 	liststring *entry=static_cast<liststring*>(iterator->current());//It is this type
 	if (entry==NULL)
-	{
 		return NULL;
-	}
 	return oapiGetVesselByName(entry->getbuffer());
 }
 	
@@ -487,13 +455,9 @@ bool MFDvarMJD::inc_variable()
 		return true;
 	}
 	if (temp>logborder || temp<-logborder)
-	{
 		temp+=fabs(temp)*adjuster*increment;
-	}
 	else
-	{
 		temp+=logborder*adjuster*increment;
-	}
 	if (temp>max) temp=max;
 	value=temp;
 	return true;
@@ -528,20 +492,13 @@ bool MFDvarMJD::dec_variable()
 
 	}
 	if (temp>logborder || temp<-logborder)
-	{
 		temp-=fabs(temp)*adjuster*increment;
-	}
 	else
-	{
 		temp-=logborder*adjuster*increment;
-	}
 	if (temp<min) temp=min;
 	value=temp;
 	return true;
 }
-
-
-
 
 bool MFDvarfloat::inc_variable()
 {
@@ -571,13 +528,9 @@ bool MFDvarfloat::inc_variable()
 		return true;
 	}
 	if (temp>logborder || temp<-logborder)
-	{
 		temp+=fabs(temp)*adjuster*increment;
-	}
 	else
-	{
 		temp+=logborder*adjuster*increment;
-	}
 	if (temp>max) temp=max;
 	value=temp;
 	return true;
@@ -612,13 +565,9 @@ bool MFDvarfloat::dec_variable()
 
 	}
 	if (temp>logborder || temp<-logborder)
-	{
 		temp-=fabs(temp)*adjuster*increment;
-	}
 	else
-	{
 		temp-=logborder*adjuster*increment;
-	}
 	if (temp<min) temp=min;
 	value=temp;
 	return true;
@@ -634,13 +583,8 @@ double MFDvarfloat::getvalue() const
 	return value;
 }
 
-MFDvarfloat::~MFDvarfloat() {}
-
-/*
-
-  MFDvarMJD class
-
-*/
+MFDvarfloat::~MFDvarfloat()
+{}
 
 
 MFDvarMJD::MFDvarMJD()
@@ -664,20 +608,12 @@ bool MFDvarMJD::show(HDC hDC, int width, int line)
 }
 
 
-MFDvarMJD::~MFDvarMJD() {}
-
-/*
-
-  MFDvardiscrete class
-
-*/
-
+MFDvarMJD::~MFDvarMJD() 
+{}
 
 
 MFDvardiscrete::MFDvardiscrete()
-{
-}
-
+{}
 
 void MFDvarshiplist::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname)
 {
@@ -738,11 +674,10 @@ bool MFDvardiscrete::loadvalue(char *buffer)
 
 bool MFDvardiscrete::flip_variable()
 {
-
-	if (++value>limit) value=0;
+	if (++value>limit)
+		value=0;
 	return true;
 }
-
 
 void MFDvardiscrete::setivalue(int tvalue)
 {
@@ -754,18 +689,11 @@ int MFDvardiscrete::getivalue() const
 	return value;
 }
 
-MFDvardiscrete::~MFDvardiscrete() {}
-
-/*
-
-  MFDvarangle class
-
-*/
-
+MFDvardiscrete::~MFDvardiscrete() 
+{}
 
 MFDvarangle::MFDvarangle()
-{
-}
+{}
 
 void MFDvarangle::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname, int vadjmode, double vvalue, double vcosvalue, double vsinvalue,
 						 double vmin, double vmax, double vincrement, bool vloop)
@@ -809,7 +737,6 @@ bool MFDvarangle::loadvalue(char *buffer)
 
 bool MFDvarangle::inc_variable()
 {
-
 	double temp=value;
 	double adjuster=0;
 	switch (adjmode){
@@ -841,13 +768,9 @@ bool MFDvarangle::inc_variable()
 	if (temp>max)
 	{
 		if (loop)
-		{
 			temp=min;
-		}
 		else
-		{
 			temp=max;
-		}
 	}
 	value=temp;
 	cosvalue=cos(temp);
@@ -888,13 +811,9 @@ bool MFDvarangle::dec_variable()
 	if (temp<min)
 	{
 		if (loop)
-		{
 			temp=max;
-		}
 		else
-		{
 			temp=min;
-		}
 	}
 	value=temp;
 	cosvalue=cos(temp);
@@ -931,4 +850,5 @@ double MFDvarangle::getvalue() const
 	return value;
 }
 
-MFDvarangle::~MFDvarangle() {}
+MFDvarangle::~MFDvarangle() 
+{}

@@ -1,27 +1,29 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #ifndef __MFDVARTYPES_H
 #define __MFDVARTYPES_H
 
 #include "mapfunction.h"
 #include "mfdvariable.h"
 #include "doublelink.h"
-
-/*class MFDvarbody : public MFDvariable {
-protected:
-	OBJHANDLE pointer;
-	char label[40];
-public:
-	MFDvarbody();
-	void init(MFDvarhandler *vars,int viewmode1,int viewmode2, char *vname,char *vlabel);
-	~MFDvarbody();
-	void sethandle(OBJHANDLE tpointer);
-	virtual OBJHANDLE gethandle() const;
-	bool flip_variable();
-	bool SetVariableBody(char *str);
-	virtual bool show(HDC hDC, int width, int line) const;
-	virtual void getsaveline(char *buffer) const;
-	virtual bool loadvalue(char *buffer);
-};*/
-
 
 class liststring : public listelement
 {
@@ -57,10 +59,6 @@ public:
 	virtual bool loadvalue(char *buffer){return true;};//
 };
 	
-
-
-
-
 class MFDvarmoon : public MFDvariable {
 protected:
 	OBJHANDLE pointer;
@@ -79,8 +77,6 @@ public:
 	virtual void ch_adjmode();
 	virtual void chm_adjmode();
 	virtual void showadjustment(HDC hDC, int width, int line) const;
-
-
 	virtual int getivalue() const;
 	virtual OBJHANDLE gethandle() const;
 	virtual bool loadvalue(char *buffer);
@@ -166,9 +162,6 @@ public:
 
 	~MFDsemiintdiscrete();
 };
-
-
-
 
 class MFDvarangle: public MFDvariable {
 private:

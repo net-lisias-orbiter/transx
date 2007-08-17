@@ -1,3 +1,23 @@
+/* Copyright (c) 2007 Duncan Sharpe, Steve Arch
+**
+** Permission is hereby granted, free of charge, to any person obtaining a copy
+** of this software and associated documentation files (the "Software"), to deal
+** in the Software without restriction, including without limitation the rights
+** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+** copies of the Software, and to permit persons to whom the Software is
+** furnished to do so, subject to the following conditions:
+** 
+** The above copyright notice and this permission notice shall be included in
+** all copies or substantial portions of the Software.
+** 
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+** THE SOFTWARE.*/
+
 #define STRICT
 
 #include <windows.h>
@@ -9,8 +29,6 @@
 #include "orbitelements.h"
 #include "intercept.h"
 #include "mapfunction.h"
-
-extern double debug;
 
 
 orbitelements::orbitelements() : minoraboutbarycentre(0)
@@ -49,8 +67,6 @@ double orbitelements::getvelocityatdist(double tradius)
 	return energy;
 }
 	
-
-
 void orbitelements::minortomajorinit(const ORBIT &craftinrmin, const ORBIT &rmininrmaj, double soisize)
 //Now aims close to transfer coordinates very close to the minor planet - should be very accurate!
 {
@@ -62,13 +78,9 @@ void orbitelements::minortomajorinit(const ORBIT &craftinrmin, const ORBIT &rmin
 	double costhi=craftinrmin.angularmomentum2/(craftinrmin.planet*3*soisize*craftinrmin.eccentricity)-1/craftinrmin.eccentricity;//take vectors at 3x SOI radius
 	double sinthi=1-costhi*costhi;
 	if (sinthi>0)
-	{
 		sinthi=sqrt(sinthi); //Positive thi = outward motion
-	}
 	else
-	{
 		sinthi=0;
-	}
 	VECTOR3 pos, vel, plpos, plvel;
 	pos=(craftinrmin.majoraxis*costhi+craftinrmin.minoraxis*sinthi)*10*soisize; //Position vector
 	double time=craftinrmin.simpletimetoradius(10*soisize); //elapsed time from periapsis to soi
@@ -142,20 +154,15 @@ void orbitelements::majortominorinit(OBJHANDLE target, OBJHANDLE object, const c
 }
 
 
-
 void orbitelements::getinfinityvelvector(bool outward,VECTOR3 *velocity) const
 {
 	if (!valid || eccentricity<1) return;
 	double costhi=-1/eccentricity;
 	double sinthi=sqrt(1-costhi*costhi);
 	if (outward)
-	{
 		*velocity=(majoraxis*costhi+minoraxis*sinthi)*sqrt(planet/semimajor);
-	}
 	else
-	{
 		*velocity=(minoraxis*sinthi-majoraxis*costhi)*sqrt(planet/semimajor);
-	}
 }
 
 
@@ -173,8 +180,6 @@ void orbitelements::radiustovectors(double radius, bool outward, VECTOR3 *positi
 	double outvel=eccentricity*planet*sinthi/sqrt(angularmomentum2);
 	*velocity=outvector*outvel+roundvector*sqrt(rndvel2);
 }
-
-
 
 void orbitelements::thitovectors(double costhi, double sinthi,VECTOR3 *position, VECTOR3 *velocity) const
 // Finds position and velocity vectors at a given angle thi
@@ -262,13 +267,9 @@ void orbitelements::init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, dou
 	currvelocity=rvelocity;
 	planet=gmplanet;
 	if (semimajor>0)
-	{
 		orbitconstant=-sqrt(semimajor*semimajor*semimajor/planet);
-	}
 	else
-	{
 		orbitconstant=sqrt(-semimajor*semimajor*semimajor/planet);
-	}
 	deltatime=0;
 	deltatime=GetTimeToThi(currcosthi, currsinthi);
 	timestamp=ttimestamp;
@@ -294,13 +295,9 @@ double orbitelements::simpletimetoradius(double radius) const
 		{
 			sinsinh=0;
 			if (coscosh>0)
-			{
 				e_angle=0;
-			}
 			else
-			{
 				e_angle=PI;
-			}
 		}
 	}
 	else
@@ -344,13 +341,9 @@ double orbitelements::GetTimeToRadius(double radius, bool outward) const
 		{
 			sinsinh=0;
 			if (coscosh>0)
-			{
 				e_angle=0;
-			}
 			else
-			{
 				e_angle=PI;
-			}
 		}
 	}
 	else
@@ -409,13 +402,9 @@ double orbitelements::simpletimetothi(double costhi,double sinthi) const
 		{
 			sinsinh=0;
 			if (coscosh>0)
-			{
 				e_angle=0;
-			}
 			else
-			{
 				e_angle=PI;
-			}
 		}
 	}
 	else
@@ -482,13 +471,9 @@ double orbitelements::GetTimeToThi(double costhi, double sinthi,int fullorbits,i
 		{
 			sinsinh=0;
 			if (coscosh>0)
-			{
 				e_angle=0;
-			}
 			else
-			{
 				e_angle=PI;
-			}
 		}
 	}
 	else
@@ -641,15 +626,9 @@ double orbitelements::getgmplanet() const
 	return planet;
 }
 
-
-
-
-
 void orbitelements::GetTimesToThi(double costhi, double *time1, double *time2,int fullorbits,int halforbits) const
-
 // There are two solutions for any value of costhi
 // Useful as costhi can be derived from a radius from a body
-
 {
 	if (!valid) return;
 	double coscosh;
@@ -676,13 +655,9 @@ void orbitelements::GetTimesToThi(double costhi, double *time1, double *time2,in
 		{
 			sinsinh=0;
 			if (coscosh>0)
-			{
 				e_angle=0;
-			}
 			else
-			{
 				e_angle=PI;
-			}
 		}
 	}
 	else
@@ -867,13 +842,9 @@ void orbitelements::timetovectors(double timefromnow,ORBITTIME *posvel) const
 		topthi=-1/eccentricity+0.2;//Not at infinity - a bit closer
 		double timeattopthi=simpletimetothi(topthi,timetarget);
 		if (fabs(timeattopthi)<fabs(timetarget))//In asymptote region, work by radius at first
-		{
 			improvebyradius(timetarget,topthi,timeattopthi,posvel);
-		}
 		else
-		{
 			improvebysubdivision(timetarget,topthi,timeattopthi,posvel);
-		}
 	}
 	else
 	{
@@ -907,19 +878,13 @@ void orbitelements::improvebyradius(double timetarget,double topthi,double timea
 	tempthi=radiustothi(radius);
 	posvel->icosthi=tempthi;
 	if (fabs(tempthi)<1)
-	{
 		posvel->currangle=acos(tempthi);
-	}
 	else
 	{
 		if (tempthi>0)
-		{
 			posvel->currangle=0;
-		}
 		else
-		{
 			posvel->currangle=PI;
-		}
 	}
 	if (reversed) posvel->currangle=-posvel->currangle;
 }
@@ -958,29 +923,18 @@ void orbitelements::improvebysubdivision(double timetarget,double topthi,double 
 	}
 	posvel->icosthi=guess;
 	if (fabs(guess)<1)
-	{
 		guess=acos(guess);
-	}
 	else
 	{
 		if (guess>0)
-		{
 			guess=0;
-		}
 		else
-		{
 			guess=PI;
-		}
 	}
 	if (reversed) guess=-guess;
 	posvel->currangle=guess;
 	return;
 }
-
-
-
-
-
 
 bool orbitelements::improve(double timetarget,ORBITTIME *posvel) const
 {
@@ -1000,20 +954,14 @@ bool orbitelements::improve(double timetarget,ORBITTIME *posvel) const
 	{
 		if (1+eccentricity*icosthi<0) return false;//check for beyond asymptote result
 		if (fabs(tempangle)<PI)
-		{
 			timeerr=simpletimetothi(icosthi,timetarget)-timetarget;
-		}
 		else
 		{
 			timeerr=simpletimetothi(icosthi,-timetarget)-timetarget;
 			if (timetarget>0)
-			{
 				timeerr+=orbitconstant*2*PI;
-			}
 			else
-			{
 				timeerr-=orbitconstant*2*PI;
-			}
 		}
 		iradius=thitoradius(icosthi);
 		iangleerr=timeerr*angmomentum/(iradius*iradius);
@@ -1032,9 +980,6 @@ bool orbitelements::improve(double timetarget,ORBITTIME *posvel) const
 	return true;
 }
 
-
-
-
 void orbitelements::timetovectors(double timefromnow, VECTOR3 *pos, VECTOR3 *vel) const
 {
 	// Find the position of a planet at timefromnow in the future
@@ -1043,19 +988,15 @@ void orbitelements::timetovectors(double timefromnow, VECTOR3 *pos, VECTOR3 *vel
 	if (!valid) return;
 	if (eccentricity>1)
 	{
-		
 		double e_angle;
 		double loc_deltatime,delta,ex;
 		double to=(timefromnow+deltatime)/orbitconstant; //Required time / orbitconstant
 		if (to>PI)
-		{
 			e_angle=-to-eccentricity/2;
-		}
 		else
-		{
 			e_angle=-to+eccentricity/2;
-		}
-		for (int i=0;i<20;i++){// Should quickly converge to correct value of e_angle
+		for (int i=0;i<20;i++)
+		{// Should quickly converge to correct value of e_angle
 			ex=exp(e_angle);
 			delta=(eccentricity*(ex-1/ex)*0.5-e_angle+to)/(1-eccentricity*(ex+1/ex)*0.5); //(sinh and cosh are the ex expressions)
 			e_angle+=delta;
@@ -1066,13 +1007,9 @@ void orbitelements::timetovectors(double timefromnow, VECTOR3 *pos, VECTOR3 *vel
 		double costhi=(eccentricity-cosh_e)/(eccentricity*cosh_e-1);
 		double sinthi=1-costhi*costhi;
 		if (sinthi>0)
-		{
 			sinthi=sqrt(sinthi);
-		}
 		else
-		{
 			sinthi=0;
-		}
 		if (ex-1/ex>0) sinthi=-sinthi;
 		thitovectors(costhi, sinthi, pos, vel);
 		// Finally adjust the vectors using deltatime
@@ -1085,14 +1022,11 @@ void orbitelements::timetovectors(double timefromnow, VECTOR3 *pos, VECTOR3 *vel
 		double loc_deltatime,delta;
 		double to=(timefromnow+deltatime)/orbitconstant; //Required time / orbitconstant
 		if (to>PI)
-		{
 			e_angle=to-eccentricity/2;
-		}
 		else
-		{
 			e_angle=to+eccentricity/2;
-		}		
-		for (int i=0;i<20;i++){// Should quickly converge to correct value of e_angle
+		for (int i=0;i<20;i++)
+		{// Should quickly converge to correct value of e_angle
 			delta=(eccentricity*sin(e_angle)-e_angle+to)/(1-eccentricity*cos(e_angle));
 			e_angle+=delta;
 		}
@@ -1105,7 +1039,6 @@ void orbitelements::timetovectors(double timefromnow, VECTOR3 *pos, VECTOR3 *vel
 		*pos=*pos+*vel*(timefromnow-loc_deltatime+deltatime); //Make final (small) correction to deltatime error
 	}
 }
-
 
 void orbittime::getposvel(VECTOR3 *tpos,VECTOR3 *tvel)
 {
