@@ -26,7 +26,6 @@ basefunction::basefunction(class transxstate *tstate, class basefunction *tprevi
 	previousexists=false;//until we find otherwise
 	valid=initialisevars();
 	mappointer=mapfunction::getthemap();
-	target.release(); // release any shared memory in the target
 }
 
 basefunction::basefunction(class transxstate *tstate, class basefunction *tpreviousfunc, class basefunction *templbase, OBJHANDLE thcraft)
@@ -249,6 +248,7 @@ void basefunction::onplaceindeletebuffer()//ESSENTIAL cleanup
 basefunction::~basefunction()
 {
 	delete planpointer;//Delete any plan that this function has
+	//target.release(); // release any shared memory in the target FIXME - this needs to be released somewhere.
 	if (previousfunc!=NULL) previousfunc->setnextfunc(NULL);
 	if (nextfunc!=NULL) nextfunc->setpreviousfunc(NULL);
 }
