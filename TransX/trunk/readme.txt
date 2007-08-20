@@ -1,4 +1,4 @@
-TransX V3
+TransX V3.11
 
 Description & License
 ---------------------
@@ -83,4 +83,5 @@ Any questions - post in the addons section of the Orbiter forum.
 
 Happy Orbiting!
 
-Duncan Sharpe
+Duncan Sharpe & Steve Arch
+http://orbiter.quorg.org

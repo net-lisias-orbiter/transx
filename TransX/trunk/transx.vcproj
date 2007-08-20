@@ -551,6 +551,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\TransX.rc"
+				>
+			</File>
+			<File
 				RelativePath="TransXFunction.cpp"
 				>
 				<FileConfiguration
@@ -675,6 +679,10 @@
 			</File>
 			<File
 				RelativePath="planfunction.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
 				>
 			</File>
 			<File
