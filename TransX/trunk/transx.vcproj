@@ -152,7 +152,7 @@
 				AdditionalIncludeDirectories="C:\Program files\orbitersdk\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;RMIN_EXPORTS;_CRT_SECURE_NO_DEPRECATE"
 				StringPooling="true"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=".\Release/rmin.pch"
 				AssemblerListingLocation=".\Release/"
@@ -180,7 +180,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="C:\Program Files\orbitersdk\lib\"
-				IgnoreDefaultLibraryNames="msvcirt.lib"
+				IgnoreDefaultLibraryNames="msvcirt.lib;msvcrt.lib"
 				ProgramDatabaseFile=".\Release/transx.pdb"
 				ImportLibrary=".\Release/transx.lib"
 				TargetMachine="1"
@@ -551,10 +551,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\TransX.rc"
-				>
-			</File>
-			<File
 				RelativePath="TransXFunction.cpp"
 				>
 				<FileConfiguration
@@ -714,6 +710,10 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
+			<File
+				RelativePath=".\TransX.rc"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>
