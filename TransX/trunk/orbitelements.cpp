@@ -606,7 +606,6 @@ double orbitelements::getpedeltatime() const
 	double temp;
 	if (eccentricity<1)
 	{
-		
 		temp=orbitconstant*(PI+PI)-deltatime;//Time to next passage
 	}
 	else

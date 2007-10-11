@@ -275,8 +275,13 @@ void encounterplan::graphupdate(HDC hDC,GRAPH *graph,basefunction *base)
 	double rot = oapiGetPlanetPeriod(hmaj);
 	ORBIT craft=base->getcraftorbit();
 	
-	// Get the base position at the Pe by rotating the body by the time until Pe
-	double deltatime = craft.getpedeltatime();
+	// Get the base position at the Pe/impact by rotating the body by the time until Pe/impact
+	double radius = oapiGetSize(hmaj);
+	double deltatime;
+	if(craft.getpedistance() > radius)
+		deltatime = craft.getpedeltatime();	// Get time of Pe
+	else
+		deltatime = craft.GetTimeToRadius(radius, false); // Get time of impact (distance = radius of planet)
 	MATRIX3 oblrot;
 	oapiGetPlanetObliquityMatrix(hmaj, &oblrot);
 	MATRIX3 invoblrot = getinvmatrix(oblrot);
@@ -290,8 +295,7 @@ void encounterplan::graphupdate(HDC hDC,GRAPH *graph,basefunction *base)
 	matrixmultiply(oblrot, v2, &baseposition);
 
 	double distance2=vectorsize2(baseposition);
-	double radius2=oapiGetSize(hmaj);
-	radius2=radius2*radius2;
+	double radius2=radius*radius;
 	if (radius2*1.5>distance2)
 	{
 		graph->drawvector(hDC,baseposition);
