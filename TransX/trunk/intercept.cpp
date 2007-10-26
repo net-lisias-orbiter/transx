@@ -61,12 +61,6 @@ void intercept::adjustorbitsdown()
 
 void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &target)
 {
-	// Fix for if iceptalpha is NaN
-	if(iceptalpha.x != iceptalpha.x)
-		iceptalpha.x = iceptalpha.y = iceptalpha.z = 0;
-	if(iceptbeta.x != iceptbeta.x)
-		iceptbeta.x = iceptbeta.y = iceptbeta.z = 0;
-
 	double craftorbittime;
 	if (craft.geteccentricity()<1)
 	{

@@ -937,12 +937,6 @@ void orbitelements::improvebysubdivision(double timetarget,double topthi,double 
 
 bool orbitelements::improve(double timetarget,ORBITTIME *posvel) const
 {
-	// Prevent NaN errors
-	if(posvel->currangle != posvel->currangle)
-		posvel->currangle = 0;
-	if(posvel->icosthi != posvel->icosthi)
-		posvel->icosthi = 0;
-
 	double angmomentum=sqrt(angularmomentum2);
 	double timeerr,iradius,iangleerr,icosthi;
 	VECTOR3 *tpos=&(posvel->pos);
@@ -990,6 +984,12 @@ void orbitelements::timetovectors(double timefromnow, VECTOR3 *pos, VECTOR3 *vel
 		double e_angle;
 		double loc_deltatime,delta,ex;
 		double to=(timefromnow+deltatime)/orbitconstant; //Required time / orbitconstant
+
+		// Make sure 'to' is in range [0, 2pi]
+		while(to > 2 * PI)
+			to -= 2 * PI;
+		while(to < 0)
+			to += 2*PI;
 		if (to>PI)
 			e_angle=-to-eccentricity/2;
 		else
@@ -1013,6 +1013,7 @@ void orbitelements::timetovectors(double timefromnow, VECTOR3 *pos, VECTOR3 *vel
 		thitovectors(costhi, sinthi, pos, vel);
 		// Finally adjust the vectors using deltatime
 		*pos=*pos+*vel*(timefromnow-loc_deltatime+deltatime); //Make final (small) correction to deltatime error
+		int iueoa = 578934;
 	}
 	else
 	{
