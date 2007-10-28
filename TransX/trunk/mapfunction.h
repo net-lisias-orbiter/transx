@@ -23,21 +23,19 @@
 
 #include "mfdfunction.h"
 #include "orbitelements.h"
-
+#include "list"
+#include "map"
+using namespace std;
 #define MAX_BODIES	101
 
-typedef struct {
+struct GBODY{
 	OBJHANDLE bodyhandle;
-	int parentbody;
-	int peerring;
-	int backpeerring;
-	int moonring;
-	int backmoonring;
-	int overflow;
+	GBODY *parent, *next, *previous; // next and previous bodies orbiting same body
+	list <GBODY*> satellites;
 	double soisize2;
 	double gravbodyratio2;
 	double mass;
-} GBODY;
+} ;
 
 typedef struct {
 	OBJHANDLE bodyhandle;
@@ -47,24 +45,18 @@ typedef struct {
 class mapfunction: public MFDFunction
 {
 private:
-	GBODY *primaryarray, *secondaryarray,*array,*inarray,*outarray;
+	void InitialiseSolarSystem();
+	GBODY *sun; // a tree of the sun, its satellites, the satellites' satellites etc.
+	map<OBJHANDLE, GBODY*> bodyMap;
 	int totalbodies;
-	int actionstage,actionloop;
 	bool initialised;
 	static class mapfunction *themap;
-	HASHENTRY hashtable[MAX_BODIES];
-	void getallhandles();
-	void sorthandles();
-	void mergelists(GBODY *list1, GBODY *endlist1, GBODY *list2, GBODY *endlist2, GBODY *listout);
-	void initialisehashtable();
-	void homegbody(int listmember, OBJHANDLE handle);
 	int getbodybyhandle(OBJHANDLE handle);
-	void populatehashtable();
 	void findmajor(int position);
-	mapfunction();
-	~mapfunction();
 	VECTOR3 getweightedvector(OBJHANDLE, void(OBJHANDLE, VECTOR3*));
 public:
+	mapfunction();
+	~mapfunction();
 	static class mapfunction *getthemap();
 	virtual void dolowpriaction();
 	bool getinitialised(){return initialised;};
@@ -76,7 +68,6 @@ public:
 	OBJHANDLE getpreviouspeer(OBJHANDLE handle);//Gets heavier peer in mass order
 	double getsoisize(OBJHANDLE handle);//Gets the size of the SOI for this body
 	OBJHANDLE getcurrbody(OBJHANDLE vessel);//Get current body for arbitrary vessel
-	friend class shipptrs;//Allows the map to be deleted by this object
 	VECTOR3 getbarycentre(OBJHANDLE body); // Gets the global pos of the barycentre of the system with body as the main object
 	VECTOR3 getbarycentrevel(OBJHANDLE body); // Gets the global velocity of the barycentre of the system with body as the main object
 };

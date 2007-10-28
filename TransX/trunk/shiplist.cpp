@@ -169,7 +169,7 @@ void shipptrs::destroyshipptrs()
 		delete temp;//Destructor modifies first
 	}
 	//Also destroys the map
-	class mapfunction *map=mapfunction::themap;
+	class mapfunction *map=mapfunction::getthemap();
 	if (map!=NULL)
 		delete map;
 }
