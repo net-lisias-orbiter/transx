@@ -73,7 +73,7 @@ private:
 	bool functionswitch;//whether to switch view with the variables
 	bool mfdactive;
 	int eastereggswitch;//Choose which Easter Egg to use
-	unsigned int currcalcfunction;
+	int currcalcfunction;
 	int actionframe;
 	class TransxMFD *mfdpointer;
 	class shipptrs *shipptrs;//List of viewstates for this transxstate

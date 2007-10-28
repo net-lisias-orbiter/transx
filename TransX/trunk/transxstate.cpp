@@ -146,7 +146,7 @@ void transxstate::dolowpriaction()
 		checkbasefunction();
 	}
 	VECTOR3 temp;
-	if (currcalcfunction>=baselist.size())
+	if (currcalcfunction>=(int)baselist.size())
 	{
 		currcalcfunction=-1;
 		return;
