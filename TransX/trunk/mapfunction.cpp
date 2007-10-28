@@ -70,20 +70,22 @@ OBJHANDLE mapfunction::getcurrbody(OBJHANDLE vessel)//Finds current body for cur
 	double distance2,bodyfromparent2;
 	oapiGetGlobalPos(vessel,&currentpos);
 	GBODY *currentsoi=NULL;
-	int a=1;
 	GBODY *body = sun;
-	while (a!=-1)//No more objects to check
+	while(body)
 	{//Recomputes distance as time may have passed since initialisation
-		oapiGetGlobalPos(body->satellites.front()->bodyhandle,&bodypos);
-		oapiGetGlobalPos(body->parent->bodyhandle,&parentpos);
+		oapiGetGlobalPos(body->bodyhandle,&bodypos);
+		if(body->parent == NULL)
+			parentpos = bodypos; // The sun
+		else
+			oapiGetGlobalPos(body->parent->bodyhandle,&parentpos);
 		relvector=parentpos-bodypos;
 		bodyfromparent2=vectorsize2(relvector);
 		relvector=currentpos-bodypos;
 		distance2=vectorsize2(relvector);
-		if (distance2<body->gravbodyratio2*bodyfromparent2)//In this soi
+		if (distance2<body->gravbodyratio2*bodyfromparent2 || body == sun)//In this soi
 		{
 			currentsoi=body;
-			body=body->satellites.front();
+			body = body->satellites.front();
 		}
 		else
 		{
