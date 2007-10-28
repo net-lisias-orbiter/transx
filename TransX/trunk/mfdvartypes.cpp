@@ -301,9 +301,6 @@ bool MFDvarmoon::validate()
 {
 	OBJHANDLE temp=oapiGetObjectByName(ibuffer);
 	if (temp==pointer) return true;
-	pointer=NULL;
-	ivalue=0;
-	strcpy(ibuffer," ");
 	return false;
 }
 
