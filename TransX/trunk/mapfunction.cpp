@@ -85,7 +85,10 @@ OBJHANDLE mapfunction::getcurrbody(OBJHANDLE vessel)//Finds current body for cur
 		if (distance2<body->gravbodyratio2*bodyfromparent2 || body == sun)//In this soi
 		{
 			currentsoi=body;
-			body = body->satellites.front();
+			if(body->satellites.size() > 0)
+				body = body->satellites.front();
+			else
+				body = NULL;
 		}
 		else
 		{
