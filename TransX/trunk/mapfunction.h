@@ -48,11 +48,8 @@ private:
 	void InitialiseSolarSystem();
 	GBODY *sun; // a tree of the sun, its satellites, the satellites' satellites etc.
 	map<OBJHANDLE, GBODY*> bodyMap;
-	int totalbodies;
 	bool initialised;
 	static class mapfunction *themap;
-	int getbodybyhandle(OBJHANDLE handle);
-	void findmajor(int position);
 	VECTOR3 getweightedvector(OBJHANDLE, void(OBJHANDLE, VECTOR3*));
 public:
 	mapfunction();
@@ -61,7 +58,6 @@ public:
 	static class mapfunction *getthemap();
 	virtual void dolowpriaction();
 	bool getinitialised(){return initialised;};
-	void getorbit(OBJHANDLE handle, ORBIT *orbit);
 	OBJHANDLE getmajor(OBJHANDLE handle);//Gets central body that handle orbits
 	OBJHANDLE getfirstmoon(OBJHANDLE handle);//Gets heaviest moon of handle
 	OBJHANDLE getlastmoon(OBJHANDLE handle);//Gets lightest moon of handle

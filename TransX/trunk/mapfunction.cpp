@@ -66,12 +66,6 @@ void mapfunction::dolowpriaction()
 	initialised=true;
 }
 
-
-void mapfunction::getorbit(OBJHANDLE handle, ORBIT *orbit)
-{
-	orbit->init(getmajor(handle),handle);
-}
-
 OBJHANDLE mapfunction::getcurrbody(OBJHANDLE vessel)//Finds current body for current focus vessel
 {
 	if (!initialised || vessel==NULL) return NULL;
