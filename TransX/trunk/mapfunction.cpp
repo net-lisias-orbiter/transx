@@ -31,7 +31,7 @@ mapfunction *mapfunction::themap=NULL;
 
 mapfunction::~mapfunction()
 {
-	// FIXME - delete all the GBODYs
+	DeleteGBody(sun); // deallocate memory recursively
 	themap=NULL;
 }
 
@@ -48,6 +48,15 @@ mapfunction *mapfunction::getthemap()
 	return themap;
 }
 
+void mapfunction::DeleteGBody(GBODY *body)
+{
+	// recursively eletes the GBODY and the tree of satellites 
+	list<GBODY*>::iterator it;
+	for(it = body->satellites.begin(); it != body->satellites.end(); ++it)
+		DeleteGBody(*it);
+	body->satellites.clear();
+	delete body;
+}
 
 void mapfunction::dolowpriaction()
 {//Function is called multiple times - addaction(0) prompts it to be recalled

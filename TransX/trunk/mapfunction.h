@@ -57,6 +57,7 @@ private:
 public:
 	mapfunction();
 	~mapfunction();
+	void DeleteGBody(GBODY *body);
 	static class mapfunction *getthemap();
 	virtual void dolowpriaction();
 	bool getinitialised(){return initialised;};
