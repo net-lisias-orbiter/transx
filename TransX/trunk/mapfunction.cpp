@@ -105,6 +105,8 @@ OBJHANDLE mapfunction::getcurrbody(OBJHANDLE vessel)//Finds current body for cur
 double mapfunction::getsoisize(OBJHANDLE handle)
 {
 	double radius;
+	if(!bodyMap[handle])
+		return 0;	// probably a craft or something similar.
 	if (bodyMap[handle]->parent == NULL)
 		return 1e80;//virtually infinite SOI for largest body
 	else
@@ -157,10 +159,10 @@ OBJHANDLE mapfunction::getpreviouspeer(OBJHANDLE handle)
 
 OBJHANDLE mapfunction::getmajor(OBJHANDLE handle)
 {
-	if(bodyMap[handle]->parent)
-		return bodyMap[handle]->parent->bodyhandle;
-	else
-		return NULL;
+	if(bodyMap[handle])
+		if(bodyMap[handle]->parent)
+			return bodyMap[handle]->parent->bodyhandle;
+	return NULL;
 }
 
 VECTOR3 mapfunction::getweightedvector(OBJHANDLE body, void (*func)(OBJHANDLE, VECTOR3*))
