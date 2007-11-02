@@ -49,7 +49,7 @@ private:
 	int interceptwith;
 	ORBITTIME mode2orbittime,deltavel;
 protected:
-	INTERCEPT primary, pecorrintercept;
+	INTERCEPT primary;
 	ORBIT craft, rmin, basisorbit, hypormaj, craftincontext, target, context;
 	OBJHANDLE hcontext;
 	GRAPH graph;

@@ -632,24 +632,11 @@ void basefunction::calculate(VECTOR3 *targetvel)
 		double distance=vectorsize(pos);
 		double velenergy=vectorsize2(vel)*0.5;
 		double overallenergy=-GRAVITY*oapiGetMass(hmajor)/distance+velenergy;
-		if (overallenergy>0 && dotproduct(vel,pos)<0 && context.isvalid())
-		{//Orbit is hyperbolic and incoming! Need to do periapsis compensation
-			craftincontext.init(hcontext,hcraft);
-			pecorrintercept.updateintercept(craftincontext,context);
-			craft.majortominorinit(hmajor,hcraft,pecorrintercept,mappointer->getsoisize(hmajor));
-		}
-		else
-		{
-			craft.init(hmajor, hcraft);
-		}
+		craft.init(hmajor, hcraft);
 		if (hminor==NULL)
-		{
 			rmin.setinvalid();//No minor body on first graph
-		}
 		else
-		{
 			rmin.init(hmajor,hminor);
-		}
 	}
 	else//There is a graph before this one
 	{

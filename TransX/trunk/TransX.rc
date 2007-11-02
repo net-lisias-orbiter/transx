@@ -65,8 +65,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_UK
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,11,2,0
- PRODUCTVERSION 3,11,2,0
+ FILEVERSION 3,11,2,2
+ PRODUCTVERSION 3,11,2,2
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -83,12 +83,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Quorg"
             VALUE "FileDescription", "TransX Transfer MFD for orbiter"
-            VALUE "FileVersion", "3, 11, 2, 0"
+            VALUE "FileVersion", "3, 11, 2, 2"
             VALUE "InternalName", "TransX"
             VALUE "LegalCopyright", "Copyright (C) Duncan Sharpe and Steve Arch, 2002-2007"
             VALUE "OriginalFilename", "TransX.dll"
             VALUE "ProductName", "TransX"
-            VALUE "ProductVersion", "3, 11, 2, 0"
+            VALUE "ProductVersion", "3, 11, 2, 2"
         END
     END
     BLOCK "VarFileInfo"
