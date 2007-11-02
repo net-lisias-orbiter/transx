@@ -916,7 +916,6 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 				graph.drawvectorline(hDC,intersect);
 
 				//Describe targeting quality
-				char buffer[20];
 				int hpos=8*linespacing;
 				int wpos=0;
 				int length=sprintf(buffer, "Cl. App. (rough)");
