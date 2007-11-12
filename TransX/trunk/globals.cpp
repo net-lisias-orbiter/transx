@@ -24,20 +24,9 @@
 #include <stdio.h>
 #include <math.h>
 #include "orbitersdk.h"
-#include "mfd.h"
-#include "intercept.h"
-#include "mfdvartypes.h"
-#include "mfdvarhandler.h"
-#include "viewstate.h"
-#include "graph.h"
-#include "transx.h"
 #include "shiplist.h"
-#include "mfdfunction.h"
 
-
-struct {
-	int mode;
-}g_transxMFD;
+static int mode;
 
 using namespace std;
 
@@ -102,13 +91,13 @@ DLLCLBK void InitModule (HINSTANCE hDLL)
 	else
 		spec.key = OAPI_KEY_J;
 
-	g_transxMFD.mode = oapiRegisterMFDMode (spec);
+	mode = oapiRegisterMFDMode (spec);
 
 }//end code from Dave Robotham
 
 DLLCLBK void ExitModule (HINSTANCE hDLL)
 {
-	oapiUnregisterMFDMode (g_transxMFD.mode);
+	oapiUnregisterMFDMode (mode);
 }
 
 DLLCLBK void opcCloseRenderViewport()

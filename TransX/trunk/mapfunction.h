@@ -26,7 +26,6 @@
 #include "list"
 #include "map"
 using namespace std;
-#define MAX_BODIES	101
 
 struct GBODY{
 	OBJHANDLE bodyhandle;
@@ -36,11 +35,6 @@ struct GBODY{
 	double gravbodyratio2;
 	double mass;
 } ;
-
-typedef struct {
-	OBJHANDLE bodyhandle;
-	int pointer;
-} HASHENTRY;
 
 class mapfunction: public MFDFunction
 {
@@ -58,14 +52,14 @@ public:
 	static class mapfunction *getthemap();
 	virtual void dolowpriaction();
 	bool getinitialised(){return initialised;};
-	OBJHANDLE getmajor(OBJHANDLE handle);//Gets central body that handle orbits
-	OBJHANDLE getfirstmoon(OBJHANDLE handle);//Gets heaviest moon of handle
-	OBJHANDLE getlastmoon(OBJHANDLE handle);//Gets lightest moon of handle
-	OBJHANDLE getnextpeer(OBJHANDLE handle);//Gets lighter peer in mass order (a peer is a body orbiting same major as handle)
+	OBJHANDLE getmajor		(OBJHANDLE handle);//Gets central body that handle orbits
+	OBJHANDLE getfirstmoon	(OBJHANDLE handle);//Gets heaviest moon of handle
+	OBJHANDLE getlastmoon	(OBJHANDLE handle);//Gets lightest moon of handle
+	OBJHANDLE getnextpeer	(OBJHANDLE handle);//Gets lighter peer in mass order (a peer is a body orbiting same major as handle)
 	OBJHANDLE getpreviouspeer(OBJHANDLE handle);//Gets heavier peer in mass order
-	double getsoisize(OBJHANDLE handle);//Gets the size of the SOI for this body
-	OBJHANDLE getcurrbody(OBJHANDLE vessel);//Get current body for arbitrary vessel
-	VECTOR3 getbarycentre(OBJHANDLE body); // Gets the global pos of the barycentre of the system with body as the main object
+	double getsoisize		(OBJHANDLE handle);//Gets the size of the SOI for this body
+	OBJHANDLE getcurrbody	(OBJHANDLE vessel);//Get current body for arbitrary vessel
+	VECTOR3 getbarycentre	(OBJHANDLE body); // Gets the global pos of the barycentre of the system with body as the main object
 	VECTOR3 getbarycentrevel(OBJHANDLE body); // Gets the global velocity of the barycentre of the system with body as the main object
 };
 
