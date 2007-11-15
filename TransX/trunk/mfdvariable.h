@@ -48,7 +48,7 @@ public:
 	void setshow(bool value);
 	bool getshow();
 	bool showgeneric(HDC hDC,int width,int line, char *inbuff);
-	virtual void showadjustment(HDC hDC, int width, int line) const; //Show the adjustment mode
+	virtual void showadjustment(HDC hDC, int width, int line) const {}; //Show the adjustment mode
 	void getsaveline1(char *buffer) const;//Creates first part of save line
 	void gethelpstrings(char *help1,char *help2) const;//Returns help strings
 	void sethelpstrings(char *help1, char *help2);//Sets help strings

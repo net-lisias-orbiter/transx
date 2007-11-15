@@ -170,44 +170,6 @@ int MFDvariable::getadjmode() const
 	return adjmode;
 }
 
-void MFDvariable::showadjustment(HDC hDC, int width, int line) const
-// This shows the mode of adjustment currently in force for the current MFDvariable
-{
-	char buffer[MAX_NAME_LENGTH];
-	int ypos=int(7*line);
-	int xpos=int(width/2);
-	int length;
-	switch (adjmode) 
-	{
-	case 0:
-		length=sprintf(buffer," ");
-		break;
-	case 1:
-		length=sprintf(buffer,"Coarse");
-		break;
-	case 2:
-		length=sprintf(buffer,"Medium");
-		break;
-	case 3:
-		length=sprintf(buffer,"Fine");
-		break;
-	case 4:
-		length=sprintf(buffer,"Super");
-		break;
-	case 5:
-		length=sprintf(buffer,"Ultra");
-		break;
-	case 6:
-		length=sprintf(buffer,"Hyper");
-		break;
-	case 7:
-		length=sprintf(buffer,"Reset");
-		break;
-	}
-	TextOut(hDC, xpos, ypos, buffer, length);
-}
-
-
 void MFDvariable::ch_adjmode()
 // Change the adjustment mode of this MFDvariable
 {

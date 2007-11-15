@@ -86,7 +86,6 @@ public:
 	void updatecentralbody(OBJHANDLE tcentral){centralbody=tcentral;};
 	operator int(){return value;}
 	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname,OBJHANDLE tcentralbody);
-	~MFDvarmoon();
 };
 
 class MFDvarfloat : public MFDvariable {
@@ -101,6 +100,7 @@ public:
 	double operator = (double tvalue){value=tvalue;return value;};
 	virtual void inc_variable(); // Increase the variable
 	virtual void dec_variable(); //Decrease the variable
+	virtual void showadjustment(HDC hDC, int width, int line) const;
 	bool show(HDC hDC, int width, int line);
 	double getvalue() const; //Get the value
 	void setvalue(double tvalue);
