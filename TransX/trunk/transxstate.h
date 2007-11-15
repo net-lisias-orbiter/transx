@@ -26,7 +26,6 @@
 #include "mfdvartypes.h"
 #include "cmdnugget.h"
 #include <deque>
-#define NUMFUNCTIONS 100
 #define SECONDS_PER_DAY 86400
 
 class transxstate:private MFDFunction {

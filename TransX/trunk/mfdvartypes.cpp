@@ -424,79 +424,6 @@ bool MFDvarfloat::loadvalue(char *buffer)
 	return true;
 }
 
-bool MFDvarMJD::inc_variable()
-{
-	double temp=value;
-	double adjuster=0;
-	switch (adjmode){
-	case 1:
-		adjuster=0.1;
-		break;
-	case 2:
-		adjuster=0.01;
-		break;
-	case 3:
-		adjuster=0.001;
-		break;
-	case 4:
-		adjuster=0.0001;
-		break;
-	case 5:
-		adjuster=0.00001;
-		break;
-	case 6:
-		adjuster=0.000001;
-		break;
-	case 7:
-		value=oapiGetSimMJD();
-		return true;
-	}
-	if (temp>logborder || temp<-logborder)
-		temp+=fabs(temp)*adjuster*increment;
-	else
-		temp+=logborder*adjuster*increment;
-	if (temp>max) temp=max;
-	value=temp;
-	return true;
-}
-
-bool MFDvarMJD::dec_variable()
-{
-	double temp=value;
-	double adjuster=0;
-	switch (adjmode){
-	case 1:
-		adjuster=0.1;
-		break;
-	case 2:
-		adjuster=0.01;
-		break;
-	case 3:
-		adjuster=0.001;
-		break;
-	case 4:
-		adjuster=0.0001;
-		break;
-	case 5:
-		adjuster=0.00001;
-		break;
-	case 6:
-		adjuster=0.000001;
-		break;
-	case 7:
-		value=oapiGetSimMJD();
-		return true;
-
-	}
-	if (temp>logborder || temp<-logborder)
-		temp-=fabs(temp)*adjuster*increment;
-	else
-		temp-=logborder*adjuster*increment;
-	if (temp<min) temp=min;
-	value=temp;
-	return true;
-}
-
 bool MFDvarfloat::inc_variable()
 {
 	double temp=value;
@@ -583,10 +510,6 @@ double MFDvarfloat::getvalue() const
 MFDvarfloat::~MFDvarfloat()
 {}
 
-
-MFDvarMJD::MFDvarMJD()
-{}
-
 bool MFDsemiintdiscrete::show(HDC hDC,int width,int line)
 {
 	char buffer[20];
@@ -603,10 +526,6 @@ bool MFDvarMJD::show(HDC hDC, int width, int line)
 	showgeneric(hDC,width,line,buffer);
 	return true;
 }
-
-
-MFDvarMJD::~MFDvarMJD() 
-{}
 
 
 MFDvardiscrete::MFDvardiscrete()

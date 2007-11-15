@@ -114,12 +114,8 @@ public:
 class MFDvarMJD: public MFDvarfloat {
 public:
 	bool show(HDC hDC, int width, int line);
-	virtual bool inc_variable(); // Increase the variable
-	virtual bool dec_variable(); //Decrease the variable
 
 	double operator = (double tvalue){value=tvalue;return value;};
-	MFDvarMJD();
-	~MFDvarMJD();
 };
 
 
