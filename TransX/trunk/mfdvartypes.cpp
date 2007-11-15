@@ -68,10 +68,9 @@ void MFDvarmoon::setall(class MFDvariable *var)
 MFDsemiintdiscrete::~MFDsemiintdiscrete()
 {}
 
-bool MFDsemiintdiscrete::flipback_variable()
+void MFDsemiintdiscrete::dec_variable()
 {
 	if (value>0) value--;
-	return true;
 }
 
 MFDvarshiplist::MFDvarshiplist()
@@ -126,20 +125,19 @@ void MFDvarshiplist::addtolist(char *name)
 	shiplisthead.addfront(temp);
 }
 
-bool MFDsemiintdiscrete::flip_variable()
+void MFDsemiintdiscrete::inc_variable()
 {
 	value++;
-	return true;
 }
 
-bool MFDvarmoon::flipback_variable()
+void MFDvarmoon::dec_variable()
 {
 	if (adjmode==0)
 	{
 		switch (value){
 		case 0:
 			++value;
-			return true;
+			break;
 		case 1:
 			++value;
 			pointer=mappointer->getfirstmoon(centralbody);
@@ -148,7 +146,7 @@ bool MFDvarmoon::flipback_variable()
 			{
 				value=0;
 			}
-			return true;
+			break;
 		case 2:
 			pointer=mappointer->getnextpeer(pointer);
 			initvalidate();
@@ -157,14 +155,16 @@ bool MFDvarmoon::flipback_variable()
 				value=0;
 				strcpy(ibuffer,"");
 			}
-			return true;
+			break;
+		default:
+			value=0;
+			pointer=NULL;
+			break;
+
 		}
-		value=0;
-		pointer=NULL;
-		return true;
 	}
-	oapiOpenInputBox("Select Ship",SelectVariableBody,0,20, (void*)this);
-	return true;
+	else
+		oapiOpenInputBox("Select Ship",SelectVariableBody,0,20, (void*)this);
 }
 
 void MFDvarmoon::initvalidate()
@@ -173,7 +173,7 @@ void MFDvarmoon::initvalidate()
 		oapiGetObjectName(pointer,ibuffer,30);
 }
 
-bool MFDvarmoon::flip_variable()
+void MFDvarmoon::inc_variable()
 {
 	if (adjmode==0)
 	{
@@ -184,10 +184,10 @@ bool MFDvarmoon::flip_variable()
 			initvalidate();
 			if (pointer==NULL)
 				value=1;
-			return true;
+			break;
 		case 1:
 			--value;
-			return true;
+			break;
 		case 2:
 			pointer=mappointer->getpreviouspeer(pointer);
 			initvalidate();
@@ -196,14 +196,15 @@ bool MFDvarmoon::flip_variable()
 				value=1;
 				strcpy(ibuffer,"");
 			}
-			return true;
+			break;
+		default:
+			value=0;
+			pointer=NULL;
+			break;
 		}
-		value=0;
-		pointer=NULL;
-		return true;
 	}
-	oapiOpenInputBox("Select Ship",SelectVariableBody,0,20, (void*)this);
-	return true;
+	else
+		oapiOpenInputBox("Select Ship",SelectVariableBody,0,20, (void*)this);
 }
 
 void MFDvarmoon::ch_adjmode()
@@ -380,16 +381,14 @@ OBJHANDLE MFDvarshiplist::gethandle() const
 	return oapiGetVesselByName(entry->getbuffer());
 }
 	
-bool MFDvarshiplist::flip_variable()
+void MFDvarshiplist::inc_variable()
 {
 	iterator->next();
-	return true;
 }
 
-bool MFDvarshiplist::flipback_variable()
+void MFDvarshiplist::dec_variable()
 {
 	iterator->previous();
-	return true;
 }
 
 bool MFDvarfloat::show(HDC hDC, int width, int line)
@@ -633,11 +632,10 @@ bool MFDvardiscrete::loadvalue(char *buffer)
 }
 
 
-bool MFDvardiscrete::flip_variable()
+void MFDvardiscrete::inc_variable()
 {
 	if (++value>limit)
 		value=0;
-	return true;
 }
 
 void MFDvardiscrete::setivalue(int tvalue)

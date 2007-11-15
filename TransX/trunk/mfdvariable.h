@@ -60,11 +60,8 @@ public:
 	virtual void chm_adjmode();
 	int getadjmode() const; //Get the current adjustment mode
 	virtual int getadjtype() const;//Get the correct adjustment method
-	// Following four implemented to do nothing much - designed to overload
-	virtual void inc_variable(); //Increase the variable
-	virtual void dec_variable(); //Decrease the variable
-	virtual bool flip_variable(); // Change the variable in discrete amounts
-	virtual bool flipback_variable();//Change the variable in discrete amounts
+	virtual void inc_variable() = 0; //Increase the variable
+	virtual void dec_variable() {inc_variable();}; //Decrease the variable
 	virtual bool show(HDC hDC, int width, int line);
 	virtual void sethandle(OBJHANDLE tpointer);
 	virtual void setall(class MFDvariable *var);

@@ -183,28 +183,6 @@ void MFDvariable::chm_adjmode()
 	if (--adjmode<1) adjmode=7;
 }
 
-bool MFDvariable::flip_variable()
-
-// Used to manipulate MFDvardiscrete class - this is run for those classes which
-// do not use this method of changing the variable.
-
-{
-	return false;
-}
-
-bool MFDvariable::flipback_variable()
-{
-	return flip_variable();
-}
-
-void MFDvariable::inc_variable()
-{
-}
-
-void MFDvariable::dec_variable()
-{
-}
-
 void MFDvariable::sethandle(OBJHANDLE tpointer)
 {}
 

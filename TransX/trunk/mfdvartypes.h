@@ -49,8 +49,8 @@ public:
 	virtual void showadjustment(HDC hDC, int width, int line) const{};
 	virtual void ch_adjmode(){};
 	virtual void chm_adjmode(){};
-	virtual bool flip_variable();
-	virtual bool flipback_variable();
+	virtual void inc_variable();
+	virtual void dec_variable();
 	void init(MFDvarhandler *vars,int viewmode1, int viewmode2, char *vname);
 	MFDvarshiplist();
 	virtual ~MFDvarshiplist();
@@ -68,11 +68,11 @@ protected:
 	char intbuffer[30];
 	char *ibuffer;
 public:
-	virtual bool flip_variable();
+	virtual void inc_variable();
 	virtual void setall(class MFDvariable *var);
 	bool validate();
 	void initvalidate();
-	virtual bool flipback_variable();
+	virtual void dec_variable();
 	virtual bool show(HDC hDC, int width, int line);
 	virtual void ch_adjmode();
 	virtual void chm_adjmode();
@@ -127,7 +127,7 @@ private:
 	int value; // Variable indicating the projection type
 	int limit; // Highest permissible value - Note - 5 labels MAX!!
 public:
-	bool flip_variable(); //Change to next projection
+	void inc_variable(); //Change to next projection
 	operator int() {return value;};
 	int operator = (int tvalue){value=tvalue;return value;};
 	int getivalue() const; // Function to obtain value
@@ -143,8 +143,8 @@ public:
 class MFDsemiintdiscrete: public MFDvariable {
 	int value;//variable indicating double the actual value
 public:
-	virtual bool flip_variable();
-	virtual bool flipback_variable();
+	virtual void inc_variable();
+	virtual void dec_variable();
 	operator double(){return value*0.5;};
 	double operator = (double tvalue){value=int(floor(2.0*tvalue));return value;};
 	double getvalue() const{return double(value)*0.5;};

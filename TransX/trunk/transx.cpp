@@ -222,10 +222,10 @@ bool TransxMFD::ConsumeKeyBuffered (DWORD key)
 		if (access) currvar->chm_adjmode();
 		return true;
 	case OAPI_KEY_MINUS:
-		if (access)	return currvar->flipback_variable();
+		if (access)	currvar->dec_variable();
 		return true;
 	case OAPI_KEY_EQUALS:
-		if (access) return currvar->flip_variable();
+		if (access) currvar->inc_variable();
 		return true;
 	}
 	return false; //Key not one of cases above
