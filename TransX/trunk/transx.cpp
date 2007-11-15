@@ -144,9 +144,15 @@ bool TransxMFD::ConsumeKeyImmediate(char *kstate)
 	MFDvariable *varpointer=viewstate->GetCurrVariable();
 	if (varpointer==NULL) return false;
 	if  (*(kstate+OAPI_KEY_MINUS)==-128)
-		return varpointer->dec_variable();
+	{
+		varpointer->dec_variable();
+		return true;
+	}
 	if (*(kstate+OAPI_KEY_EQUALS)==-128)
-		return varpointer->inc_variable();
+	{
+		varpointer->inc_variable();
+		return true;
+	}
 	return false;
 }
 

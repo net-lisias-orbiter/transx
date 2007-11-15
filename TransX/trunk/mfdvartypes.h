@@ -64,7 +64,7 @@ protected:
 	OBJHANDLE pointer;
 	OBJHANDLE centralbody;
 	class mapfunction *mappointer;
-	int ivalue;
+	int value;
 	char intbuffer[30];
 	char *ibuffer;
 public:
@@ -77,14 +77,14 @@ public:
 	virtual void ch_adjmode();
 	virtual void chm_adjmode();
 	virtual void showadjustment(HDC hDC, int width, int line) const;
-	virtual int getivalue() const;
+	virtual int getvalue() const;
 	virtual OBJHANDLE gethandle() const;
 	virtual bool loadvalue(char *buffer);
 	virtual bool SetVariableBody(char *str);
 	virtual int getadjtype() const {return 0;};
 	virtual void getsaveline(char *buffer) const;
 	void updatecentralbody(OBJHANDLE tcentral){centralbody=tcentral;};
-	operator int(){return ivalue;}
+	operator int(){return value;}
 	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname,OBJHANDLE tcentralbody);
 	~MFDvarmoon();
 };
@@ -99,8 +99,8 @@ protected:
 public:
 	operator double() {return value;};
 	double operator = (double tvalue){value=tvalue;return value;};
-	virtual bool inc_variable(); // Increase the variable
-	virtual bool dec_variable(); //Decrease the variable
+	virtual void inc_variable(); // Increase the variable
+	virtual void dec_variable(); //Decrease the variable
 	bool show(HDC hDC, int width, int line);
 	double getvalue() const; //Get the value
 	void setvalue(double tvalue);
@@ -114,6 +114,8 @@ public:
 class MFDvarMJD: public MFDvarfloat {
 public:
 	bool show(HDC hDC, int width, int line);
+	virtual void inc_variable(); // Increase the variable
+	virtual void dec_variable(); //Decrease the variable
 
 	double operator = (double tvalue){value=tvalue;return value;};
 };
@@ -159,32 +161,17 @@ public:
 	~MFDsemiintdiscrete();
 };
 
-class MFDvarangle: public MFDvariable {
+class MFDvarangle: public MFDvarfloat {
 private:
-	double value,defaultvalue; // Value of the angle
-	double cosvalue;//Cosine of the angle - calculated here to avoid repeated recalculation later
-	double sinvalue; //Sin of the angle - as above
-	double min; // Minimum legal value
-	double max; // Maximum legal value
-	double increment; // Increment value
 	bool loop; //If true, then loops from min to max
 public:
-	operator double() {return value;};
 	double operator = (double tvalue){setvalue(tvalue);return tvalue;};
-	bool inc_variable(); //Increase the variable
-	bool dec_variable(); //Decrease the variable
+	virtual void inc_variable(); // Increase the variable
+	virtual void dec_variable(); //Decrease the variable
 	bool show(HDC hDC, int width, int line);
-	double getvalue() const;
-	void setvalue(double tvalue);
-	void getsincos(double *sin, double *cos) const;
 	double getsin() const;
 	double getcos() const;
-	virtual void getsaveline(char *buffer) const;
-	virtual bool loadvalue(char *buffer);
-	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname, int vadjmode, double vvalue, double vcosvalue, double vsinvalue,
-						 double vmin, double vmax, double vincrement, bool vloop);
-	MFDvarangle();
-	~MFDvarangle();
+	void init(MFDvarhandler *vars,char *vname, bool vloop);
 };
 
 #endif

@@ -61,18 +61,11 @@ public:
 	int getadjmode() const; //Get the current adjustment mode
 	virtual int getadjtype() const;//Get the correct adjustment method
 	// Following four implemented to do nothing much - designed to overload
-	virtual bool inc_variable(); //Increase the variable
-	virtual bool dec_variable(); //Decrease the variable
+	virtual void inc_variable(); //Increase the variable
+	virtual void dec_variable(); //Decrease the variable
 	virtual bool flip_variable(); // Change the variable in discrete amounts
 	virtual bool flipback_variable();//Change the variable in discrete amounts
 	virtual bool show(HDC hDC, int width, int line);
-	virtual double getvalue() const; // Virtual functions for data access - implemented as safety values here
-	virtual int getivalue() const;
-	virtual void getsincos(double *sin, double *cos) const;
-	virtual double getsin() const;
-	virtual double getcos() const;
-	virtual void setvalue(double tvalue);
-	virtual void setivalue(int tvalue);
 	virtual void sethandle(OBJHANDLE tpointer);
 	virtual void setall(class MFDvariable *var);
 	virtual OBJHANDLE gethandle() const;

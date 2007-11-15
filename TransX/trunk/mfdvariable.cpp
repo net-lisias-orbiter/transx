@@ -67,8 +67,6 @@ void MFDvariable::setshow(bool value)
 
 void MFDvariable::setall(class MFDvariable *var)
 {
-	setvalue(var->getvalue());
-	setivalue(var->getivalue());
 	sethandle(var->gethandle());
 }
 
@@ -237,53 +235,16 @@ bool MFDvariable::flipback_variable()
 	return flip_variable();
 }
 
-bool MFDvariable::inc_variable()
+void MFDvariable::inc_variable()
 {
-	return false;
 }
 
-bool MFDvariable::dec_variable()
+void MFDvariable::dec_variable()
 {
-	return false;
 }
-
-void MFDvariable::getsincos(double *sin, double *cos) const //Sensible default behaviour if someone miscalls function
-{
-	*sin=0;
-	*cos=1;
-}
-
-//Returns internally consistent values for MFDvariables that do not overload this function
-double MFDvariable::getsin() const
-{
-	return (double) 0;
-}
-
-double MFDvariable::getcos() const
-{
-	return (double) 1;
-}
-
-void MFDvariable::setvalue(double tvalue)
-{}
-
-void MFDvariable::setivalue(int tvalue)
-{}
 
 void MFDvariable::sethandle(OBJHANDLE tpointer)
 {}
-
-double MFDvariable::getvalue() const
-{
-	double temp=0;
-	return temp;
-}
-
-int MFDvariable::getivalue() const
-{
-	int temp=0;
-	return temp;
-}
 
 OBJHANDLE MFDvariable::gethandle() const
 {

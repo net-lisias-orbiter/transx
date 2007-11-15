@@ -36,7 +36,7 @@ bool minorejectplan::init(class MFDvarhandler *vars, class basefunction *base)
 	radius=oapiGetSize(base->gethmajor());
 
 	m_ped.init(vars,3,3,"Pe Distance",1, radius*1.2, 0, radius*1000, 0.05, 1000);
-	m_ejorient.init(vars,3,3,"Ej Orientation", 1, 0, 1, 0, -PI, PI, PI/90, true);
+	m_ejorient.init(vars,"Ej Orientation", true);
 	m_equatorial.init(vars,3,3,"Equatorial view",0,1,"No","Yes","","","");
 	ibase=base;
 	base->setnumberviews(3);
@@ -513,8 +513,8 @@ void majejectplan::graphupdate(HDC hDC, GRAPH *graph,basefunction *base)
 bool slingejectplan::init(class MFDvarhandler *vars, class basefunction *base)
 {
 	m_totalvel.init(vars,3,3,"Velocity.",1,0, 0,1e8,0.1,1000);
-	m_outwardangle.init(vars,3,3,"Outward angle",1,0,1,0,-PI,PI,PI/45,true);
-	m_incangle.init(vars,3,3,"Inc. angle",1,0,1,0,-PI,PI,PI/90,false);
+	m_outwardangle.init(vars,"Outward angle",true);
+	m_incangle.init(vars,"Inc. angle",false);
 	m_inheritvel.init(vars,3,3,"Inherit Vel.",0,1,"Yes","No","","","");
 	m_ejdate.init(vars,3,3,"Eject date",1,0,0,1e20,0.000005,1000000);
 	m_ejdate=oapiGetSimMJD();//Temporary default.
@@ -713,8 +713,8 @@ void minorejectplan::calculate(class MFDvarhandler *vars,basefunction *base)
 	VECTOR3 txaxis=unitise(ejectvector);
 	VECTOR3 tzaxis=unitise(crossproduct(ejectvector, rminplane));
 	VECTOR3 tyaxis=unitise(crossproduct(ejectvector, tzaxis));
-	double ejorientsinvalue, ejorientcosvalue;
-	m_ejorient.getsincos(&ejorientsinvalue, &ejorientcosvalue);
+	double ejorientsinvalue = m_ejorient.getsin();
+	double ejorientcosvalue = m_ejorient.getcos();
 	VECTOR3 tnaxis=tzaxis*ejorientcosvalue+tyaxis*ejorientsinvalue;
 
 	//Get eccentricity for hypothetical orbit
