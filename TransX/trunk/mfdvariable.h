@@ -39,8 +39,10 @@ protected:
 	char helpstring2[MAX_HELPSTRING_LENGTH];//Help string
 	int adjmode; // Integer representing the adjustment mode - use depends on class
 	bool showvariable;
+	bool continuous; // allows continuous adjustment of variable (eg, angle)
 public:
 	MFDvariable();
+	bool IsContinuous() {return continuous;};
 	void setcmdnugget(cmdnugget *nugget);
 	void execute();//Executes any command nugget installed.
 	void initialise(class MFDvarhandler *vars,int viewmode1,int viewmode2);

@@ -320,7 +320,9 @@ int MFDvarmoon::getvalue() const
 }
 
 MFDvarfloat::MFDvarfloat()
-{}
+{
+	continuous = true;
+}
 
 void MFDvarfloat::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname, int vadjmode, double vvalue, double vmin, double vmax, double vincrement, double vlogborder)
 {

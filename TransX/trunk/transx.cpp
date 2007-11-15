@@ -172,7 +172,7 @@ bool TransxMFD::ConsumeButton(int bt, int event)
 		return ConsumeKeyBuffered (btkey[bt]);
 	}
 	// At this point, only the possibility of immediate consumption...
-	if (!(event & PANEL_MOUSE_LBPRESSED)) return false; //Mouse button is down on 9 or 10
+	if (!(event & PANEL_MOUSE_LBPRESSED) || !varpointer->IsContinuous()) return false; //Mouse button is down on 9 or 10
 	if (bt==9)
 		varpointer->dec_variable();
 	if (bt==8)

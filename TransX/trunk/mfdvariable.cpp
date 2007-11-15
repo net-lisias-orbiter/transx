@@ -30,6 +30,7 @@
 
 MFDvariable::MFDvariable()
 {
+	continuous = false;
 	showvariable=true;
 	inugget=NULL;
 	execstatus=execcountdown=0;
