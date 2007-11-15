@@ -46,12 +46,11 @@ void MFDvarmoon::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vnam
 {
 	initialise(vars,viewmode1,viewmode2);
 	strcpy(name,vname);
-	ibuffer=intbuffer;
-	strcpy(ibuffer,"");
+	strcpy(intbuffer,"");
 	centralbody=tcentralbody;
 	mappointer=mapfunction::getthemap();
 	value=0;
-	pointer=NULL;
+	target=NULL;
 	adjmode=0;
 }
 
@@ -59,18 +58,10 @@ void MFDvarmoon::setall(class MFDvariable *var)
 {
 	class MFDvarmoon *ivar=dynamic_cast<class MFDvarmoon*>(var);
 	if (ivar==NULL) return;
-	pointer=ivar->pointer;
+	target=ivar->target;
 	centralbody=ivar->centralbody;
 	value=ivar->value;
 	initvalidate();
-}
-
-MFDsemiintdiscrete::~MFDsemiintdiscrete()
-{}
-
-void MFDsemiintdiscrete::dec_variable()
-{
-	if (value>0) value--;
 }
 
 MFDvarshiplist::MFDvarshiplist()
@@ -125,11 +116,6 @@ void MFDvarshiplist::addtolist(char *name)
 	shiplisthead.addfront(temp);
 }
 
-void MFDsemiintdiscrete::inc_variable()
-{
-	value++;
-}
-
 void MFDvarmoon::dec_variable()
 {
 	if (adjmode==0)
@@ -140,27 +126,26 @@ void MFDvarmoon::dec_variable()
 			break;
 		case 1:
 			++value;
-			pointer=mappointer->getfirstmoon(centralbody);
+			target=mappointer->getfirstmoon(centralbody);
 			initvalidate();
-			if (pointer==NULL)
+			if (target==NULL)
 			{
 				value=0;
 			}
 			break;
 		case 2:
-			pointer=mappointer->getnextpeer(pointer);
+			target=mappointer->getnextpeer(target);
 			initvalidate();
-			if (pointer==NULL)
+			if (target==NULL)
 			{
 				value=0;
-				strcpy(ibuffer,"");
+				strcpy(intbuffer,"");
 			}
 			break;
 		default:
 			value=0;
-			pointer=NULL;
+			target=NULL;
 			break;
-
 		}
 	}
 	else
@@ -169,8 +154,8 @@ void MFDvarmoon::dec_variable()
 
 void MFDvarmoon::initvalidate()
 {
-	if (pointer!=NULL)
-		oapiGetObjectName(pointer,ibuffer,30);
+	if (target!=NULL)
+		oapiGetObjectName(target,intbuffer,30);
 }
 
 void MFDvarmoon::inc_variable()
@@ -180,26 +165,26 @@ void MFDvarmoon::inc_variable()
 		switch (value){
 		case 0:
 			value=2;
-			pointer=mappointer->getlastmoon(centralbody);
+			target=mappointer->getlastmoon(centralbody);
 			initvalidate();
-			if (pointer==NULL)
+			if (target==NULL)
 				value=1;
 			break;
 		case 1:
 			--value;
 			break;
 		case 2:
-			pointer=mappointer->getpreviouspeer(pointer);
+			target=mappointer->getpreviouspeer(target);
 			initvalidate();
-			if (pointer==NULL)
+			if (target==NULL)
 			{
 				value=1;
-				strcpy(ibuffer,"");
+				strcpy(intbuffer,"");
 			}
 			break;
 		default:
 			value=0;
-			pointer=NULL;
+			target=NULL;
 			break;
 		}
 	}
@@ -208,11 +193,6 @@ void MFDvarmoon::inc_variable()
 }
 
 void MFDvarmoon::ch_adjmode()
-{
-	adjmode=1-adjmode;
-}
-
-void MFDvarmoon::chm_adjmode()
 {
 	adjmode=1-adjmode;
 }
@@ -240,8 +220,8 @@ void MFDvarmoon::getsaveline(char *buffer) const
 {
 	getsaveline1(buffer);
 	char tbuffer[30];
-	if (pointer!=NULL)
-		oapiGetObjectName(pointer,tbuffer,30);
+	if (target!=NULL)
+		oapiGetObjectName(target,tbuffer,30);
 	else
 	{
 		if (value==1)
@@ -254,30 +234,30 @@ void MFDvarmoon::getsaveline(char *buffer) const
 
 bool MFDvarmoon::loadvalue(char *buffer)
 {
-	strcpy(ibuffer,buffer);
+	strcpy(intbuffer,buffer);
 	if (strcmp(buffer,"None")==0)
 	{
-		pointer=NULL;
+		target=NULL;
 		value=0;
 		return true;
 	}
 	if (strcmp(buffer,"Escape")==0)
 	{
-		pointer=NULL;
+		target=NULL;
 		value=1;
 		return true;
 	}
 	value=2;
-	pointer=oapiGetGbodyByName(buffer);
-	if (pointer==NULL)
+	target=oapiGetGbodyByName(buffer);
+	if (target==NULL)
 	{
-		pointer=oapiGetObjectByName(buffer);
+		target=oapiGetObjectByName(buffer);
 		value=3;
 	}
-	if (pointer==NULL)
+	if (target==NULL)
 		value=0;
 	else
-		strcpy(ibuffer,buffer);
+		strcpy(intbuffer,buffer);
 	return true;
 }
 
@@ -292,26 +272,26 @@ bool MFDvarmoon::SetVariableBody(char *str)
 	OBJHANDLE temp2=mappointer->getcurrbody(temp);
 	if (temp2!=centralbody)
 		return false;
-	pointer=temp;
-	strcpy(ibuffer,str);
+	target=temp;
+	strcpy(intbuffer,str);
 	value=3;
 	return true;
 }
 
 bool MFDvarmoon::validate()
 {
-	OBJHANDLE temp=oapiGetObjectByName(ibuffer);
-	if (temp==pointer) return true;
+	OBJHANDLE temp=oapiGetObjectByName(intbuffer);
+	if (temp==target) return true;
 	return false;
 }
 
 bool MFDvarmoon::show(HDC hDC, int width, int line)
 {
 	char buffer[20];
-	if (pointer!=NULL)
+	if (target!=NULL)
 	{
-		oapiGetObjectName(pointer,buffer,20);
-		strcpy(ibuffer,buffer);
+		oapiGetObjectName(target,buffer,20);
+		strcpy(intbuffer,buffer);
 	}
 	else
 	{
@@ -326,7 +306,7 @@ bool MFDvarmoon::show(HDC hDC, int width, int line)
 
 OBJHANDLE MFDvarmoon::gethandle() const
 {
-	if (value!=1) return pointer;
+	if (value!=1) return target;
 	OBJHANDLE temp=mappointer->getmajor(centralbody);
 	if (temp==centralbody)
 		return NULL;
@@ -418,6 +398,19 @@ bool MFDvarfloat::loadvalue(char *buffer)
 {
 	value=atof(buffer);
 	return true;
+}
+
+void MFDvarfloat::ch_adjmode()
+// Change the adjustment mode of this MFDvariable
+{
+	if (adjmode==0) return;
+	if (++adjmode>7) adjmode=1;
+}
+
+void MFDvarfloat::chm_adjmode()
+{
+	if (adjmode==0) return;
+	if (--adjmode<1) adjmode=7;
 }
 
 void MFDvarfloat::showadjustment(HDC hDC, int width, int line) const
@@ -572,9 +565,6 @@ void MFDvarMJD::dec_variable()
 		value = oapiGetSimMJD();
 }
 
-MFDvardiscrete::MFDvardiscrete()
-{}
-
 void MFDvarshiplist::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname)
 {
 	initialise(vars,viewmode1,viewmode2);
@@ -637,19 +627,6 @@ void MFDvardiscrete::inc_variable()
 	if (++value>limit)
 		value=0;
 }
-
-void MFDvardiscrete::setivalue(int tvalue)
-{
-	value=tvalue;
-}
-
-int MFDvardiscrete::getivalue() const
-{
-	return value;
-}
-
-MFDvardiscrete::~MFDvardiscrete() 
-{}
 
 void MFDvarangle::init(MFDvarhandler *vars,char *vname, bool vloop)
 {

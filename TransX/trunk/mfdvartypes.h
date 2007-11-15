@@ -61,21 +61,20 @@ public:
 	
 class MFDvarmoon : public MFDvariable {
 protected:
-	OBJHANDLE pointer;
+	OBJHANDLE target;
 	OBJHANDLE centralbody;
 	class mapfunction *mappointer;
 	int value;
 	char intbuffer[30];
-	char *ibuffer;
 public:
 	virtual void inc_variable();
+	virtual void dec_variable();
 	virtual void setall(class MFDvariable *var);
 	bool validate();
 	void initvalidate();
-	virtual void dec_variable();
 	virtual bool show(HDC hDC, int width, int line);
-	virtual void ch_adjmode();
-	virtual void chm_adjmode();
+	virtual void ch_adjmode();					// toggles between craft and planet/moon
+	virtual void chm_adjmode() {ch_adjmode();};	// toggles between craft and planet/moon
 	virtual void showadjustment(HDC hDC, int width, int line) const;
 	virtual int getvalue() const;
 	virtual OBJHANDLE gethandle() const;
@@ -100,6 +99,8 @@ public:
 	double operator = (double tvalue){value=tvalue;return value;};
 	virtual void inc_variable(); // Increase the variable
 	virtual void dec_variable(); //Decrease the variable
+	virtual void ch_adjmode();
+	virtual void chm_adjmode();
 	virtual void showadjustment(HDC hDC, int width, int line) const;
 	bool show(HDC hDC, int width, int line);
 	double getvalue() const; //Get the value
@@ -130,35 +131,24 @@ public:
 	void inc_variable(); //Change to next projection
 	operator int() {return value;};
 	int operator = (int tvalue){value=tvalue;return value;};
-	int getivalue() const; // Function to obtain value
-	void setivalue(int tvalue);
 	bool show(HDC hDC, int width, int line);
 	virtual void getsaveline(char *buffer) const;
 	virtual bool loadvalue(char *buffer);
 	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname, int vvalue, int vlimit, char *st1, char *st2, char *st3, char *st4, char *st5);
-	MFDvardiscrete();
-	~MFDvardiscrete();
 };
 
 class MFDsemiintdiscrete: public MFDvariable {
-	int value;//variable indicating double the actual value
+	int value;//variable indicating twice the actual value
 public:
-	virtual void inc_variable();
-	virtual void dec_variable();
+	virtual void inc_variable() {value++;};
+	virtual void dec_variable() {if (value>0) value--;};
 	operator double(){return value*0.5;};
-	double operator = (double tvalue){value=int(floor(2.0*tvalue));return value;};
-	double getvalue() const{return double(value)*0.5;};
-	void setvalue(double tvalue){value=int(floor(tvalue*2.0));};
+	double operator = (double tvalue){value=int(2.0*tvalue);return value;};
 	virtual void getsaveline(char *buffer) const;
 	virtual bool loadvalue(char *buffer);
 	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname,int tvalue);
-	virtual void showadjustment(HDC hDC,int width,int line){};//There's no adjustment to show
-	virtual void ch_adjmode(){};//or adjust
-	virtual void chm_adjmode(){};
 	virtual bool show(HDC hDC,int width,int line);
 	MFDsemiintdiscrete(){value=0;};
-
-	~MFDsemiintdiscrete();
 };
 
 class MFDvarangle: public MFDvarfloat {

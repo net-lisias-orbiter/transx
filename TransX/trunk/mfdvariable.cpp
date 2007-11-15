@@ -170,19 +170,6 @@ int MFDvariable::getadjmode() const
 	return adjmode;
 }
 
-void MFDvariable::ch_adjmode()
-// Change the adjustment mode of this MFDvariable
-{
-	if (adjmode==0) return;
-	if (++adjmode>7) adjmode=1;
-}
-
-void MFDvariable::chm_adjmode()
-{
-	if (adjmode==0) return;
-	if (--adjmode<1) adjmode=7;
-}
-
 void MFDvariable::sethandle(OBJHANDLE tpointer)
 {}
 
@@ -191,7 +178,6 @@ OBJHANDLE MFDvariable::gethandle() const
 	OBJHANDLE temp=NULL;
 	return temp;
 }
-
 
 MFDvariable::~MFDvariable() 
 {

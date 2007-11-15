@@ -50,14 +50,14 @@ public:
 	bool showgeneric(HDC hDC,int width,int line, char *inbuff);
 	virtual void showadjustment(HDC hDC, int width, int line) const {}; //Show the adjustment mode
 	void getsaveline1(char *buffer) const;//Creates first part of save line
-	void gethelpstrings(char *help1,char *help2) const;//Returns help strings
+	void gethelpstrings(char *help1, char *help2) const;//Returns help strings
 	void sethelpstrings(char *help1, char *help2);//Sets help strings
 	void getname(char *buffer) const;
 	virtual void getsaveline(char *buffer) const;//Creates second line of save - overloaded
 	virtual bool loadvalue(char *buffer);//Set value according to string
 	virtual void setadjmode(int tadjmode);//Sets the adjustment mode
-	virtual void ch_adjmode(); // Change the adjustment mode
-	virtual void chm_adjmode();
+	virtual void ch_adjmode() {}; // Change the adjustment mode
+	virtual void chm_adjmode() {};
 	int getadjmode() const; //Get the current adjustment mode
 	virtual int getadjtype() const;//Get the correct adjustment method
 	virtual void inc_variable() = 0; //Increase the variable
