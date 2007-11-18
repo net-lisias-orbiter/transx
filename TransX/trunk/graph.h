@@ -30,6 +30,7 @@ friend class orbitelements;
 public:
 	void drawvectorline(HDC hDC, const VECTOR3 &line);//Draws vector line at current projection & scaling
 	void drawplanet(HDC hDC, OBJHANDLE body); //Draw circle representing planet
+	void drawatmosphere(HDC hDC, OBJHANDLE body); //Draw circle representing atmosphere
 	void setprojection(const class orbitelements &torbit);//View set from orbit's plane vector
 	void setprojection(const VECTOR3 &projection);// View set from vector
 	void setprojection(const VECTOR3 &txaxis, const VECTOR3 &tyaxis, const VECTOR3 &tzaxis);//Explicitly set axes
@@ -44,6 +45,7 @@ public:
 	void getviewwindow(DWORD *xstart, DWORD *ystart, DWORD *xend, DWORD *yend);//Get back above info
 	double getviewscale();//Get viewscale number
 private:
+	void drawcircle(HDC hDC, double size); //Draw circle representing planet
 	VECTOR3 xaxis, yaxis, zaxis; // projection vectors
 	DWORD ixstart, iystart, ixend, iyend, windowsize;//window parameters
 	double scale;//scaling factor for diagram

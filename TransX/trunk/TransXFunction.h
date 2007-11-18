@@ -28,12 +28,28 @@
 #include "graph.h"
 
 #define MAX_HELPSTRING_LENGTH	40
-#define NUM_PENS				6
+#define PEN_DEFAULT				Grey
+#define PEN_PLANET				Grey
+#define PEN_HYPO				Yellow
+#define PEN_CRAFT				Green
+#define PEN_ATMOSPHERE			Blue
 
 class transxstate;
 
 class TransXFunction: public MFDFunction
 {
+public:
+	enum Pen
+	{ 
+		Green = 0,
+		Blue,
+		Yellow,
+		Red,
+		Grey,
+		White,
+		NUM_PENS
+	};
+
 private:
 	int numberviews;
 	void initpens(void);

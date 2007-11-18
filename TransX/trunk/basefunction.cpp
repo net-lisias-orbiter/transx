@@ -870,20 +870,17 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 
 		// Draw the craft orbit
 		HPEN pen;
-		DWORD i=1;
-		pen=SelectDefaultPen(hDC,i);
+		pen=SelectDefaultPen(hDC,Green);
 		graph.draworbit(craft, hDC, !previousexists);
 
 		//Draw the minor object orbit
-		i=2;
-		pen=SelectDefaultPen(hDC,i);
+		pen=SelectDefaultPen(hDC,Blue);
 		graph.draworbit(rmin, hDC, true);
 
 		//Draw the hypothetical manoeuvre orbit
 		if (hypormaj.isvalid())
 		{
-			i=3;
-			pen=SelectDefaultPen(hDC,i);
+			pen=SelectDefaultPen(hDC,Yellow);
 			graph.draworbit(hypormaj,hDC,true);
 		}
 
@@ -893,26 +890,24 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		}
 
 		//Draw the central body
-		i=5;
-		pen=SelectDefaultPen(hDC,i);
+		pen=SelectDefaultPen(hDC,PEN_ATMOSPHERE);
+		graph.drawatmosphere(hDC,hmajor); 
+		pen=SelectDefaultPen(hDC,Grey);
 		graph.drawplanet(hDC,hmajor); 
 
 		// If there is a target, draw it, and if there's an intercept,the targeting lines
 		if (target.isvalid())
 		{
-			i=2;
-			pen=SelectDefaultPen(hDC,i);
+			pen=SelectDefaultPen(hDC,Blue);
 			graph.draworbit(target, hDC, true);
 			if (interceptflag)
 			{
-				i=3;
-				pen=SelectDefaultPen(hDC,i);
+				pen=SelectDefaultPen(hDC,Yellow);
 				VECTOR3 craftpos, targetpos, intersect;
 				primary.getpositions(&craftpos,&targetpos);
 				graph.drawtwovector(hDC, craftpos,targetpos);
 				primary.getplanecept(&intersect);
-				i=5;
-				pen=SelectDefaultPen(hDC,i);
+				pen=SelectDefaultPen(hDC,Grey);
 				graph.drawvectorline(hDC,intersect);
 
 				//Describe targeting quality

@@ -29,6 +29,7 @@
 #include "transxstate.h"
 #include "basefunction.h"
 #include "planfunction.h"
+#include "TransXFunction.h"
 
 bool minorejectplan::init(class MFDvarhandler *vars, class basefunction *base)
 {
@@ -225,7 +226,7 @@ bool minorejectplan::maingraph(HDC hDC,GRAPH *graph, basefunction *base)
 
 	ORBIT craft=base->getcraftorbit();
 	if (!craft.isvalid() || !planorbit.isvalid())return true;
-	pen=base->SelectDefaultPen(hDC,5);
+	pen=base->SelectDefaultPen(hDC,TransXFunction::Grey);
 	VECTOR3 intersect=planorbit.getintersectvector(craft);
 	graph->drawvectorline(hDC,intersect);
 	return true;
@@ -249,11 +250,13 @@ bool slingshot::maingraph(HDC hDC,GRAPH *graph,basefunction *base)
 	craft.getinfinityvelvector(false,&velvector);//Now finally set for real
 	graph->setprojection(velvector);
 
-	pen=base->SelectDefaultPen(hDC,5);
+	pen=base->SelectDefaultPen(hDC,TransXFunction::PEN_ATMOSPHERE);
+	graph->drawatmosphere(hDC,hmajor); 
+	pen=base->SelectDefaultPen(hDC,TransXFunction::Grey);
 	graph->drawplanet(hDC,hmajor); 
-	pen=base->SelectDefaultPen(hDC,1);
+	pen=base->SelectDefaultPen(hDC,TransXFunction::Green);
 	graph->drawvector(hDC,craftpos);
-	pen=base->SelectDefaultPen(hDC,3);
+	pen=base->SelectDefaultPen(hDC,TransXFunction::Yellow);
 	graph->drawvector(hDC,planpos);
 	return false;//No need to draw any more graphs
 }
@@ -263,7 +266,7 @@ void encounterplan::graphupdate(HDC hDC,GRAPH *graph,basefunction *base)
 {
 	HPEN pen;
 	drawnbase=false;
-	pen=base->SelectDefaultPen(hDC,3);
+	pen=base->SelectDefaultPen(hDC,TransXFunction::Yellow);
 	OBJHANDLE hvessel=base->gethcraft();
 	VESSEL *curfocus=oapiGetVesselInterface(hvessel);
 	VESSELSTATUS status;
@@ -307,12 +310,12 @@ void encounterplan::graphupdate(HDC hDC,GRAPH *graph,basefunction *base)
 void slingshot::graphupdate(HDC hDC, GRAPH *graph,basefunction *base)
 {
 	HPEN pen;
-	pen=base->SelectDefaultPen(hDC,3);
+	pen=base->SelectDefaultPen(hDC,TransXFunction::Yellow);
 	planorbit.draworbit(hDC,graph,false);
 	ORBIT craft=base->getcraftorbit();
 	if (!craft.isvalid()) return;
 	VECTOR3 intersect=planorbit.getintersectvector(craft);
-	pen=base->SelectDefaultPen(hDC,5);
+	pen=base->SelectDefaultPen(hDC,TransXFunction::Grey);
 	graph->drawvectorline(hDC,intersect);
 }
 
@@ -494,7 +497,7 @@ void majejectplan::wordupdate(HDC hDC,int width, int height, basefunction *base)
 
 void minorejectplan::graphupdate(HDC hDC, GRAPH *graph,basefunction *base)
 {
-	base->SelectDefaultPen(hDC,3);
+	base->SelectDefaultPen(hDC,TransXFunction::Yellow);
 	planorbit.draworbit(hDC,graph,true);
 }
 
@@ -506,7 +509,7 @@ void majejectplan::graphscale(GRAPH *graph)
 
 void majejectplan::graphupdate(HDC hDC, GRAPH *graph,basefunction *base)
 {
-	base->SelectDefaultPen(hDC,3);
+	base->SelectDefaultPen(hDC,TransXFunction::Yellow);
 	planorbit.draworbit(hDC,graph,false);
 }
 

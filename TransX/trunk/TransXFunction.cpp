@@ -310,12 +310,12 @@ void TransXFunction::gethandles(OBJHANDLE *thmajor, OBJHANDLE *thminor, OBJHANDL
 
 void TransXFunction::initpens(void)								//(rbd+)
 {
-	pens[0] = CreatePen(PS_SOLID, 0 , RGB(0x00, 0xFF, 0x00));	// Green - stands for craft
-	pens[1] = CreatePen(PS_SOLID, 0 , RGB(0x00, 0x00, 0xCD));	// Blue - stands for planet
-	pens[2] = CreatePen(PS_DOT, 0 , RGB(0xCD, 0xCD, 0x00));		// Bright yellow - hypos
-	pens[3] = CreatePen(PS_SOLID, 0 , RGB(0xFF, 0x00, 0x00));	// Bright red - unused, but danger
-	pens[4] = CreatePen(PS_SOLID, 0 , RGB(0xC0, 0xC0, 0xC0));	// Light Grey
-	pens[5] = CreatePen(PS_SOLID, 0 , RGB(0xFF, 0xFF, 0xFF));	// Bright white - unused
+	pens[Green]		= CreatePen(PS_SOLID, 0 , RGB(0x00, 0xFF, 0x00));	// Green - stands for craft
+	pens[Blue]		= CreatePen(PS_SOLID, 0 , RGB(0x00, 0x00, 0xCD));	// Blue - stands for planet
+	pens[Yellow]	= CreatePen(PS_DOT,	  0	, RGB(0xCD, 0xCD, 0x00));	// Bright yellow - hypos
+	pens[Red]		= CreatePen(PS_SOLID, 0 , RGB(0xFF, 0x00, 0x00));	// Bright red - unused, but danger
+	pens[Grey]		= CreatePen(PS_SOLID, 0 , RGB(0xC0, 0xC0, 0xC0));	// Light Grey
+	pens[White]		= CreatePen(PS_SOLID, 0 , RGB(0xFF, 0xFF, 0xFF));	// Bright white - unused
 }
 
 
@@ -328,7 +328,7 @@ void TransXFunction::deletepens()
 HPEN TransXFunction::SelectDefaultPen(HDC hDC, int value)
 {
 	if(value < NUM_PENS) //(rbd+)
-		return((HPEN)SelectObject(hDC, pens[value-1]));		// Custom pen
+		return((HPEN)SelectObject(hDC, pens[value]));		// Custom pen
 	else //(rbd-)
 		return state->GetMFDpointer()->SelectDefaultPen(hDC,value);
 }

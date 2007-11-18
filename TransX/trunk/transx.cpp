@@ -68,13 +68,11 @@ void TransxMFD::Update (HDC hDC)
 
 {
 	Title (hDC, "TransX MFD");
-	HPEN pen=SelectDefaultPen(hDC,1);//Selects an Orbiter default pen, and retrieves called pen
+	HPEN pen=SelectDefaultPen(hDC,TransXFunction::Green);//Selects an Orbiter default pen, and retrieves called pen
 	valid=viewstate->doupdate(hDC,W,H,this);
 	shipptrs::refreshsave();//allow save again, as new values are now available
 	SelectObject(hDC,pen);//Replaces initial pen back into hDC. Now the MFD causes no pen creation
-	//SelectDefaultPen(hDC,1);//Switches to an orbiter pen - ensures that on return, no pens created here are still active
 	if (!valid) return;
-	//are given back to Orbiter in the device context
 	int linespacing=H/24;
 	
 	if (debug!=0)

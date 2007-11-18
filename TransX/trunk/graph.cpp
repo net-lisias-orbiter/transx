@@ -26,6 +26,7 @@
 #include "orbitersdk.h"
 #include "mfd.h"
 #include "graph.h"
+#include "TransXFunction.h"
 
 
 void graphset::setviewwindow(DWORD xstart,DWORD ystart,DWORD xend,DWORD yend)
@@ -184,15 +185,7 @@ void graphset::drawplanet(HDC hDC, OBJHANDLE body)
 	int x=int((ixstart+ixend)/2);
 	int y=int((iystart+iyend)/2);
 	if (size*scale>2)
-	{
-		int highx=int(x+size*scale);
-		int lowx=int(x-size*scale);
-		int highy=int(y+size*scale);
-		int lowy=int(y-size*scale);
-		float aarc=0;
-		float barc=360;
-		Arc(hDC,lowx, lowy, highx, highy, highx, y, highx, y);	
-	}
+		drawcircle(hDC, size);
 	else
 	{
 		MoveToEx(hDC,x-6,y,NULL);
@@ -200,6 +193,37 @@ void graphset::drawplanet(HDC hDC, OBJHANDLE body)
 		MoveToEx(hDC,x,y-6,NULL);
 		LineTo(hDC,x,y+6);
 	}
+}
+
+void graphset::drawatmosphere(HDC hDC, OBJHANDLE body)
+{
+	// Draw a circle of the right size to represent the atmosphere of a planet
+	if(oapiPlanetHasAtmosphere(body))
+	{
+		double size = oapiGetPlanetAtmConstants(body)->radlimit;
+		int x=int((ixstart+ixend)/2);
+		int y=int((iystart+iyend)/2);
+		if (size*scale>2)
+			drawcircle(hDC, size);
+		else
+		{
+			MoveToEx(hDC,x-6,y,NULL);
+			LineTo(hDC,x+6,y);
+			MoveToEx(hDC,x,y-6,NULL);
+			LineTo(hDC,x,y+6);
+		}
+	}
+}
+
+void graphset::drawcircle(HDC hDC, double size)
+{
+	int x=int((ixstart+ixend)/2);
+	int y=int((iystart+iyend)/2);
+	int highx=int(x+size*scale);
+	int lowx=int(x-size*scale);
+	int highy=int(y+size*scale);
+	int lowy=int(y-size*scale);
+	Arc(hDC,lowx, lowy, highx, highy, highx, y, highx, y);	
 }
 
 double graphset::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VESSEL *vessel, bool isposition)
@@ -226,8 +250,7 @@ double graphset::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VE
 	int edge=int(windowsize/1.5);
 	int centre=int(windowsize/3);
 	HPEN pen;
-	DWORD i=5;
-	pen=mfd->SelectDefaultPen(hDC,i);
+	pen=mfd->SelectDefaultPen(hDC,TransXFunction::Grey);
 	Arc(hDC, ixstart,iystart+lines,ixstart+edge,iystart+edge+lines,ixstart,iystart+centre,ixstart,iystart+centre);
 	edge-=centre/3;
 	int nearedge=centre/3;
@@ -249,8 +272,7 @@ double graphset::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VE
 	offsetsize=offsetsize/scalar*windowsize/3;
 	int xpos=int(offsetsize*xang+centre+ixstart);
 	int ypos=int(offsetsize*yang+centre+lines+iystart);
-	i=1;
-	pen=mfd->SelectDefaultPen(hDC,i);
+	pen=mfd->SelectDefaultPen(hDC,TransXFunction::Green);
 	MoveToEx(hDC,xpos-3,ypos-3,NULL);
 	LineTo(hDC,xpos+3,ypos+3);
 	MoveToEx(hDC,xpos-3,ypos+3,NULL);
