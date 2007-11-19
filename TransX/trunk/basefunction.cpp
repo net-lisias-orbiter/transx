@@ -818,7 +818,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		double rvel=graph.vectorpointdisplay(hDC, targetvel-craftvel, state->GetMFDpointer(), pV, false);
 		TextShow(hDC,"Rel V: ",0,18*linespacing,rvel);
 		TextShow(hDC,"T to Mnvre ",0,19*linespacing,timeoffset);
-		TextShow(hDC,"Begin Burn ",0,20*linespacing, GetBurnTime(pV, rvel / 2));
+		TextShow(hDC,"Begin Burn ",0,20*linespacing,timeoffset - GetBurnTime(pV, rvel / 2));
 	}
 	else
 	{
@@ -1007,6 +1007,5 @@ double basefunction::GetBurnTime(VESSEL *vessel, double deltaV)
 			T += vessel->GetThrusterMax0(thruster);
 			isp += vessel->GetThrusterIsp0(thruster);
 		}
-		return (deltaV * vessel->GetMass() / (2.0 * T)) * (1 + exp(-deltaV / isp));	// CHECKME
-		return isp * vessel->GetMass() / T * (exp(-deltaV / isp) - 1.0);			// CHECKME
+		return - (isp * vessel->GetMass() / T * (exp(-deltaV / isp) - 1.0));
 }
