@@ -818,6 +818,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		double rvel=graph.vectorpointdisplay(hDC, targetvel-craftvel, state->GetMFDpointer(), pV, false);
 		TextShow(hDC,"Rel V: ",0,18*linespacing,rvel);
 		TextShow(hDC,"T to Mnvre ",0,19*linespacing,timeoffset);
+		TextShow(hDC,"Begin Burn ",0,20*linespacing, GetBurnTime(pV, rvel / 2));
 	}
 	else
 	{
@@ -966,7 +967,6 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 	}
 }
 
-
 void basefunction::Getmode2hypo(VECTOR3 *targetvel)
 // This obtains the current hypothetical orbit in rmin influence
 {
@@ -996,6 +996,17 @@ void basefunction::Getmode2hypo(VECTOR3 *targetvel)
 	hypormaj.init(hypopos, hypovel, (m_ejdate-simstartMJD)*SECONDS_PER_DAY, basisorbit.getgmplanet());
 }
 
-
-
-
+double basefunction::GetBurnTime(VESSEL *vessel, double deltaV)
+{
+		// Returns the time to burn to the required deltaV. Calculates via rocket equation
+	    double T = 0, isp = 0;
+		const int numThrusters = vessel->GetGroupThrusterCount(THGROUP_MAIN);
+		for(int i = 0; i < numThrusters; ++i) 
+		{
+			THRUSTER_HANDLE thruster = vessel->GetGroupThruster(THGROUP_MAIN,i);
+			T += vessel->GetThrusterMax0(thruster);
+			isp += vessel->GetThrusterIsp0(thruster);
+		}
+		return (deltaV * vessel->GetMass() / (2.0 * T)) * (1 + exp(-deltaV / isp));	// CHECKME
+		return isp * vessel->GetMass() / T * (exp(-deltaV / isp) - 1.0);			// CHECKME
+}

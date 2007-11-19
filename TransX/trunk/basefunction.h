@@ -48,6 +48,7 @@ private:
 	class plan *planpointer;
 	int interceptwith;
 	ORBITTIME mode2orbittime,deltavel;
+	double GetBurnTime(VESSEL *vessel, double deltaV);
 protected:
 	INTERCEPT primary;
 	ORBIT craft, rmin, basisorbit, hypormaj, craftincontext, target, context;
