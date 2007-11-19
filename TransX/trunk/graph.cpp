@@ -250,7 +250,7 @@ double graphset::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VE
 	int edge=int(windowsize/1.5);
 	int centre=int(windowsize/3);
 	HPEN pen;
-	pen=mfd->SelectDefaultPen(hDC,TransXFunction::Grey);
+	pen=mfd->SelectDefaultPen(hDC,TransXFunction::White);
 	Arc(hDC, ixstart,iystart+lines,ixstart+edge,iystart+edge+lines,ixstart,iystart+centre,ixstart,iystart+centre);
 	edge-=centre/3;
 	int nearedge=centre/3;
