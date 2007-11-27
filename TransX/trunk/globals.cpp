@@ -305,3 +305,17 @@ MATRIX3 getinvmatrix(const MATRIX3 mat)
 
 	return out;
 }
+
+double GetBurnTime(VESSEL *vessel, double deltaV)
+{
+	// Returns the time to burn to the required deltaV. Calculates via rocket equation
+    double T = 0, isp = 0;
+	const int numThrusters = vessel->GetGroupThrusterCount(THGROUP_MAIN);
+	for(int i = 0; i < numThrusters; ++i) 
+	{
+		THRUSTER_HANDLE thruster = vessel->GetGroupThruster(THGROUP_MAIN,i);
+		T += vessel->GetThrusterMax0(thruster);
+		isp += vessel->GetThrusterIsp0(thruster);
+	}
+	return - (isp * vessel->GetMass() / T * (exp(-deltaV / isp) - 1.0));
+}

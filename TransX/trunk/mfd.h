@@ -37,6 +37,7 @@ void matrixmultiply(const MATRIX3 &first, const VECTOR3 &second, VECTOR3 *result
 void getinvrotmatrix(VECTOR3 arot, MATRIX3 *invrotmatrix);
 MATRIX3 getinvmatrix(const MATRIX3 mat);
 double getdeterminant(const MATRIX3 mat);
+double GetBurnTime(VESSEL *vessel, double deltaV);
 
 // Standard formatting function
 void TextShow(HDC hDC, const char *label, int wpos, int hpos, double value);
