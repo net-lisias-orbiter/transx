@@ -819,6 +819,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		TextShow(hDC,"Rel V: ",0,18*linespacing,rvel);
 		TextShow(hDC,"T to Mnvre ",0,19*linespacing,timeoffset);
 		TextShow(hDC,"Begin Burn ",0,20*linespacing,timeoffset - GetBurnTime(pV, rvel / 2));
+		TextShow(hDC,"Begin Burn NEW",0,21*linespacing,GetBurnStart(pV, timeoffset, rvel));
 	}
 	else
 	{

@@ -319,3 +319,28 @@ double GetBurnTime(VESSEL *vessel, double deltaV)
 	}
 	return - (isp * vessel->GetMass() / T * (exp(-deltaV / isp) - 1.0));
 }
+
+double GetBurnStart(VESSEL *vessel, double instantaneousBurnTime, double deltaV)
+{
+	double thrust = 0, isp = 0;
+	const int numThrusters = vessel->GetGroupThrusterCount(THGROUP_MAIN);
+	for(int i = 0; i < numThrusters; ++i) 
+	{
+		THRUSTER_HANDLE thruster = vessel->GetGroupThruster(THGROUP_MAIN,i);
+		thrust += vessel->GetThrusterMax0(thruster);
+		isp += vessel->GetThrusterIsp0(thruster);
+	}
+
+	double mass = oapiGetMass(vessel);
+	double startAccel = thrust / mass;
+	double mdot = thrust / isp;	// mass flow rate (rate of change of mass)
+	// jerk is rate of change of acceleration - differentiate F/(M - dm * t) using chain rule
+	// jerk is not constant, but assume it is and take the starting value (at t=0)
+	double jerk = thrust * mdot / (mass * mass);
+	double totalBurnTime = GetBurnTime(vessel, deltaV);
+
+	// magic formula calculated from equations of motion of an object under non-uniform acceleration but uniform jerk
+	double startBurn =  instantaneousBurnTime + (startAccel * totalBurnTime) / (2 * startAccel + jerk * totalBurnTime) - totalBurnTime;
+
+	return startBurn;
+}

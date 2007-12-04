@@ -382,6 +382,8 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 		pos+=linespacing;
 		TextShow(hDC,"Begin Burn ",0,pos,timefromstamp - GetBurnTime(pV, deltav / 2));
 		pos+=linespacing;
+		TextShow(hDC,"Begin Burn NEW",0,pos,GetBurnStart(pV, timefromstamp, deltav));
+		pos+=linespacing;
 		double angle=180/PI*acos(cosangle(planpos,craftpos));
 		TextShow(hDC,"Ang. to Pe:",0,pos,angle);
 		pos+=linespacing;
@@ -419,6 +421,9 @@ void slingshot::wordupdate(HDC hDC, int width, int height, basefunction *base)
 		OBJHANDLE hcraft=base->gethcraft();
 		VESSEL *pV=oapiGetVesselInterface(hcraft);
 		TextShow(hDC,"Begin Burn ",0,pos,timetope - GetBurnTime(pV, (outplanpevel-craftreqvel) / 2));
+		pos+=linespacing;
+		TextShow(hDC,"Begin Burn NEW",0,pos,GetBurnStart(pV, timetope, (outplanpevel-craftreqvel)));
+		pos+=linespacing;
 	}
 }
 
