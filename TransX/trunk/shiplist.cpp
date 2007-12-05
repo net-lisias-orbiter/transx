@@ -191,7 +191,7 @@ class viewstate *shipptrs::getviewstate(int mfdpos,class TransxMFD *mfdptr)
 {
 	if (mfdpos<0 || mfdpos>MFDLIST_LENGTH - 1) mfdpos=0;
 	if (mfdlist[mfdpos]==NULL)
-		mfdlist[mfdpos]=new viewstate(mfdpos,mfdptr,this);
+		mfdlist[mfdpos]=new viewstate(mfdpos,this);
 	return mfdlist[mfdpos];
 }
 

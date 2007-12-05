@@ -29,7 +29,7 @@
 
 bool viewstate::renderviewport=true;
 
-viewstate::viewstate(UINT tmfd,class TransxMFD *mfdptr,class shipptrs *shipptrs)
+viewstate::viewstate(UINT tmfd, class shipptrs *shipptrs)
 {
 	viewmode=2;
 	varviewmode=2;
@@ -38,7 +38,6 @@ viewstate::viewstate(UINT tmfd,class TransxMFD *mfdptr,class shipptrs *shipptrs)
 	switchmode=true;
 	mfdactive=false;
 	renderviewport=true;
-	imfd=mfdptr;
 	mfdposition=tmfd;
 	state=shipptrs->gettransxstate();
 }

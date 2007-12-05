@@ -33,8 +33,7 @@ class viewstate
 	bool switchmode;
 	static bool renderviewport;
 	bool mfdactive;//If there's an MFD associated with this
-	class TransxMFD *imfd;
-	viewstate(UINT tmfd,TransxMFD *mfdptr,class shipptrs *shipptrs);
+	viewstate(UINT tmfd, class shipptrs *shipptrs);
 	class transxstate *state;//Pointer to the transxstate associated with this
 	void selfdownshift();
 	void resetshift();
