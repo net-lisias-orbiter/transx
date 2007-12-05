@@ -88,13 +88,13 @@ bool basefunction::soistatus()
 	double soi=mappointer->getsoisize(hmajor);
 	VECTOR3 posvector;
 	oapiGetRelativePos(hmajor,hcraft,&posvector);
-	if (soi*soi*4<vectorsize2(posvector)) return false;
+	if (soi*soi*4<length2(posvector)) return false;
 
 	//Check that we're not too far inside target SOI
 	if (hmajtarget==NULL) return true;
 	soi=mappointer->getsoisize(hmajtarget);
 	oapiGetRelativePos(hmajtarget,hcraft,&posvector);
-	if (soi*soi>vectorsize2(posvector)) return false;
+	if (soi*soi>length2(posvector)) return false;
 	return true;
 }
 
@@ -423,7 +423,6 @@ bool basefunction::initialisevars()
 	m_scale.init(&vars,2,2,"Scale to view",0,2,"All","Target","Craft","","");
 	m_advanced.init(&vars,2,2,"Advanced",0,1,"Off","On","","","");
 	valid=true;
-	setnumberviews(4);
 	m_ejdate=oapiGetSimMJD();
 
 	//Make invisible all variables that sometimes are invisible
@@ -629,8 +628,8 @@ void basefunction::calculate(VECTOR3 *targetvel)
 		VECTOR3 pos,vel;
 		oapiGetRelativeVel(hcraft,hmajor,&vel);
 		oapiGetRelativePos(hcraft,hmajor,&pos);
-		double distance=vectorsize(pos);
-		double velenergy=vectorsize2(vel)*0.5;
+		double distance=length(pos);
+		double velenergy=length2(vel)*0.5;
 		double overallenergy=-GRAVITY*oapiGetMass(hmajor)/distance+velenergy;
 		craft.init(hmajor, hcraft);
 		if (hminor==NULL)
@@ -816,7 +815,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		deltavel.getposvel(&craftpos,&craftvel);
 		VESSEL *pV=oapiGetVesselInterface(hcraft);
 		double rvel=graph.vectorpointdisplay(hDC, targetvel-craftvel, state->GetMFDpointer(), pV, false);
-		TextShow(hDC,"Rel V: ",0,18*linespacing,rvel);
+		TextShow(hDC,"Delta V: ",0,18*linespacing,rvel);
 		TextShow(hDC,"T to Mnvre ",0,19*linespacing,timeoffset);
 		TextShow(hDC,"Begin Burn ",0,20*linespacing,timeoffset - GetBurnTime(pV, rvel / 2));
 		TextShow(hDC,"Begin Burn NEW",0,21*linespacing,GetBurnStart(pV, timeoffset, rvel));
@@ -915,20 +914,19 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 				//Describe targeting quality
 				int hpos=8*linespacing;
 				int wpos=0;
-				int length=sprintf(buffer, "Cl. App. (rough)");
-				TextOut(hDC, wpos, hpos, buffer, length);
+				int len=sprintf(buffer, "Cl. App. (rough)");
+				TextOut(hDC, wpos, hpos, buffer, len);
 				hpos+=linespacing;
-				TextShow(hDC, " ", wpos, hpos, vectorsize(craftpos-targetpos));
+				TextShow(hDC, " ", wpos, hpos, length(craftpos-targetpos));
 				hpos+=linespacing;
 				VECTOR3 relvel;
 				primary.getrelvel(&relvel);
-				TextShow(hDC,"Enc. V:", wpos, hpos, vectorsize(relvel));
+				TextShow(hDC,"Enc. V:", wpos, hpos, length(relvel));
 				hpos+=linespacing;
 				double intercepttime=primary.gettimeintercept();
 				double arrmjd=oapiTime2MJD(intercepttime);
-				length=sprintf(buffer,"Enc. MJD %.4f", arrmjd);
-				TextOut(hDC, wpos, hpos, buffer, length);
-
+				len=sprintf(buffer,"Enc. MJD %.4f", arrmjd);
+				TextOut(hDC, wpos, hpos, buffer, len);
 			}
 		}
 		else
@@ -954,7 +952,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 			}
 			if (hypormaj.isvalid())
 			{
-				TextShow(hDC,"Hyp Ped ",wpos,hpos,hypormaj.getpedistance());
+				TextShow(hDC,"Hyp PeD ",wpos,hpos,hypormaj.getpedistance());
 				hpos+=linespacing;
 				double timeatped=(hypormaj.gettimestamp()+hypormaj.getpedeltatime())/SECONDS_PER_DAY+simstartMJD;
 				int length=sprintf(buffer,"H. Pe MJD %.2f",timeatped);
@@ -983,7 +981,7 @@ void basefunction::Getmode2hypo(VECTOR3 *targetvel)
 
 	//basisorbit.timetovectors(difftime, &ejradius, &ejvel);
 	VECTOR3 forward=unitise(ejvel)*m_prograde;
-	VECTOR3 outward=unitise(crossproduct(ejvel, basisorbit.getplanevector()))*m_outwardvel;
+	VECTOR3 outward=unitise(crossp(ejvel, basisorbit.getplanevector()))*m_outwardvel;
 	VECTOR3 sideward=unitise(basisorbit.getplanevector())*m_chplvel;
 	VECTOR3 ejectvector=forward+outward+sideward; //=Eject vector in basisorbit frame
 

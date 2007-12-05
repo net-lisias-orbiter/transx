@@ -235,11 +235,6 @@ void TransXFunction::saveorbit(FILEHANDLE scn, const ORBIT &saveorbit)
 	savedouble(scn,time);
 }
 
-void TransXFunction::setnumberviews(int tnumberviews)
-{
-	numberviews=tnumberviews;
-}
-
 MFDvarhandler *TransXFunction::getvariablehandler()
 {
 	return &vars;

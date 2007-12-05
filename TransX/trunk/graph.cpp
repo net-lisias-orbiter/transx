@@ -113,8 +113,8 @@ void graphset::setprojection(const VECTOR3 &projection)
 	{
 		VECTOR3 temp={0,-1,0}; // Ecliptic vector
 		zaxis=unitise(projection);
-		VECTOR3 cross=unitise(crossproduct(temp, zaxis)); // Vector of LAN x+z only
-		VECTOR3 xcross=crossproduct(cross, zaxis); //90 around - max out of plane
+		VECTOR3 cross=unitise(crossp(temp, zaxis)); // Vector of LAN x+z only
+		VECTOR3 xcross=crossp(cross, zaxis); //90 around - max out of plane
 		xaxis=cross*cross.x+xcross*cross.z; // Back around the orbit
 		yaxis=xcross*cross.x-cross*cross.z;
 	}
@@ -135,14 +135,14 @@ void graphset::drawtwovector(HDC hDC, const VECTOR3 &line1, const VECTOR3 &line2
 	xpos=int(xoffset);
 	ypos=int(yoffset);
 	MoveToEx(hDC, xpos, ypos, NULL);
-	xpos=int(dotproduct(xaxis, line1)*scale+xoffset);
-	ypos=int(dotproduct(yaxis, line1)*scale+yoffset);
+	xpos=int(dotp(xaxis, line1)*scale+xoffset);
+	ypos=int(dotp(yaxis, line1)*scale+yoffset);
 	LineTo(hDC, xpos, ypos);
 	xpos=int(xoffset);
 	ypos=int(yoffset);
 	MoveToEx(hDC, xpos, ypos, NULL);
-	xpos=int(dotproduct(xaxis, line2)*scale+xoffset);
-	ypos=int(dotproduct(yaxis, line2)*scale+yoffset);
+	xpos=int(dotp(xaxis, line2)*scale+xoffset);
+	ypos=int(dotp(yaxis, line2)*scale+yoffset);
 	LineTo(hDC, xpos, ypos);
 }
 
@@ -155,8 +155,8 @@ void graphset::drawvector(HDC hDC,const VECTOR3 &line1)
 	xpos=int(xoffset);
 	ypos=int(yoffset);
 	MoveToEx(hDC, xpos, ypos, NULL);
-	xpos=int(dotproduct(xaxis, line1)*scale+xoffset);
-	ypos=int(dotproduct(yaxis, line1)*scale+yoffset);
+	xpos=int(dotp(xaxis, line1)*scale+xoffset);
+	ypos=int(dotp(yaxis, line1)*scale+yoffset);
 	LineTo(hDC, xpos, ypos);
 }
 
@@ -168,8 +168,8 @@ void graphset::drawvectorline(HDC hDC, const VECTOR3 &line)
 	const double yoffset=(iystart+iyend)*0.5;
 	int xpos, ypos;
 	VECTOR3 temp=unitise(line)*(windowsize/2);
-	double xline=dotproduct(xaxis, temp);
-	double yline=dotproduct(yaxis, temp);
+	double xline=dotp(xaxis, temp);
+	double yline=dotp(yaxis, temp);
 	xpos=int(xoffset-xline);
 	ypos=int(yoffset-yline);
 	MoveToEx(hDC, xpos, ypos, NULL);
@@ -277,5 +277,5 @@ double graphset::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VE
 	LineTo(hDC,xpos+3,ypos+3);
 	MoveToEx(hDC,xpos-3,ypos+3,NULL);
 	LineTo(hDC,xpos+3,ypos-3);
-	return vectorsize(trtarget);
+	return length(trtarget);
 }

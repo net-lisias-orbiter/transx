@@ -50,10 +50,9 @@ private:
 	ORBITTIME mode2orbittime,deltavel;
 protected:
 	INTERCEPT primary;
-	ORBIT craft, rmin, basisorbit, hypormaj, craftincontext, target, context;
+	ORBIT craft, rmin, basisorbit, hypormaj, target, context;
 	OBJHANDLE hcontext;
 	GRAPH graph;
-	bool hypoorcraft, showintercept, showrinc;
 	MFDvarmoon m_target,m_minor;
 	MFDvardiscrete m_planauto, m_plantype,m_planinitial,m_planthrough,m_planminor;
 	MFDvardiscrete m_manoeuvremode,m_updbaseorbit;

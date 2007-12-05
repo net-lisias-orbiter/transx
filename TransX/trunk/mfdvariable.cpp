@@ -70,11 +70,6 @@ void MFDvariable::setall(class MFDvariable *var)
 	sethandle(var->gethandle());
 }
 
-bool MFDvariable::getshow()
-{
-	return showvariable;
-}
-
 void MFDvariable::setcmdnugget(cmdnugget *nugget)
 {
 	if (nugget==NULL) return;

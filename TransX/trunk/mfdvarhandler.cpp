@@ -109,9 +109,6 @@ MFDvarhandler::~MFDvarhandler()
 	delete variterator;
 }
 
-
-
-
 void MFDvarhandler::setnextcurrent(int viewmode)
 {
 	if (viewmode<0 || viewmode>4) viewmode=0;
@@ -135,7 +132,6 @@ void MFDvarhandler::setnextcurrent(int viewmode)
 	}
 	while (startpos!=current);//causes termination if no legal outcome
 	currvariable[viewmode]=current;
-	return;
 }
 
 bool MFDvarhandler::crosscopy(MFDvarhandler &othervars)

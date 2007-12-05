@@ -51,7 +51,6 @@ public:
 	};
 
 private:
-	int numberviews;
 	void initpens(void);
 	virtual bool initialisevars() = 0;
 	void deletepens();
@@ -71,8 +70,6 @@ protected:
 
 public:
 	HPEN SelectDefaultPen(HDC hDC, int value);
-	void setnumberviews(int tnumberviews);
-
 
 	MFDvarhandler* getvariablehandler();//Passes pointer to variable handler
 	TransXFunction(class transxstate *tstate, OBJHANDLE thmajor, OBJHANDLE thminor, OBJHANDLE thtarget, OBJHANDLE thcraft, OBJHANDLE thbase);//Constructor

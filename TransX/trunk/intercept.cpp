@@ -134,10 +134,10 @@ void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &ta
 
 	//Find the time to closest approach from here
 	//We now have craft and target position and velocity
-	//Now use dotproduct to estimate remaining course correction
+	//Now use dotp to estimate remaining course correction
 	VECTOR3 relcraftpos=icraftpos-itargetpos;
 	VECTOR3 relcraftvel=icraftvel-itargetvel;
-	double timecorrection=-dotproduct(relcraftpos,relcraftvel)/dotproduct(relcraftvel,relcraftvel);
+	double timecorrection=-dotp(relcraftpos,relcraftvel)/dotp(relcraftvel,relcraftvel);
 	if (timecorrection*lasttimecorrection<0 && fabs(timecorrection/orbittime)>0.0001)
 	{//Oscillatory
 		gain=gain*0.5;
@@ -157,7 +157,7 @@ void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &ta
 	
 	icepttimeoffset=crafttimeest+timecorrection*gain;
 	itimeintercept=icepttimeoffset+target.gettimestamp();
-	if (vectorsize(relcraftpos)*3>vectorsize(icraftpos))//Allows method to switch back if solution is no longer good
+	if (length(relcraftpos)*3>length(icraftpos))//Allows method to switch back if solution is no longer good
 	{
 		iceptmethod=1;
 	}
@@ -177,7 +177,7 @@ void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double c
 {
 	if (!craft.isvalid() || !target.isvalid()) return;//Ensure no void updates!
 	double timeoffset=craft.gettimestamp()-target.gettimestamp();
-	iplanecept=crossproduct(craft.getplanevector(),target.getplanevector());
+	iplanecept=crossp(craft.getplanevector(),target.getplanevector());
 	if (iceptmethod==2)
 	{
 		improveinterceptstraightline(craft,target);
@@ -252,7 +252,7 @@ void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double c
 	alphatime.getposvel(&betaposa,&betavela);
 	betatime.getposvel(&betaposb,&betavelb);
 
-	bool abetter=(vectorsize2(betaposa-alphaposa)<vectorsize2(betaposb-alphaposb)); //Picks best on grounds of distance
+	bool abetter=(length2(betaposa-alphaposa)<length2(betaposb-alphaposb)); //Picks best on grounds of distance
 	if (timea<timeoffset)
 	{
 		if (craftorbitsahead<0.3)
@@ -267,9 +267,9 @@ void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double c
 	if (abetter)
 	{
 		//a is better
-		iceptradius=(vectorsize(betaposa)+iceptradius)/2;// Takes average of new and old as this converges better
+		iceptradius=(length(betaposa)+iceptradius)/2;// Takes average of new and old as this converges better
 		itimeintercept=timea;
-		if (vectorsize2(betaposa-alphaposa)*9<vectorsize2(alphaposa))
+		if (length2(betaposa-alphaposa)*9<length2(alphaposa))
 		{
 			iceptmethod=2;
 			icepttimeoffset=timea;
@@ -282,9 +282,9 @@ void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double c
 	else
 	{
 		//b is better
-		iceptradius=(vectorsize(betaposb)+iceptradius)/2;
+		iceptradius=(length(betaposb)+iceptradius)/2;
 		itimeintercept=timeb;
-		if (vectorsize2(betaposb-alphaposb)*9<vectorsize2(alphaposb))
+		if (length2(betaposb-alphaposb)*9<length2(alphaposb))
 		{
 			iceptmethod=2;
 			icepttimeoffset=timeb;

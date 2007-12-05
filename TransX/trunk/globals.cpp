@@ -192,21 +192,6 @@ void TextShow(HDC hDC,const char *label, int wpos, int hpos, double value)
 
 
 // Standard vector functions
-double dotproduct(const VECTOR3 &vector1, const VECTOR3 &vector2)
-{
-	double temp=vector1.x*vector2.x+vector1.y*vector2.y+vector1.z*vector2.z;
-	return temp;
-}
-
-VECTOR3 crossproduct (const VECTOR3 &vector1, const VECTOR3 &vector2)
-{
-	VECTOR3 out;
-	out.x=vector1.y*vector2.z-vector1.z*vector2.y;
-	out.y=vector1.z*vector2.x-vector1.x*vector2.z;
-	out.z=vector1.x*vector2.y-vector1.y*vector2.x;
-	return out;
-}
-
 // Create vector of length 1
 VECTOR3 unitise (const VECTOR3 &vector)
 {
@@ -215,19 +200,14 @@ VECTOR3 unitise (const VECTOR3 &vector)
 }
 
 // Find length of vector
-double vectorsize(const VECTOR3 &vector)
-{
-	return sqrt(vector.x*vector.x+vector.y*vector.y+vector.z*vector.z);
-}
-
-double vectorsize2(const VECTOR3 &vector)
+double length2(const VECTOR3 &vector)
 {
 	return vector.x*vector.x+vector.y*vector.y+vector.z*vector.z;
 }
 
 double cosangle(const VECTOR3 &veca,const VECTOR3 &vecb)
 {
-	return dotproduct(veca,vecb)/sqrt(vectorsize2(veca)*vectorsize2(vecb));
+	return dotp(veca,vecb)/sqrt(length2(veca)*length2(vecb));
 }
 
 void matrixmultiply(const MATRIX3 &first, const MATRIX3 &second, MATRIX3 *result)

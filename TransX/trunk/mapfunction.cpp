@@ -82,9 +82,9 @@ OBJHANDLE mapfunction::getcurrbody(OBJHANDLE vessel)//Finds current body for cur
 		else
 			oapiGetGlobalPos(body->parent->bodyhandle,&parentpos);
 		relvector=parentpos-bodypos;
-		bodyfromparent2=vectorsize2(relvector);
+		bodyfromparent2=length2(relvector);
 		relvector=currentpos-bodypos;
-		distance2=vectorsize2(relvector);
+		distance2=length2(relvector);
 		if (distance2<body->gravbodyratio2*bodyfromparent2 || body == sun)//In this soi
 		{
 			currentsoi=body;
@@ -116,7 +116,7 @@ double mapfunction::getsoisize(OBJHANDLE handle)
 		VECTOR3 vecradius;
 		
 		oapiGetRelativePos(parent,handle,&vecradius);
-		radius=sqrt(dotproduct(vecradius,vecradius)*body->gravbodyratio2);
+		radius=sqrt(dotp(vecradius,vecradius)*body->gravbodyratio2);
 	}
 	return radius;
 }
@@ -238,7 +238,7 @@ void mapfunction::InitialiseSolarSystem()
 				
 				VECTOR3 pos;
 				oapiGetRelativePos(body->bodyhandle, (*it)->bodyhandle, &pos);
-				double distance2 = dotproduct(pos, pos);
+				double distance2 = dotp(pos, pos);
 				if(distance2 < (*it)->soisize2)
 				{
 					currparent = *it;

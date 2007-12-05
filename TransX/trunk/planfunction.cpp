@@ -40,7 +40,6 @@ bool minorejectplan::init(class MFDvarhandler *vars, class basefunction *base)
 	m_ejorient.init(vars,"Ej Orientation", true);
 	m_equatorial.init(vars,3,3,"Equatorial view",0,1,"No","Yes","","","");
 	ibase=base;
-	base->setnumberviews(3);
 	m_ped.sethelpstrings(
 		"Periapsis of planned orbit",
 		"(Distance from planet centre)");
@@ -59,7 +58,6 @@ bool minorejectplan::init(class MFDvarhandler *vars, class basefunction *base)
 bool encounterplan::init(class MFDvarhandler *vars, class basefunction *base)
 {
 	m_drawbase.init(vars,3,3,"Draw Base",0,1,"Yes","No","","","");
-	base->setnumberviews(3);
 	m_drawbase.sethelpstrings(
 		"Choose to not draw the base","");
 	base->sethelp(
@@ -73,7 +71,6 @@ bool encounterplan::init(class MFDvarhandler *vars, class basefunction *base)
 bool slingshot::init(class MFDvarhandler *vars, class basefunction *base)
 {
 	m_selectorbit.init(vars,3,3,"View Orbit",0,1,"Approach","Depart","","","");
-	base->setnumberviews(3);
 	goodness=0;
 	m_selectorbit.sethelpstrings(
 		"Choose to view approach",
@@ -120,7 +117,7 @@ void slingshot::calculate(class MFDvarhandler *vars,basefunction *base)
 				eventtime=0;
 				ejecttime=nextplan->geteventtime();//Get from future variable if nothing else
 			}
-			ejectvelocity2=vectorsize2(ejectvector);
+			ejectvelocity2=length2(ejectvector);
 		}
 		else
 			return;
@@ -131,7 +128,7 @@ void slingshot::calculate(class MFDvarhandler *vars,basefunction *base)
 		return;
 	}
 	if (!craft.isvalid()) return;
-	inwardvelocity=vectorsize(inward);
+	inwardvelocity=length(inward);
 	if (ejectvelocity2<1 || inwardvelocity<1)
 		return;
 	//We now have both vectors
@@ -170,7 +167,7 @@ void slingshot::calculate(class MFDvarhandler *vars,basefunction *base)
 	//set up coordinate system
 	ratiotoradius=periapsisguess/oapiGetSize(hmajor);
 	VECTOR3 asvel=inward*(1/inwardvelocity);
-	VECTOR3 rightangletovel=unitise(asvel*dotproduct(asvel,ejectvector)-ejectvector);
+	VECTOR3 rightangletovel=unitise(asvel*dotp(asvel,ejectvector)-ejectvector);
 	double cosfirst=sqrt(1-sinfirst*sinfirst);
 	VECTOR3 peposition=(rightangletovel*cosfirst+asvel*sinfirst)*periapsisguess;
 	VECTOR3 pevel=rightangletovel*(-sinfirst)+asvel*cosfirst;
@@ -202,7 +199,7 @@ void minorejectplan::graphscale(GRAPH *graph)
 		svelocity=unitise(svelocity); //Unitise to give vector parallel to rotation
 		oapiGetFocusRelativePos(hmajor,&craftpos);
 		VECTOR3 tradius=unitise(craftpos);//Get unit radius vector
-		VECTOR3 tvector=unitise(crossproduct(tradius, svelocity));
+		VECTOR3 tvector=unitise(crossp(tradius, svelocity));
 		double longitude, latitude, tnumber;
 		oapiGetFocusEquPos(&longitude, &latitude, &tnumber);//Only works if current planet's surface dominates
 		double cosl=cos(-latitude);
@@ -244,9 +241,9 @@ bool slingshot::maingraph(HDC hDC,GRAPH *graph,basefunction *base)
 	graph->setviewscalesize(planetsize);
 	VECTOR3 planpos,craftpos,velvector;
 	planorbit.thitovectors(1,0,&planpos,&velvector);
-	graph->setviewscalesize(vectorsize(planpos));
+	graph->setviewscalesize(length(planpos));
 	craft.thitovectors(1,0,&craftpos,&velvector);
-	graph->setviewscalesize(vectorsize(craftpos));
+	graph->setviewscalesize(length(craftpos));
 	craft.getinfinityvelvector(false,&velvector);//Now finally set for real
 	graph->setprojection(velvector);
 
@@ -297,7 +294,7 @@ void encounterplan::graphupdate(HDC hDC,GRAPH *graph,basefunction *base)
 	matrixmultiply(majrot, v1, &v2);
 	matrixmultiply(oblrot, v2, &baseposition);
 
-	double distance2=vectorsize2(baseposition);
+	double distance2=length2(baseposition);
 	double radius2=radius*radius;
 	if (radius2*1.5>distance2)
 	{
@@ -324,7 +321,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	char buffer[20];
 	int linespacing=height/24;
 	int pos=15*linespacing;
-	int length;
+	int len;
 	ORBIT craft=base->getcraftorbit();
 	if (!craft.isvalid() || !planorbit.isvalid()) return;
 	OBJHANDLE hcraft=base->gethcraft();
@@ -339,7 +336,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	{ //Vessel is landed!
 		VECTOR3 tintersectvector=planorbit.getintersectvector(craft);//Gets intersection vector
 		tpos=status.rpos;
-		if (dotproduct(tintersectvector,tpos)<0)
+		if (dotp(tintersectvector,tpos)<0)
 			angle+=90;
 		else
 			angle=90-angle;
@@ -351,21 +348,21 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 			if(angle > 360)
 				angle -= 360;
 		}
-		length=sprintf(buffer,"Heading:%.4g'", angle);
+		len=sprintf(buffer,"Heading:%.4g'", angle);
 	}
 	else
 	{
-		length=sprintf(buffer, "R.Inc:%.4g'", angle);
+		len=sprintf(buffer, "R.Inc:%.4g'", angle);
 	}
-	TextOut(hDC, 0, pos, buffer, length);
+	TextOut(hDC, 0, pos, buffer, len);
 
 	// Calculate Delta-v
 	if (status.rbody!=base->gethmajor()) return;
 	if (craft.getpedistance()<oapiGetSize(status.rbody)) return;//Haven't got into orbit yet
-	double radius=vectorsize(tpos);
-	double deltav=sqrt(planorbit.getgmplanet()*(2/radius+1/planorbit.getsemimajor()))-vectorsize(tvel);
+	double radius=length(tpos);
+	double deltav=sqrt(planorbit.getgmplanet()*(2/radius+1/planorbit.getsemimajor()))-length(tvel);
 	pos+=linespacing;
-	TextShow(hDC,"DeltaV ", 0, pos, deltav);
+	TextShow(hDC,"Delta V ", 0, pos, deltav);
 	pos+=linespacing;
 
 	//Calculate timings for burn
@@ -450,7 +447,7 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 		{
 			VECTOR3 position,velocity;
 			craft.radiustovectors(radius,false,&position,&velocity);
-			double distfrombase=vectorsize(position-baseposition);
+			double distfrombase=length(position-baseposition);
 			TextShow(hDC,"L.site dist to Base:",0,pos,distfrombase);
 			pos+=linespacing;
 		}
@@ -471,22 +468,22 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 	if (m_drawbase==0 && drawnbase)
 	{
 		VECTOR3 plane=unitise(craft.getplanevector());
-		double distoffplane=dotproduct(plane,baseposition);
+		double distoffplane=dotp(plane,baseposition);
 		TextShow(hDC,"Offplane Dist:",0,pos,distoffplane);
 		pos+=linespacing;
 		VECTOR3 position,velocity;
 		craft.radiustovectors(ped+10,false,&position,&velocity);
-		double distfrombase=vectorsize(position-baseposition);
+		double distfrombase=length(position-baseposition);
 		TextShow(hDC,"Pe dist to Base:",0,pos,distfrombase);
 		pos+=linespacing;
 	}
 
 	VECTOR3 ecliptic={0,-1,0};
-	double inclination=acos(dotproduct(unitise(craft.getplanevector()),ecliptic));
+	double inclination=acos(dotp(unitise(craft.getplanevector()),ecliptic));
 	inclination=inclination/PI*180;
 	TextShow(hDC,"Inclination:",0,pos,inclination);
 	pos+=linespacing;
-	VECTOR3 lanvector=unitise(crossproduct(craft.getplanevector(),ecliptic));
+	VECTOR3 lanvector=unitise(crossp(craft.getplanevector(),ecliptic));
 	double lan=acos(lanvector.x)/PI*180;
 	if (lanvector.z<0) lan=-lan;
 	TextShow(hDC,"LAN ",0,pos,lan);
@@ -563,7 +560,6 @@ bool majorejectplan::init(class MFDvarhandler *vars, class basefunction *base)
 	m_inheritvel=1;//MFDvariable capabilities not used in this class
 	m_outwardvel.init(vars,3,3,"Outward vel.", 0,-1e8,1e8,0.1,1000);
 	m_chplvel.init(vars,3,3,"Ch. plane vel.", 0, -1e8, 1e8, 0.1,1000);
-	base->setnumberviews(3);
 	m_prograde.sethelpstrings(
 		"Positive to move outward from MAJ",
 		"Negative to move inward toward MAJ");
@@ -590,7 +586,7 @@ bool majorejectplan::init(class MFDvarhandler *vars, class basefunction *base)
 void majorejectplan::calcejectvector(const VECTOR3 &rminplane,const VECTOR3 &minorvel, double inheritedvelocity)
 {//Final param not used here
 	VECTOR3 forward=unitise(minorvel)*m_prograde;
-	VECTOR3 outward=unitise(crossproduct(minorvel, rminplane))*m_outwardvel;
+	VECTOR3 outward=unitise(crossp(minorvel, rminplane))*m_outwardvel;
 	VECTOR3 sideward=unitise(rminplane)*m_chplvel;
 	ejectvector=forward+outward+sideward; //=Eject vector in RMin frame
 }
@@ -598,7 +594,7 @@ void majorejectplan::calcejectvector(const VECTOR3 &rminplane,const VECTOR3 &min
 void slingejectplan::calcejectvector(const VECTOR3 &rminplane,const VECTOR3 &minorvel, double inheritedvelocity)
 {
 	VECTOR3 forward=unitise(minorvel)*m_outwardangle.getcos()*m_incangle.getcos();
-	VECTOR3 outward=unitise(crossproduct(minorvel,rminplane))*m_outwardangle.getsin()*m_incangle.getcos();
+	VECTOR3 outward=unitise(crossp(minorvel,rminplane))*m_outwardangle.getsin()*m_incangle.getcos();
 	VECTOR3 sideward=unitise(rminplane)*m_incangle.getsin();
 	ejectvector=forward+outward+sideward;
 	if (m_inheritvel==0 && inheritedvelocity>0)
@@ -643,7 +639,7 @@ void majejectplan::calculate(class MFDvarhandler *vars,basefunction *base)
 
 	//derive the velocity vector described by the variables
 	calcejectvector(rmin.getplanevector(),minorvel,escvel);//Calculates ejectvector
-	double ejectvector2=vectorsize2(ejectvector);
+	double ejectvector2=length2(ejectvector);
 	if (ejectvector2<1) return;
 	if (fabs(ejectvector2-escvel*escvel)*20<escvel*escvel && craftinrmin.isvalid())
 		planorbit.minortomajorinit(craftinrmin,rmin,soisize);
@@ -708,7 +704,7 @@ void minorejectplan::calculate(class MFDvarhandler *vars,basefunction *base)
 		{
 			ejectvector=nextplan->getvelocityvector();
 			ejecttime=nextplan->geteventtime();
-			ejectvelocity2=dotproduct(ejectvector,ejectvector);
+			ejectvelocity2=dotp(ejectvector,ejectvector);
 		}
 	}
 	else
@@ -724,8 +720,8 @@ void minorejectplan::calculate(class MFDvarhandler *vars,basefunction *base)
 	//Set up temporary coordinate system
 	VECTOR3 rminplane=(base->getcontextorbit()).getplanevector();
 	VECTOR3 txaxis=unitise(ejectvector);
-	VECTOR3 tzaxis=unitise(crossproduct(ejectvector, rminplane));
-	VECTOR3 tyaxis=unitise(crossproduct(ejectvector, tzaxis));
+	VECTOR3 tzaxis=unitise(crossp(ejectvector, rminplane));
+	VECTOR3 tyaxis=unitise(crossp(ejectvector, tzaxis));
 	double ejorientsinvalue = m_ejorient.getsin();
 	double ejorientcosvalue = m_ejorient.getcos();
 	VECTOR3 tnaxis=tzaxis*ejorientcosvalue+tyaxis*ejorientsinvalue;

@@ -48,7 +48,6 @@ public:
 	void initialise(class MFDvarhandler *vars,int viewmode1,int viewmode2);
 	virtual ~MFDvariable();
 	void setshow(bool value);
-	bool getshow();
 	bool showgeneric(HDC hDC,int width,int line, char *inbuff);
 	virtual void showadjustment(HDC hDC, int width, int line) const {}; //Show the adjustment mode
 	void gethelpstrings(char *help1, char *help2) const;//Returns help strings
