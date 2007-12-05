@@ -34,7 +34,6 @@ MFDvariable::MFDvariable()
 	showvariable=true;
 	inugget=NULL;
 	execstatus=execcountdown=0;
-	adjmode=0;
 }
 
 void MFDvariable::execute()
@@ -123,17 +122,6 @@ bool MFDvariable::show(HDC hDC, int width, int line)
 	return showgeneric(hDC,width,line," ");
 }
 
-void MFDvariable::getsaveline1(char *buffer) const
-{
-	sprintf(buffer," %i ",adjmode);
-}
-
-void MFDvariable::getsaveline(char *buffer) const//Overloaded by final function
-{
-	getsaveline1(buffer);
-	strcat(buffer,"0");
-}
-
 bool MFDvariable::loadvalue(char *buffer)
 {
 	return true;
@@ -142,16 +130,6 @@ bool MFDvariable::loadvalue(char *buffer)
 void MFDvariable::getname(char *buffer) const
 {
 	strcpy(buffer,name);
-}
-
-void MFDvariable::setadjmode(int tadjmode)
-{
-	adjmode=tadjmode;
-}
-
-int MFDvariable::getadjtype() const
-{
-	return adjmode;
 }
 
 void MFDvariable::gethelpstrings(char *help1,char *help2) const
@@ -164,11 +142,6 @@ void MFDvariable::sethelpstrings(char *help1,char *help2)
 {
 	strcpy(helpstring1,help1);
 	strcpy(helpstring2,help2);
-}
-
-int MFDvariable::getadjmode() const
-{
-	return adjmode;
 }
 
 void MFDvariable::sethandle(OBJHANDLE tpointer)

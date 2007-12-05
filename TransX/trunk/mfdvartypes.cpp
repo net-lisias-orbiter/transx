@@ -51,7 +51,6 @@ void MFDvarmoon::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vnam
 	mappointer=mapfunction::getthemap();
 	value=0;
 	target=NULL;
-	adjmode=0;
 }
 
 void MFDvarmoon::setall(class MFDvariable *var)
@@ -68,7 +67,6 @@ MFDvarshiplist::MFDvarshiplist()
 {
 	iterator=shiplisthead.getiterator();
 	initialised=false;
-	adjmode=0;
 }
 
 MFDvarshiplist::~MFDvarshiplist()
@@ -118,7 +116,7 @@ void MFDvarshiplist::addtolist(char *name)
 
 void MFDvarmoon::dec_variable()
 {
-	if (adjmode==0)
+	if (adjMode == Planet)
 	{
 		switch (value){
 		case 0:
@@ -160,7 +158,7 @@ void MFDvarmoon::initvalidate()
 
 void MFDvarmoon::inc_variable()
 {
-	if (adjmode==0)
+	if (adjMode == Planet)
 	{
 		switch (value){
 		case 0:
@@ -194,7 +192,8 @@ void MFDvarmoon::inc_variable()
 
 void MFDvarmoon::ch_adjmode()
 {
-	adjmode=1-adjmode;
+	if(adjMode == Planet)
+		adjMode = Craft;
 }
 
 void MFDvarmoon::showadjustment(HDC hDC, int width, int line) const
@@ -204,12 +203,12 @@ void MFDvarmoon::showadjustment(HDC hDC, int width, int line) const
 	int ypos=int(7*line);
 	int xpos=int(width/2);
 	int length;
-	switch (adjmode) 
+	switch (adjMode) 
 	{
-	case 0:
+	case Planet:
 		length=sprintf(buffer,"Planets/Moons");
 		break;
-	case 1:
+	case Craft:
 		length=sprintf(buffer,"Ships");
 		break;
 	}
@@ -218,7 +217,7 @@ void MFDvarmoon::showadjustment(HDC hDC, int width, int line) const
 
 void MFDvarmoon::getsaveline(char *buffer) const
 {
-	getsaveline1(buffer);
+	sprintf(buffer, " %d ", adjMode);
 	char tbuffer[30];
 	if (target!=NULL)
 		oapiGetObjectName(target,tbuffer,30);
@@ -320,15 +319,15 @@ int MFDvarmoon::getvalue() const
 }
 
 MFDvarfloat::MFDvarfloat()
+: adjMode(Coarse)
 {
 	continuous = true;
 }
 
-void MFDvarfloat::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname, int vadjmode, double vvalue, double vmin, double vmax, double vincrement, double vlogborder)
+void MFDvarfloat::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname, double vvalue, double vmin, double vmax, double vincrement, double vlogborder)
 {
 	initialise(vars,viewmode1,viewmode2);
 	strcpy(name,vname);
-	adjmode=vadjmode;
 	defaultvalue=value=vvalue;
 	min=vmin;
 	max=vmax;
@@ -390,7 +389,7 @@ bool MFDvarfloat::show(HDC hDC, int width, int line)
 
 void MFDvarfloat::getsaveline(char *buffer) const
 {
-	getsaveline1(buffer);
+	sprintf(buffer, " %i ", adjMode);
 	char tbuffer[30];
 	sprintf(tbuffer," %.12g",value);
 	strcat(buffer,tbuffer);
@@ -405,14 +404,30 @@ bool MFDvarfloat::loadvalue(char *buffer)
 void MFDvarfloat::ch_adjmode()
 // Change the adjustment mode of this MFDvariable
 {
-	if (adjmode==0) return;
-	if (++adjmode>7) adjmode=1;
+	switch(adjMode)
+	{
+		case Coarse	: adjMode = Medium;	break;
+		case Medium	: adjMode = Fine;	break;
+		case Fine	: adjMode = Super;	break;
+		case Super	: adjMode = Ultra;	break;
+		case Ultra	: adjMode = Hyper;	break;
+		case Hyper	: adjMode = Reset;	break;
+		case Reset	: adjMode = Coarse;	break;
+	}
 }
 
 void MFDvarfloat::chm_adjmode()
 {
-	if (adjmode==0) return;
-	if (--adjmode<1) adjmode=7;
+	switch(adjMode)
+	{
+		case Coarse	: adjMode = Reset;	break;
+		case Medium	: adjMode = Coarse;	break;
+		case Fine	: adjMode = Medium;	break;
+		case Super	: adjMode = Fine;	break;
+		case Ultra	: adjMode = Super;	break;
+		case Hyper	: adjMode = Ultra;	break;
+		case Reset	: adjMode = Hyper;	break;
+	}
 }
 
 void MFDvarfloat::showadjustment(HDC hDC, int width, int line) const
@@ -422,30 +437,27 @@ void MFDvarfloat::showadjustment(HDC hDC, int width, int line) const
 	int ypos=int(7*line);
 	int xpos=int(width/2);
 	int length;
-	switch (adjmode) 
+	switch (adjMode) 
 	{
-	case 0:
-		length=sprintf(buffer," ");
-		break;
-	case 1:
+	case Coarse:
 		length=sprintf(buffer,"Coarse");
 		break;
-	case 2:
+	case Medium:
 		length=sprintf(buffer,"Medium");
 		break;
-	case 3:
+	case Fine:
 		length=sprintf(buffer,"Fine");
 		break;
-	case 4:
+	case Super:
 		length=sprintf(buffer,"Super");
 		break;
-	case 5:
+	case Ultra:
 		length=sprintf(buffer,"Ultra");
 		break;
-	case 6:
+	case Hyper:
 		length=sprintf(buffer,"Hyper");
 		break;
-	case 7:
+	case Reset:
 		length=sprintf(buffer,"Reset");
 		break;
 	}
@@ -456,26 +468,26 @@ void MFDvarfloat::inc_variable()
 {
 	double temp=value;
 	double adjuster=0;
-	switch (adjmode){
-	case 1:
+	switch (adjMode){
+	case Coarse:
 		adjuster=0.1;
 		break;
-	case 2:
+	case Medium:
 		adjuster=0.01;
 		break;
-	case 3:
+	case Fine:
 		adjuster=0.001;
 		break;
-	case 4:
+	case Super:
 		adjuster=0.0001;
 		break;
-	case 5:
+	case Ultra:
 		adjuster=0.00001;
 		break;
-	case 6:
+	case Hyper:
 		adjuster=0.000001;
 		break;
-	case 7:
+	case Reset:
 		value=defaultvalue;
 		return;
 	}
@@ -491,26 +503,26 @@ void MFDvarfloat::dec_variable()
 {
 	double temp=value;
 	double adjuster=0;
-	switch (adjmode){
-	case 1:
+	switch (adjMode){
+	case Coarse:
 		adjuster=0.1;
 		break;
-	case 2:
+	case Medium:
 		adjuster=0.01;
 		break;
-	case 3:
+	case Fine:
 		adjuster=0.001;
 		break;
-	case 4:
+	case Super:
 		adjuster=0.0001;
 		break;
-	case 5:
+	case Ultra:
 		adjuster=0.00001;
 		break;
-	case 6:
+	case Hyper:
 		adjuster=0.000001;
 		break;
-	case 7:
+	case Reset:
 		value=defaultvalue;
 		return;
 
@@ -556,14 +568,14 @@ bool MFDvarMJD::show(HDC hDC, int width, int line)
 void MFDvarMJD::inc_variable()
 {
 	MFDvarfloat::inc_variable();
-	if(adjmode == 7)
+	if(adjMode == Reset)
 		value = oapiGetSimMJD();
 }
 
 void MFDvarMJD::dec_variable()
 {
 	MFDvarfloat::dec_variable();
-	if(adjmode == 7)
+	if(adjMode == Reset)
 		value = oapiGetSimMJD();
 }
 
@@ -577,7 +589,6 @@ void MFDvardiscrete::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *
 {
 	initialise(vars,viewmode1,viewmode2);
 	strcpy(name,vname);
-	adjmode=0;
 	value=vvalue;
 	limit=vlimit;
 	strcpy(label[0], st1);
@@ -596,18 +607,12 @@ bool MFDvardiscrete::show(HDC hDC, int width, int line)
 
 void MFDvardiscrete::getsaveline(char *buffer) const
 {
-	getsaveline1(buffer);
-	char tbuffer[30];
-	sprintf(tbuffer," %i",value);
-	strcat(buffer,tbuffer);
+	sprintf(buffer,"0 %i",value);	// need to have the adjustmode (irrelevant here) saved first
 }
 
 void MFDsemiintdiscrete::getsaveline(char *buffer) const
 {
-	getsaveline1(buffer);
-	char tbuffer[30];
-	sprintf(tbuffer," %i",value);
-	strcat(buffer,tbuffer);
+	sprintf(buffer,"0 %i",value);	// need to have the adjustmode (irrelevant here) saved first
 }
 
 bool MFDsemiintdiscrete::loadvalue(char *buffer)
@@ -634,7 +639,6 @@ void MFDvarangle::init(MFDvarhandler *vars,char *vname, bool vloop)
 {
 	initialise(vars,3,3); //FIXME
 	strcpy(name,vname);
-	adjmode=1;
 	defaultvalue=value=0;
 	min=-PI;
 	max=PI;
@@ -654,26 +658,26 @@ void MFDvarangle::inc_variable()
 {
 	double temp=value;
 	double adjuster=0;
-	switch (adjmode){
-	case 1:
+	switch (adjMode){
+	case Coarse:
 		adjuster=0.1;
 		break;
-	case 2:
+	case Medium:
 		adjuster=0.01;
 		break;
-	case 3:
+	case Fine:
 		adjuster=0.001;
 		break;
-	case 4:
+	case Super:
 		adjuster=0.0001;
 		break;
-	case 5:
+	case Ultra:
 		adjuster=0.00001;
 		break;
-	case 6:
+	case Hyper:
 		adjuster=0.000001;
 		break;
-	case 7:
+	case Reset:
 		value=defaultvalue;
 		return;
 	}
@@ -692,26 +696,26 @@ void MFDvarangle::dec_variable()
 {
 	double temp=value;
 	double adjuster=0;
-	switch (adjmode){
-	case 1:
+	switch (adjMode){
+	case Coarse:
 		adjuster=0.1;
 		break;
-	case 2:
+	case Medium:
 		adjuster=0.01;
 		break;
-	case 3:
+	case Fine:
 		adjuster=0.001;
 		break;
-	case 4:
+	case Super:
 		adjuster=0.0001;
 		break;
-	case 5:
+	case Ultra:
 		adjuster=0.00001;
 		break;
-	case 6:
+	case Hyper:
 		adjuster=0.000001;
 		break;
-	case 7:
+	case Reset:
 		value=defaultvalue;
 		return;
 	}

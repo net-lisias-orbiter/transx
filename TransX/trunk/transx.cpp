@@ -164,7 +164,7 @@ bool TransxMFD::ConsumeButton(int bt, int event)
 	if ((event & PANEL_MOUSE_LBDOWN) && (bt<8 || bt==10)) return ConsumeKeyBuffered (btkey[bt]);
 	if (bt>9) return false; //No buttons above 10
 	if (varpointer==NULL) return false;
-	if ((event & PANEL_MOUSE_LBDOWN) && varpointer->getadjtype()==0)
+	if ((event & PANEL_MOUSE_LBDOWN)/* && varpointer->getadjtype()==0*/) // FIXME what does this do???
 	{
 		// Button 8 or 9 is pressed and the mode is discrete
 		return ConsumeKeyBuffered (btkey[bt]);

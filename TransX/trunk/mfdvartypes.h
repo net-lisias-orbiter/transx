@@ -61,11 +61,17 @@ public:
 	
 class MFDvarmoon : public MFDvariable {
 protected:
+	enum AdjustMode
+	{
+		Planet,
+		Craft
+	};
 	OBJHANDLE target;
 	OBJHANDLE centralbody;
 	class mapfunction *mappointer;
 	int value;
 	char intbuffer[30];
+	AdjustMode adjMode;
 public:
 	virtual void inc_variable();
 	virtual void dec_variable();
@@ -80,7 +86,6 @@ public:
 	virtual OBJHANDLE gethandle() const;
 	virtual bool loadvalue(char *buffer);
 	virtual bool SetVariableBody(char *str);
-	virtual int getadjtype() const {return 0;};
 	virtual void getsaveline(char *buffer) const;
 	void updatecentralbody(OBJHANDLE tcentral){centralbody=tcentral;};
 	operator int(){return value;}
@@ -89,11 +94,23 @@ public:
 
 class MFDvarfloat : public MFDvariable {
 protected:
+	enum AdjustMode
+	{
+		Coarse,
+		Medium,
+		Fine,
+		Super,
+		Ultra,
+		Hyper,
+		Reset
+	};
+
 	double value,defaultvalue; // Value of the variable
 	double min; // Minimum legal value
 	double max; //Maximum legal value
 	double increment; //Increment fraction
 	double logborder; // Number below which increment is linear scaled
+	AdjustMode adjMode;
 public:
 	operator double() {return value;};
 	double operator = (double tvalue){value=tvalue;return value;};
@@ -107,7 +124,7 @@ public:
 	void setvalue(double tvalue);
 	virtual void getsaveline(char *buffer) const;
 	virtual bool loadvalue(char *buffer);
-	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname, int vadjmode, double vvalue, double vmin, double vmax, double vincrement, double vlogborder);
+	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname, double vvalue, double vmin, double vmax, double vincrement, double vlogborder);
 	MFDvarfloat();
 	~MFDvarfloat();
 };

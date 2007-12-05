@@ -413,10 +413,10 @@ bool basefunction::initialisevars()
 	m_minor.init(&vars,2,2,"Select Minor",hmajor);
 	m_manoeuvremode.init(&vars,4,4,"Manoeuvre mode",0,1,"Off","On","","","");
 	m_updbaseorbit.init(&vars,4,4,"Base Orbit",1,1,"++ Updates","Updating","","","");
-	m_prograde.init(&vars,4,4,"Prograde vel.", 1, 0, -1e8, 1e8, 0.1, 1000);
-	m_ejdate.init(&vars,4,4,"Man. date", 1, 0, 0, 1e20, 0.00001, 1000000);
-	m_outwardvel.init(&vars,4,4,"Outward vel.", 1, 0,-1e8,1e8,0.1,1000);
-	m_chplvel.init(&vars,4,4,"Ch. plane vel.", 1, 0, -1e8, 1e8, 0.1,1000);
+	m_prograde.init(&vars,4,4,"Prograde vel.", 0, -1e8, 1e8, 0.1, 1000);
+	m_ejdate.init(&vars,4,4,"Man. date", 0, 0, 1e20, 0.00001, 1000000);
+	m_outwardvel.init(&vars,4,4,"Outward vel.", 0,-1e8,1e8,0.1,1000);
+	m_chplvel.init(&vars,4,4,"Ch. plane vel.", 0, -1e8, 1e8, 0.1,1000);
 	m_intwith.init(&vars,2,2,"Intercept with",0,3,"Auto","Plan","Manoeuvre","Focus","");
 	m_orbitsahead.init(&vars,2,2,"Orbits to Icept",0);
 	m_graphprj.init(&vars,2,2,"Graph projection",0,3, "Ecliptic","Focus","Manoeuvre","Plan","");

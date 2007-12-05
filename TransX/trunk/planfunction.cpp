@@ -36,7 +36,7 @@ bool minorejectplan::init(class MFDvarhandler *vars, class basefunction *base)
 	double radius;
 	radius=oapiGetSize(base->gethmajor());
 
-	m_ped.init(vars,3,3,"Pe Distance",1, radius*1.2, 0, radius*1000, 0.05, 1000);
+	m_ped.init(vars,3,3,"Pe Distance", radius*1.2, 0, radius*1000, 0.05, 1000);
 	m_ejorient.init(vars,"Ej Orientation", true);
 	m_equatorial.init(vars,3,3,"Equatorial view",0,1,"No","Yes","","","");
 	ibase=base;
@@ -525,11 +525,11 @@ void majejectplan::graphupdate(HDC hDC, GRAPH *graph,basefunction *base)
 
 bool slingejectplan::init(class MFDvarhandler *vars, class basefunction *base)
 {
-	m_totalvel.init(vars,3,3,"Velocity.",1,0, 0,1e8,0.1,1000);
+	m_totalvel.init(vars,3,3,"Velocity.",0, 0,1e8,0.1,1000);
 	m_outwardangle.init(vars,"Outward angle",true);
 	m_incangle.init(vars,"Inc. angle",false);
 	m_inheritvel.init(vars,3,3,"Inherit Vel.",0,1,"Yes","No","","","");
-	m_ejdate.init(vars,3,3,"Eject date",1,0,0,1e20,0.000005,1000000);
+	m_ejdate.init(vars,3,3,"Eject date",0,0,1e20,0.000005,1000000);
 	m_ejdate=oapiGetSimMJD();//Temporary default.
 
 	m_totalvel.sethelpstrings(
@@ -557,12 +557,12 @@ bool slingejectplan::init(class MFDvarhandler *vars, class basefunction *base)
 
 bool majorejectplan::init(class MFDvarhandler *vars, class basefunction *base)
 {
-	m_prograde.init(vars,3,3,"Prograde vel.", 1, 0, -1e8, 1e8, 0.1, 1000);
-	m_ejdate.init(vars,3,3,"Eject date", 1, 0, 0, 1e20, 0.000005, 1000000);
+	m_prograde.init(vars,3,3,"Prograde vel.", 0, -1e8, 1e8, 0.1, 1000);
+	m_ejdate.init(vars,3,3,"Eject date", 0, 0, 1e20, 0.000005, 1000000);
 	m_ejdate=oapiGetSimMJD();//Temporary default
 	m_inheritvel=1;//MFDvariable capabilities not used in this class
-	m_outwardvel.init(vars,3,3,"Outward vel.", 1, 0,-1e8,1e8,0.1,1000);
-	m_chplvel.init(vars,3,3,"Ch. plane vel.", 1, 0, -1e8, 1e8, 0.1,1000);
+	m_outwardvel.init(vars,3,3,"Outward vel.", 0,-1e8,1e8,0.1,1000);
+	m_chplvel.init(vars,3,3,"Ch. plane vel.", 0, -1e8, 1e8, 0.1,1000);
 	base->setnumberviews(3);
 	m_prograde.sethelpstrings(
 		"Positive to move outward from MAJ",

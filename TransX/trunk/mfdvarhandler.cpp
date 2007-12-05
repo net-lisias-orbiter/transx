@@ -23,7 +23,6 @@
 #include <windows.h>
 #include <stdio.h>
 #include <math.h>
-#include "smartptr.h"
 #include "orbitersdk.h"
 #include "mfd.h"
 #include "parser.h"
@@ -60,7 +59,7 @@ bool MFDvarhandler::loadallvariables(FILEHANDLE scn)
 	int length,tadjmode;
 
 	MFDvariable *pointer;
-	XPtr<dblliter> iterator=listhead.getiterator();
+	dblliter *iterator = listhead.getiterator();
 
 	pointer=static_cast<MFDvariable*>(iterator->front());
 	while (pointer!=NULL)

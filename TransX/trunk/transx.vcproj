@@ -686,10 +686,6 @@
 				>
 			</File>
 			<File
-				RelativePath="smartptr.h"
-				>
-			</File>
-			<File
 				RelativePath="transx.h"
 				>
 			</File>
