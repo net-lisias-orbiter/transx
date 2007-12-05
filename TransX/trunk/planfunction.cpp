@@ -219,13 +219,18 @@ void slingshot::graphscale(GRAPH *graph)
 
 bool minorejectplan::maingraph(HDC hDC,GRAPH *graph, basefunction *base)
 {
-	HPEN pen;
-
 	ORBIT craft=base->getcraftorbit();
 	if (!craft.isvalid() || !planorbit.isvalid())return true;
-	pen=base->SelectDefaultPen(hDC,TransXFunction::Grey);
+	// Draw intersect line
+	base->SelectDefaultPen(hDC,TransXFunction::Grey);
 	VECTOR3 intersect=planorbit.getintersectvector(craft);
 	graph->drawvectorline(hDC,intersect);
+	// Draw Ascending Node (filled)
+	base->SelectBrush(hDC, TransXFunction::Grey);
+	graph->drawmarker(hDC, intersect, graphset::Circle);
+	// Draw Descending Node (hollow)
+	base->SelectBrush(hDC, TransXFunction::Hollow);
+	graph->drawmarker(hDC, -intersect, graphset::Circle);
 	return true;
 }
 

@@ -311,13 +311,22 @@ void TransXFunction::initpens(void)								//(rbd+)
 	pens[Red]		= CreatePen(PS_SOLID, 0 , RGB(0xFF, 0x00, 0x00));	// Bright red - unused, but danger
 	pens[Grey]		= CreatePen(PS_SOLID, 0 , RGB(0xC0, 0xC0, 0xC0));	// Light Grey
 	pens[White]		= CreatePen(PS_SOLID, 0 , RGB(0xFF, 0xFF, 0xFF));	// Bright white - unused
+	brush[Green]	= CreateSolidBrush(RGB(0x00, 0xFF, 0x00));
+	brush[Blue]		= CreateSolidBrush(RGB(0x00, 0x00, 0xCD));
+	brush[Yellow]	= CreateSolidBrush(RGB(0xCD, 0xCD, 0x00));
+	brush[Red]		= CreateSolidBrush(RGB(0xFF, 0x00, 0x00));
+	brush[Grey]		= CreateSolidBrush(RGB(0xC0, 0xC0, 0xC0));
+	brush[Green]	= CreateSolidBrush(RGB(0xFF, 0xFF, 0xFF));
 }
 
 
 void TransXFunction::deletepens()
 {
 	for (int a=0;a<NUM_PENS;a++)
+	{
 		DeleteObject(pens[a]);
+		DeleteObject(brush[a]);
+	}
 }
 															//(rbd-)
 HPEN TransXFunction::SelectDefaultPen(HDC hDC, int value)
@@ -326,6 +335,14 @@ HPEN TransXFunction::SelectDefaultPen(HDC hDC, int value)
 		return((HPEN)SelectObject(hDC, pens[value]));		// Custom pen
 	else //(rbd-)
 		return state->GetMFDpointer()->SelectDefaultPen(hDC,value);
+}
+
+HBRUSH TransXFunction::SelectBrush(HDC hDC, int value)
+{
+	if(value < NUM_PENS) //(rbd+)
+		return (HBRUSH)SelectObject(hDC, brush[value]);		// Custom brush
+	else //(rbd-)
+		return (HBRUSH)SelectObject(hDC, GetStockObject(HOLLOW_BRUSH));
 }
 
 void TransXFunction::sethelp(char *help1,char *help2,char *help3,char *help4,char *help5)

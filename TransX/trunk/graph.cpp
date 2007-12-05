@@ -279,3 +279,21 @@ double graphset::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VE
 	LineTo(hDC,xpos+3,ypos-3);
 	return length(trtarget);
 }
+
+void graphset::drawmarker(HDC hDC, const VECTOR3 location, Shape shape)
+{
+	int x = (ixstart + ixend) / 2;
+	int y = (iystart + iyend) / 2;
+
+	double xpos = dotp(xaxis, location) * scale;
+	double ypos = dotp(yaxis, location) * scale;
+	int left	= (int)(x + xpos - 3);
+	int right	= (int)(x + xpos + 3);
+	int top		= (int)(y + ypos - 3);
+	int bottom	= (int)(y + ypos + 3);
+
+	if(shape == Circle)
+		Ellipse(hDC, left, top, right, bottom);
+	else if(shape == Rectangle)
+		::Rectangle(hDC, left, top, right, bottom);
+}

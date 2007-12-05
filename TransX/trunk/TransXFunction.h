@@ -41,6 +41,7 @@ class TransXFunction: public MFDFunction
 public:
 	enum Pen
 	{ 
+		Hollow = -1,
 		Green = 0,
 		Blue,
 		Yellow,
@@ -67,9 +68,11 @@ protected:
 	class MFDvarhandler vars; //Variable set associated with this MFDFunction
 	class transxstate *state; //Pointer to calling transxstate
 	HPEN pens[NUM_PENS];//Replacement pens for MFD
+	HBRUSH brush[NUM_PENS];
 
 public:
 	HPEN SelectDefaultPen(HDC hDC, int value);
+	HBRUSH TransXFunction::SelectBrush(HDC hDC, int value);
 
 	MFDvarhandler* getvariablehandler();//Passes pointer to variable handler
 	TransXFunction(class transxstate *tstate, OBJHANDLE thmajor, OBJHANDLE thminor, OBJHANDLE thtarget, OBJHANDLE thcraft, OBJHANDLE thbase);//Constructor

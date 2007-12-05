@@ -28,6 +28,12 @@ typedef class graphset{
 //orbit graphs, and current scaling
 friend class orbitelements;
 public:
+	enum Shape
+	{
+		Circle,
+		Rectangle
+	};
+
 	void drawvectorline(HDC hDC, const VECTOR3 &line);//Draws vector line at current projection & scaling
 	void drawplanet(HDC hDC, OBJHANDLE body); //Draw circle representing planet
 	void drawatmosphere(HDC hDC, OBJHANDLE body); //Draw circle representing atmosphere
@@ -35,6 +41,7 @@ public:
 	void setprojection(const VECTOR3 &projection);// View set from vector
 	void setprojection(const VECTOR3 &txaxis, const VECTOR3 &tyaxis, const VECTOR3 &tzaxis);//Explicitly set axes
 	void drawvector(HDC hDC,const VECTOR3 &line1);//Draw vector using current projection & scale
+	void drawmarker(HDC hDC, const VECTOR3 location, Shape shape);	// draws a marker at the specified location
 	void drawtwovector(HDC hDC, const VECTOR3 &line1, const VECTOR3 &line2);//Draw two vectors using current projection & scaling
 	void draworbit(const class orbitelements &element, HDC hDC, bool drawradius);//Calls draworbit in orbitelements
 	double vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VESSEL *vessel, bool isposition);//Nice little pointer utility
