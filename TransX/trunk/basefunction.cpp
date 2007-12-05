@@ -817,11 +817,16 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		double rvel=graph.vectorpointdisplay(hDC, targetvel-craftvel, state->GetMFDpointer(), pV, false);
 		TextShow(hDC,"Delta V: ",0,18*linespacing,rvel);
 		TextShow(hDC,"T to Mnvre ",0,19*linespacing,timeoffset);
-		TextShow(hDC,"Begin Burn ",0,20*linespacing,timeoffset - GetBurnTime(pV, rvel / 2));
-		TextShow(hDC,"Begin Burn NEW",0,21*linespacing,GetBurnStart(pV, timeoffset, rvel));
+		TextShow(hDC,"Begin Burn",0,20*linespacing,GetBurnStart(pV, timeoffset, rvel));
 	}
 	else
 	{
+		//Draw the central body
+		SelectDefaultPen(hDC,PEN_ATMOSPHERE);
+		graph.drawatmosphere(hDC,hmajor); 
+		SelectDefaultPen(hDC,Grey);
+		graph.drawplanet(hDC,hmajor); 
+
 		VECTOR3 ntemp={0,-1,0};
 		graph.setviewwindow(0,0,tw,th);
 		graph.setprojection(ntemp);
@@ -870,18 +875,17 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		}
 
 		// Draw the craft orbit
-		HPEN pen;
-		pen=SelectDefaultPen(hDC,Green);
+		SelectDefaultPen(hDC,Green);
 		graph.draworbit(craft, hDC, !previousexists);
 
 		//Draw the minor object orbit
-		pen=SelectDefaultPen(hDC,Blue);
+		SelectDefaultPen(hDC,Blue);
 		graph.draworbit(rmin, hDC, true);
 
 		//Draw the hypothetical manoeuvre orbit
 		if (hypormaj.isvalid())
 		{
-			pen=SelectDefaultPen(hDC,Yellow);
+			SelectDefaultPen(hDC,Yellow);
 			graph.draworbit(hypormaj,hDC,true);
 		}
 
@@ -890,25 +894,19 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 			planpointer->graphupdate(hDC,&graph,this);
 		}
 
-		//Draw the central body
-		pen=SelectDefaultPen(hDC,PEN_ATMOSPHERE);
-		graph.drawatmosphere(hDC,hmajor); 
-		pen=SelectDefaultPen(hDC,Grey);
-		graph.drawplanet(hDC,hmajor); 
-
 		// If there is a target, draw it, and if there's an intercept,the targeting lines
 		if (target.isvalid())
 		{
-			pen=SelectDefaultPen(hDC,Blue);
+			SelectDefaultPen(hDC,Blue);
 			graph.draworbit(target, hDC, true);
 			if (interceptflag)
 			{
-				pen=SelectDefaultPen(hDC,Yellow);
+				SelectDefaultPen(hDC,Yellow);
 				VECTOR3 craftpos, targetpos, intersect;
 				primary.getpositions(&craftpos,&targetpos);
 				graph.drawtwovector(hDC, craftpos,targetpos);
 				primary.getplanecept(&intersect);
-				pen=SelectDefaultPen(hDC,Grey);
+				SelectDefaultPen(hDC,Grey);
 				graph.drawvectorline(hDC,intersect);
 
 				//Describe targeting quality

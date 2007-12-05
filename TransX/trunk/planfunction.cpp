@@ -226,11 +226,12 @@ bool minorejectplan::maingraph(HDC hDC,GRAPH *graph, basefunction *base)
 	VECTOR3 intersect=planorbit.getintersectvector(craft);
 	graph->drawvectorline(hDC,intersect);
 	// Draw Ascending Node (filled)
+	intersect = unitise(intersect) * this->ibase->getcraftorbit().getapodistance(); // Put markers out of the way
 	base->SelectBrush(hDC, TransXFunction::Grey);
-	graph->drawmarker(hDC, intersect, graphset::Circle);
+	graph->drawmarker(hDC, -intersect, graphset::Circle);
 	// Draw Descending Node (hollow)
 	base->SelectBrush(hDC, TransXFunction::Hollow);
-	graph->drawmarker(hDC, -intersect, graphset::Circle);
+	graph->drawmarker(hDC, intersect, graphset::Circle);
 	return true;
 }
 
@@ -382,9 +383,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	{
 		TextShow(hDC,"T to Pe:",0,pos,timefromstamp);
 		pos+=linespacing;
-		TextShow(hDC,"Begin Burn ",0,pos,timefromstamp - GetBurnTime(pV, deltav / 2));
-		pos+=linespacing;
-		TextShow(hDC,"Begin Burn NEW",0,pos,GetBurnStart(pV, timefromstamp, deltav));
+		TextShow(hDC,"Begin Burn",0,pos,GetBurnStart(pV, timefromstamp, deltav));
 		pos+=linespacing;
 		double angle=180/PI*acos(cosangle(planpos,craftpos));
 		TextShow(hDC,"Ang. to Pe:",0,pos,angle);
@@ -422,9 +421,7 @@ void slingshot::wordupdate(HDC hDC, int width, int height, basefunction *base)
 		pos+=linespacing;
 		OBJHANDLE hcraft=base->gethcraft();
 		VESSEL *pV=oapiGetVesselInterface(hcraft);
-		TextShow(hDC,"Begin Burn ",0,pos,timetope - GetBurnTime(pV, (outplanpevel-craftreqvel) / 2));
-		pos+=linespacing;
-		TextShow(hDC,"Begin Burn NEW",0,pos,GetBurnStart(pV, timetope, (outplanpevel-craftreqvel)));
+		TextShow(hDC,"Begin Burn",0,pos,GetBurnStart(pV, timetope, (outplanpevel-craftreqvel)));
 		pos+=linespacing;
 	}
 }

@@ -44,6 +44,7 @@ void MFDsemiintdiscrete::init(MFDvarhandler *vars,int viewmode1,int viewmode2,ch
 
 void MFDvarmoon::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname,OBJHANDLE tcentralbody)
 {
+	adjMode = Planet;
 	initialise(vars,viewmode1,viewmode2);
 	strcpy(name,vname);
 	strcpy(intbuffer,"");
@@ -194,6 +195,8 @@ void MFDvarmoon::ch_adjmode()
 {
 	if(adjMode == Planet)
 		adjMode = Craft;
+	else
+		adjMode = Planet;
 }
 
 void MFDvarmoon::showadjustment(HDC hDC, int width, int line) const

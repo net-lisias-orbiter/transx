@@ -285,12 +285,13 @@ void graphset::drawmarker(HDC hDC, const VECTOR3 location, Shape shape)
 	int x = (ixstart + ixend) / 2;
 	int y = (iystart + iyend) / 2;
 
+	const int radius = 3;
 	double xpos = dotp(xaxis, location) * scale;
 	double ypos = dotp(yaxis, location) * scale;
-	int left	= (int)(x + xpos - 3);
-	int right	= (int)(x + xpos + 3);
-	int top		= (int)(y + ypos - 3);
-	int bottom	= (int)(y + ypos + 3);
+	int left	= (int)(x + xpos - radius + 0.5);	// add 0.5 to round off rather than floor
+	int right	= (int)(x + xpos + radius + 0.5);
+	int top		= (int)(y + ypos - radius + 0.5);
+	int bottom	= (int)(y + ypos + radius + 0.5);
 
 	if(shape == Circle)
 		Ellipse(hDC, left, top, right, bottom);

@@ -195,8 +195,7 @@ void TextShow(HDC hDC,const char *label, int wpos, int hpos, double value)
 // Create vector of length 1
 VECTOR3 unitise (const VECTOR3 &vector)
 {
-	double scalar= 1/sqrt(vector.x*vector.x+vector.y*vector.y+vector.z*vector.z);
-	return vector*scalar;
+	return vector / length(vector);
 }
 
 // Find length of vector
@@ -311,7 +310,7 @@ double GetBurnStart(VESSEL *vessel, double instantaneousBurnTime, double deltaV)
 		isp += vessel->GetThrusterIsp0(thruster);
 	}
 
-	double mass = oapiGetMass(vessel);
+	double mass = oapiGetMass(vessel->GetHandle());
 	double startAccel = thrust / mass;
 	double mdot = thrust / isp;	// mass flow rate (rate of change of mass)
 	// jerk is rate of change of acceleration - differentiate F/(M - dm * t) using chain rule
