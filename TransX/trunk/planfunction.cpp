@@ -220,18 +220,20 @@ void slingshot::graphscale(GRAPH *graph)
 bool minorejectplan::maingraph(HDC hDC,GRAPH *graph, basefunction *base)
 {
 	ORBIT craft=base->getcraftorbit();
-	if (!craft.isvalid() || !planorbit.isvalid())return true;
-	// Draw intersect line
-	base->SelectDefaultPen(hDC,TransXFunction::Grey);
-	VECTOR3 intersect=planorbit.getintersectvector(craft);
-	graph->drawvectorline(hDC,intersect);
-	// Draw Ascending Node (filled)
-	intersect = unitise(intersect) * this->ibase->getcraftorbit().getapodistance(); // Put markers out of the way
-	base->SelectBrush(hDC, TransXFunction::Grey);
-	graph->drawmarker(hDC, -intersect, graphset::Circle);
-	// Draw Descending Node (hollow)
-	base->SelectBrush(hDC, TransXFunction::Hollow);
-	graph->drawmarker(hDC, intersect, graphset::Circle);
+	if (craft.isvalid() && planorbit.isvalid())
+	{
+		// Draw intersect line
+		base->SelectDefaultPen(hDC,TransXFunction::Grey);
+		VECTOR3 intersect=planorbit.getintersectvector(craft);
+		graph->drawvectorline(hDC,intersect);
+		// Draw Ascending Node (filled)
+		intersect = unitise(intersect) * this->ibase->getcraftorbit().getapodistance(); // Put markers out of the way
+		base->SelectBrush(hDC, TransXFunction::Grey);
+		graph->drawmarker(hDC, -intersect, graphset::Circle);
+		// Draw Descending Node (hollow)
+		base->SelectBrush(hDC, TransXFunction::Hollow);
+		graph->drawmarker(hDC, intersect, graphset::Circle);
+	}
 	return true;
 }
 
