@@ -366,7 +366,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 
 	// Calculate Delta-v
 	if (status.rbody!=base->gethmajor()) return;
-	if (craft.getpedistance()<oapiGetSize(status.rbody)) return;//Haven't got into orbit yet
+	//if (craft.getpedistance()<oapiGetSize(status.rbody)) return;//Haven't got into orbit yet
 	double radius=length(tpos);
 	double deltav=sqrt(planorbit.getgmplanet()*(2/radius+1/planorbit.getsemimajor()))-length(tvel);
 	pos+=linespacing;
