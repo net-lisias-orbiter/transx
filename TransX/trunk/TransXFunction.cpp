@@ -339,7 +339,7 @@ HPEN TransXFunction::SelectDefaultPen(HDC hDC, int value)
 
 HBRUSH TransXFunction::SelectBrush(HDC hDC, int value)
 {
-	if(value < NUM_PENS) //(rbd+)
+	if(value < NUM_PENS && value > 0) //(rbd+)
 		return (HBRUSH)SelectObject(hDC, brush[value]);		// Custom brush
 	else //(rbd-)
 		return (HBRUSH)SelectObject(hDC, GetStockObject(HOLLOW_BRUSH));
