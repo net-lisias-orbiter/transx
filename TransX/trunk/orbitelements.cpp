@@ -146,7 +146,7 @@ void orbitelements::majortominorinit(OBJHANDLE target, OBJHANDLE object, const c
 		if (actdistance2<backradius) backradius=actdistance2;
 		backradius-=dotp(minorpos,minorpos);//Make allowance for distance of closest approach
 	}
-	backradius=sqrt(backradius);
+	backradius = backradius > 0 ? sqrt(backradius) : 0;
 	double timeoffset=backradius/minorvelsize-firsttime;
 	minorpos=minorpos-minorvel*(1/minorvelsize)*backradius;
 	//Generate new orbit
