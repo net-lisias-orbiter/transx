@@ -230,7 +230,7 @@ void transxstate::savecurrent(FILEHANDLE scn)
 bool transxstate::restoresave(FILEHANDLE scn)
 {
 	char *buffer,*member;
-	PARSER parser;
+	Parser parser;
 	int length;
 	if (!oapiReadScenario_nextline(scn,buffer))
 	{

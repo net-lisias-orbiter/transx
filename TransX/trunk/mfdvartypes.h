@@ -25,14 +25,14 @@
 #include "mfdvariable.h"
 #include "doublelink.h"
 
+#define MAX_STRING_LENGTH	40
+
 class liststring : public listelement
 {
-	char buffer[40];
+	char buffer[MAX_STRING_LENGTH];
 public:
-	void setbuffer(char *tbuffer);
 	char *getbuffer(){return buffer;};//returns pointer to actual buffer.
 	liststring(bool manageme = true);
-	virtual ~liststring(){};//virtual destructor to guard against memory leak
 };
 
 class MFDvarshiplist : public MFDvariable

@@ -53,7 +53,7 @@ void MFDvarhandler::saveallvariables(FILEHANDLE scn)
 
 bool MFDvarhandler::loadallvariables(FILEHANDLE scn)
 {
-	PARSER parser;
+	Parser parser;
 	char *buffer,*member;
 	char namebuffer[20];
 	int length,tadjmode;

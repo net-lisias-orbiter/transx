@@ -117,7 +117,7 @@ void shipptrs::saveallships(FILEHANDLE scn)
 void shipptrs::restoreallships(FILEHANDLE scn)
 {
 	char *buffer,*member;
-	PARSER parser;
+	Parser parser;
 	int length;
 	while (oapiReadScenario_nextline(scn,buffer))
 	{

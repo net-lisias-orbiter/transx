@@ -26,55 +26,54 @@
 #include "parser.h"
 
 
-void parser::parseline(char *xbuffer)//Parses the line
+void Parser::parseline(char *buffer)//Parses the line
 {
-	char *tbuffer;
-	tbuffer=xbuffer;
-	currmember=0;
+	int currmember=0;
 	totalmembers=0;
 	bool whitespace=true;//Currently moving through whitespace
 	bool loop=true;
 	while (loop) //While not end of line
 	{
-		if (*tbuffer!=0)
+		if (*buffer)
 		{
 			if (whitespace)
 			{
-				if (*tbuffer!=' ')
+				if (*buffer != ' ')
 				{
-					memberstart[currmember]=tbuffer;
+					memberstart[currmember] = buffer;
 					whitespace=false;
 					totalmembers++;
 				}
 				else
 				{
-					tbuffer++;
+					buffer++;
 				}
 			}
 			else
 			{
-				if (*tbuffer!=' ')
+				if (*buffer!=' ')
 				{
-					tbuffer++;
+					buffer++;
 				}
 				else
 				{
 					whitespace=true;
-					memberend[currmember]=tbuffer;
+					memberend[currmember]=buffer;
 					currmember++;
 				}
 			}
 		}
-		if (*tbuffer==0 && whitespace==false)
+		if (*buffer==0 && whitespace==false)
 		{
-			memberend[currmember]=tbuffer;
+			memberend[currmember]=buffer;
 			currmember++;
 		}
-		if (*tbuffer==0 || currmember>9) loop=false;
+		if (*buffer==0 || currmember>9) 
+			loop=false;
 	}
 }
 
-bool parser::getlineelement(int element, char **tbuffer, int *length)
+bool Parser::getlineelement(int element, char **tbuffer, int *length)
 {
 	if (element>totalmembers-1 || element<0)
 		return false;//Requested element doesn't exist

@@ -32,7 +32,7 @@
 
 liststring::liststring(bool manageme) : listelement(manageme)
 {
-	for (int a=0;a<40;a++) buffer[a]=0;
+	ZeroMemory(buffer, MAX_STRING_LENGTH);
 }
 
 void MFDsemiintdiscrete::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname,int tvalue)
@@ -108,10 +108,7 @@ void MFDvarshiplist::initbybody(OBJHANDLE craft,bool reset)
 void MFDvarshiplist::addtolist(char *name)
 {
 	class liststring *temp=new liststring();
-	char *buffer=temp->getbuffer();
-	int length=strlen(name);
-	strcpy(buffer,name);
-	buffer[length]=0;
+	strcpy(temp->getbuffer(),name);
 	shiplisthead.addfront(temp);
 }
 

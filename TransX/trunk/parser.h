@@ -18,13 +18,13 @@
 ** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.*/
 
-typedef class parser
+class Parser
 {
 public:
-	void parseline(char *xbuffer);//Parses the line
+	void parseline(char *buffer);	//Parses the line
 	bool getlineelement(int element, char **tbuffer, int *length);//Get element from parsed line
 private:
-	int currmember,totalmembers;
+	int totalmembers;
 	char *memberstart[10], *memberend[10];//Pointers for up to ten members
 	char parserbuffer[40];
-} PARSER;
+};

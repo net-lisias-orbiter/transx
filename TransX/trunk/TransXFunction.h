@@ -55,7 +55,7 @@ private:
 	void initpens(void);
 	virtual bool initialisevars() = 0;
 	void deletepens();
-	PARSER parser;
+	Parser parser;
 	char helpstring1[MAX_HELPSTRING_LENGTH],
 		 helpstring2[MAX_HELPSTRING_LENGTH],
 		 helpstring3[MAX_HELPSTRING_LENGTH],

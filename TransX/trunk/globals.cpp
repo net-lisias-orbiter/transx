@@ -209,30 +209,6 @@ double cosangle(const VECTOR3 &veca,const VECTOR3 &vecb)
 	return dotp(veca,vecb)/sqrt(length2(veca)*length2(vecb));
 }
 
-void matrixmultiply(const MATRIX3 &first, const MATRIX3 &second, MATRIX3 *result)
-{
-	int a,b,c;
-	for (a=0;a<3;a++)
-	{
-		c=3*a;
-		for (b=0;b<3;b++)
-		{
-			result->data[3*a+b]=first.data[c]*second.data[b]+first.data[c+1]*second.data[b+3]+first.data[c+2]*second.data[b+6];
-		}
-	}
-}
-
-void matrixmultiply(const MATRIX3 &first, const VECTOR3 &second, VECTOR3 *result)
-{
-	int a,c;
-	for (a=0;a<3;a++)
-	{
-		c=3*a;
-		result->data[a]=first.data[c]*second.data[0]+first.data[c+1]*second.data[1]+first.data[c+2]*second.data[2];
-	}
-}
-
-
 void getinvrotmatrix(VECTOR3 arot, MATRIX3 *invrotmatrix)//arot not really a vector - see arot defn from vessel struct
 {
 	double tcos=cos(arot.z);
@@ -253,9 +229,8 @@ void getinvrotmatrix(VECTOR3 arot, MATRIX3 *invrotmatrix)//arot not really a vec
 	x.m22=x.m33=tcos;
 	x.m32=tsin;
 	x.m23=-tsin;
-	MATRIX3 temp;
-	matrixmultiply(z,y,&temp);
-	matrixmultiply(temp,x,invrotmatrix);
+	MATRIX3 temp = mul(z, y);
+	*invrotmatrix = mul(temp, x);
 }
 
 double getdeterminant(const MATRIX3 mat)

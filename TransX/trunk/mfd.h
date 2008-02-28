@@ -29,8 +29,6 @@ DLLCLBK void opcDLLExit (HINSTANCE hDLL);
 VECTOR3 unitise(const VECTOR3 &vector);
 double cosangle(const VECTOR3 &veca,const VECTOR3 &vecb);
 double length2(const VECTOR3 &vector);
-void matrixmultiply(const MATRIX3 &first, const MATRIX3 &second, MATRIX3 *result);
-void matrixmultiply(const MATRIX3 &first, const VECTOR3 &second, VECTOR3 *result);
 void getinvrotmatrix(VECTOR3 arot, MATRIX3 *invrotmatrix);
 MATRIX3 getinvmatrix(const MATRIX3 mat);
 double getdeterminant(const MATRIX3 mat);

@@ -293,14 +293,13 @@ void encounterplan::graphupdate(HDC hDC,GRAPH *graph,basefunction *base)
 	MATRIX3 oblrot;
 	oapiGetPlanetObliquityMatrix(hmaj, &oblrot);
 	MATRIX3 invoblrot = getinvmatrix(oblrot);
-	VECTOR3 v1, v2;
 	double theta = 2 * PI * deltatime / rot; // angle rotated by planet in 1 second
 	MATRIX3 majrot = {cos(theta), 0, -sin(theta), 
 					  0,		  1, 0,
 					  sin(theta), 0, cos(theta)};
-	matrixmultiply(invoblrot, baseposition, &v1);
-	matrixmultiply(majrot, v1, &v2);
-	matrixmultiply(oblrot, v2, &baseposition);
+	VECTOR3 v1 = mul(invoblrot, baseposition);
+	VECTOR3 v2 = mul(majrot, v1);
+	baseposition = mul(oblrot, v2);
 
 	double distance2=length2(baseposition);
 	double radius2=radius*radius;

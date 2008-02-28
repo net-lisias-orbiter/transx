@@ -245,7 +245,7 @@ double graphset::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VE
 	VECTOR3 arot=status.arot;
 	MATRIX3 rotmatrix;
 	getinvrotmatrix(arot,&rotmatrix);
-	matrixmultiply(rotmatrix,temp,&trtarget);
+	trtarget = mul(rotmatrix, temp);
 	int lines=int(windowsize/10);
 	int edge=int(windowsize/1.5);
 	int centre=int(windowsize/3);
