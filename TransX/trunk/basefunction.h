@@ -47,12 +47,12 @@ private:
 	class mapfunction *mappointer;
 	class plan *planpointer;
 	int interceptwith;
-	ORBITTIME mode2orbittime,deltavel;
+	OrbitTime mode2orbittime,deltavel;
 protected:
-	INTERCEPT primary;
-	ORBIT craft, rmin, basisorbit, hypormaj, target, context;
+	Intercept primary;
+	OrbitElements craft, rmin, basisorbit, hypormaj, target, context;
 	OBJHANDLE hcontext;
-	GRAPH graph;
+	Graph graph;
 	MFDvarmoon m_target,m_minor;
 	MFDvardiscrete m_planauto, m_plantype,m_planinitial,m_planthrough,m_planminor;
 	MFDvardiscrete m_manoeuvremode,m_updbaseorbit;
@@ -81,13 +81,13 @@ public:
 	virtual void restoreself(FILEHANDLE scn);
 	void handlesfornextfunction(OBJHANDLE *thmajor, OBJHANDLE *thminor);
 	class plan *getplanpointer(){return planpointer;};
-	ORBIT getcraftorbit(){return craft;};
-	ORBIT getpassforwardorbit();
-	void getcraftorbitattarget(ORBIT *tcraft);
-	ORBIT getcontextorbit(){return context;};//Returns copy of context orbit
-	ORBIT getminororbit(){return rmin;};
-	ORBIT getmanoeuvreorbit(){return hypormaj;};
-	ORBIT gettargetorbit(){return target;};//Returns copy of target orbit
+	OrbitElements getcraftorbit(){return craft;};
+	OrbitElements getpassforwardorbit();
+	void getcraftorbitattarget(OrbitElements *tcraft);
+	OrbitElements getcontextorbit(){return context;};//Returns copy of context orbit
+	OrbitElements getminororbit(){return rmin;};
+	OrbitElements getmanoeuvreorbit(){return hypormaj;};
+	OrbitElements gettargetorbit(){return target;};//Returns copy of target orbit
 	basefunction(class transxstate *tstate, class basefunction *tpreviousfunc,OBJHANDLE thmajor, OBJHANDLE thminor,OBJHANDLE thcraft);
 	basefunction(class transxstate *tstate, class basefunction *tpreviousfunc, class basefunction *templbase, OBJHANDLE thcraft);
 	~basefunction();

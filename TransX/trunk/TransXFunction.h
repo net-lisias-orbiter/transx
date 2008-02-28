@@ -88,8 +88,8 @@ public:
 	bool loadint(FILEHANDLE scn, int *loadedint);
 	bool loaddouble(FILEHANDLE scn, double *loadednumber);
 	bool loadvector(FILEHANDLE scn, VECTOR3 *loadedvector);
-	void saveorbit(FILEHANDLE scn, const ORBIT &saveorbit);//Saves an orbit structure
-	bool loadorbit(FILEHANDLE scn, ORBIT *loadorbit);//Loads an orbit structure
+	void saveorbit(FILEHANDLE scn, const OrbitElements &saveorbit);//Saves an orbit structure
+	bool loadorbit(FILEHANDLE scn, OrbitElements *loadorbit);//Loads an orbit structure
 	virtual void doupdate(HDC hDC, int tw, int th, int viewmode){return;};//overloaded to create views
 	MFDvariable *getcurrentvariable(int view);
 	void gethandles(OBJHANDLE *thmajor, OBJHANDLE *thminor, OBJHANDLE *thtarget, OBJHANDLE *thcraft, OBJHANDLE *thbase); //Gets handles

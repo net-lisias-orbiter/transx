@@ -29,7 +29,7 @@
 #include "TransXFunction.h"
 
 
-void graphset::setviewwindow(DWORD xstart,DWORD ystart,DWORD xend,DWORD yend)
+void Graph::setviewwindow(DWORD xstart,DWORD ystart,DWORD xend,DWORD yend)
 {
 	ixstart=xstart;
 	ixend=xend;
@@ -40,7 +40,7 @@ void graphset::setviewwindow(DWORD xstart,DWORD ystart,DWORD xend,DWORD yend)
 	if (temp<windowsize) windowsize=temp;
 }
 
-void graphset::getviewwindow(DWORD *xstart, DWORD *ystart, DWORD *xend, DWORD *yend)
+void Graph::getviewwindow(DWORD *xstart, DWORD *ystart, DWORD *xend, DWORD *yend)
 {
 	*xstart=ixstart;
 	*xend=ixend;
@@ -49,24 +49,24 @@ void graphset::getviewwindow(DWORD *xstart, DWORD *ystart, DWORD *xend, DWORD *y
 }
 
 // Viewscale is used to scale everything that is drawn graphically
-void graphset::setviewscale(double temp)
+void Graph::setviewscale(double temp)
 {
 	scale=temp;
 }
 
-double graphset::getviewscale()
+double Graph::getviewscale()
 {
 	return scale;
 }
 
 
-void graphset::setviewscalesize(double temp)
+void Graph::setviewscalesize(double temp)
 {
 	double tempscale=(double(windowsize)/temp)/2;
 	if (scale==0 || scale>tempscale) scale=tempscale;
 }
 
-void graphset::setviewscale(const ORBIT &orbit)
+void Graph::setviewscale(const OrbitElements &orbit)
 {
 	if (!orbit.isvalid()) return;
 	double tempscale=0;
@@ -82,7 +82,7 @@ void graphset::setviewscale(const ORBIT &orbit)
 	if (scale==0 || scale>tempscale) scale=tempscale;
 }
 
-void graphset::setprojection(const VECTOR3 &txaxis, const VECTOR3 &tyaxis, const VECTOR3 &tzaxis)
+void Graph::setprojection(const VECTOR3 &txaxis, const VECTOR3 &tyaxis, const VECTOR3 &tzaxis)
 // Set projection vectors
 {
 	xaxis=unitise(txaxis);
@@ -90,14 +90,14 @@ void graphset::setprojection(const VECTOR3 &txaxis, const VECTOR3 &tyaxis, const
 	zaxis=unitise(tzaxis);
 }
 
-void graphset::setprojection(const ORBIT &torbit)
+void Graph::setprojection(const OrbitElements &torbit)
 {
 	if (!torbit.isvalid()) return;
 	VECTOR3 tvector=torbit.getplanevector();
 	setprojection(tvector);
 }
 
-void graphset::setprojection(const VECTOR3 &projection)
+void Graph::setprojection(const VECTOR3 &projection)
 //Set projection vectors using a viewpoint vector
 // Angle of peojection is set by the same method used by Orbiter
 {
@@ -120,13 +120,13 @@ void graphset::setprojection(const VECTOR3 &projection)
 	}
 }
 
-void graphset::draworbit(const ORBIT &element, HDC hDC, bool drawradius)
+void Graph::draworbit(const OrbitElements &element, HDC hDC, bool drawradius)
 {
 	element.draworbit(hDC,this ,drawradius);
 }
 
 
-void graphset::drawtwovector(HDC hDC, const VECTOR3 &line1, const VECTOR3 &line2)
+void Graph::drawtwovector(HDC hDC, const VECTOR3 &line1, const VECTOR3 &line2)
 // Draw two vectors from the planet centre
 {
 	const double xoffset=(ixstart+ixend)*0.5;
@@ -147,7 +147,7 @@ void graphset::drawtwovector(HDC hDC, const VECTOR3 &line1, const VECTOR3 &line2
 }
 
 
-void graphset::drawvector(HDC hDC,const VECTOR3 &line1)
+void Graph::drawvector(HDC hDC,const VECTOR3 &line1)
 {
 	const double xoffset=(ixstart+ixend)*0.5;
 	const double yoffset=(iystart+iyend)*0.5;
@@ -161,7 +161,7 @@ void graphset::drawvector(HDC hDC,const VECTOR3 &line1)
 }
 
 
-void graphset::drawvectorline(HDC hDC, const VECTOR3 &line)
+void Graph::drawvectorline(HDC hDC, const VECTOR3 &line)
 // Draw a vector from the planet centre
 {
 	const double xoffset=(ixstart+ixend)*0.5;
@@ -178,7 +178,7 @@ void graphset::drawvectorline(HDC hDC, const VECTOR3 &line)
 	LineTo(hDC, xpos, ypos);
 }
 
-void graphset::drawplanet(HDC hDC, OBJHANDLE body)
+void Graph::drawplanet(HDC hDC, OBJHANDLE body)
 {
 	// Draw a circle of the right size to represent a planet
 	double size=oapiGetSize(body);
@@ -195,7 +195,7 @@ void graphset::drawplanet(HDC hDC, OBJHANDLE body)
 	}
 }
 
-void graphset::drawatmosphere(HDC hDC, OBJHANDLE body)
+void Graph::drawatmosphere(HDC hDC, OBJHANDLE body)
 {
 	// Draw a circle of the right size to represent the atmosphere of a planet
 	if(oapiPlanetHasAtmosphere(body))
@@ -215,7 +215,7 @@ void graphset::drawatmosphere(HDC hDC, OBJHANDLE body)
 	}
 }
 
-void graphset::drawcircle(HDC hDC, double size)
+void Graph::drawcircle(HDC hDC, double size)
 {
 	int x=int((ixstart+ixend)/2);
 	int y=int((iystart+iyend)/2);
@@ -226,7 +226,7 @@ void graphset::drawcircle(HDC hDC, double size)
 	Arc(hDC,lowx, lowy, highx, highy, highx, y, highx, y);	
 }
 
-double graphset::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VESSEL *vessel, bool isposition)
+double Graph::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VESSEL *vessel, bool isposition)
 //targetvector is a vector in the global reference plane
 //isposition true
 {
@@ -280,7 +280,7 @@ double graphset::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VE
 	return length(trtarget);
 }
 
-void graphset::drawmarker(HDC hDC, const VECTOR3 location, Shape shape)
+void Graph::drawmarker(HDC hDC, const VECTOR3 location, Shape shape)
 {
 	int x = (ixstart + ixend) / 2;
 	int y = (iystart + iyend) / 2;

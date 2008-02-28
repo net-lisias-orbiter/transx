@@ -31,43 +31,43 @@
 #include "mapfunction.h"
 
 
-orbitelements::orbitelements() : minoraboutbarycentre(0)
+OrbitElements::OrbitElements() : minoraboutbarycentre(0)
 {
 	valid=false; //Not a valid orbit yet
 }
 
-orbitelements::orbitelements(OBJHANDLE hmajor, OBJHANDLE hminor) : minoraboutbarycentre(0)
+OrbitElements::OrbitElements(OBJHANDLE hmajor, OBJHANDLE hminor) : minoraboutbarycentre(0)
 {
 	init(hmajor,hminor);
 }
 
-orbitelements::~orbitelements()
+OrbitElements::~OrbitElements()
 {
 	// cannot delete the pointer minaboutbarycentre as it may have been copied and still being used.
 	// This causes a memory leak once per new stage, so not major but still needs to be sorted out
 	// Instead explicitely call release when the orbit is disposed of
 }
 
-void orbitelements::release()
+void OrbitElements::release()
 {
 	if(minoraboutbarycentre)
 		delete minoraboutbarycentre;
 }
 
-void orbitelements::gettimeorbit(int *orbitnumber,double *orbittime, double timefromnow) const
+void OrbitElements::gettimeorbit(int *orbitnumber,double *orbittime, double timefromnow) const
 {
 	*orbittime=orbitconstant*2*PI;
 	*orbitnumber=int(floor(timefromnow/ (*orbittime)));
 }
 
-double orbitelements::getvelocityatdist(double tradius)
+double OrbitElements::getvelocityatdist(double tradius)
 {
 	double energy=planet/semimajor+2*planet/tradius;
 	energy=((energy>0) ? sqrt(energy) : 0);
 	return energy;
 }
 	
-void orbitelements::minortomajorinit(const ORBIT &craftinrmin, const ORBIT &rmininrmaj, double soisize)
+void OrbitElements::minortomajorinit(const OrbitElements &craftinrmin, const OrbitElements &rmininrmaj, double soisize)
 //Now aims close to transfer coordinates very close to the minor planet - should be very accurate!
 {
 	if (craftinrmin.eccentricity<1 || !craftinrmin.valid || !rmininrmaj.valid)
@@ -106,13 +106,13 @@ void orbitelements::minortomajorinit(const ORBIT &craftinrmin, const ORBIT &rmin
 	init(pos,vel,time, rmininrmaj.planet);
 }
 
-double orbitelements::getinfinityvelocity() const
+double OrbitElements::getinfinityvelocity() const
 {
 	if (semimajor>1) return sqrt(planet/semimajor);
 	return -1;
 }
 
-void orbitelements::majortominorinit(OBJHANDLE target, OBJHANDLE object, const class intercept &closestapproach, double soisize)
+void OrbitElements::majortominorinit(OBJHANDLE target, OBJHANDLE object, const Intercept &closestapproach, double soisize)
 {
 	if (target==NULL)
 	{
@@ -154,7 +154,7 @@ void orbitelements::majortominorinit(OBJHANDLE target, OBJHANDLE object, const c
 }
 
 
-void orbitelements::getinfinityvelvector(bool outward,VECTOR3 *velocity) const
+void OrbitElements::getinfinityvelvector(bool outward,VECTOR3 *velocity) const
 {
 	if (!valid || eccentricity<1) return;
 	double costhi=-1/eccentricity;
@@ -167,7 +167,7 @@ void orbitelements::getinfinityvelvector(bool outward,VECTOR3 *velocity) const
 
 
 
-void orbitelements::radiustovectors(double radius, bool outward, VECTOR3 *position, VECTOR3 *velocity) const
+void OrbitElements::radiustovectors(double radius, bool outward, VECTOR3 *position, VECTOR3 *velocity) const
 {
 	if (!valid) return;
 	double costhi=(angularmomentum2/(radius*planet)-1)/eccentricity;
@@ -181,7 +181,7 @@ void orbitelements::radiustovectors(double radius, bool outward, VECTOR3 *positi
 	*velocity=outvector*outvel+roundvector*sqrt(rndvel2);
 }
 
-void orbitelements::thitovectors(double costhi, double sinthi,VECTOR3 *position, VECTOR3 *velocity) const
+void OrbitElements::thitovectors(double costhi, double sinthi,VECTOR3 *position, VECTOR3 *velocity) const
 // Finds position and velocity vectors at a given angle thi
 // thi is the angle from periapsis, as measured from the centre of the body orbited
 {
@@ -195,12 +195,12 @@ void orbitelements::thitovectors(double costhi, double sinthi,VECTOR3 *position,
 	*velocity=outward*outvel+roundward*(angmom/radius);
 }
 
-orbitelements::orbitelements(VECTOR3 rposition, VECTOR3 rvelocity, double gmplanet)
+OrbitElements::OrbitElements(VECTOR3 rposition, VECTOR3 rvelocity, double gmplanet)
 {
 	init(rposition,rvelocity, gmplanet);
 }
 
-void orbitelements::init(OBJHANDLE hmajor, OBJHANDLE hminor)
+void OrbitElements::init(OBJHANDLE hmajor, OBJHANDLE hminor)
 {
 	valid=false;
 	if (hmajor !=NULL && hminor !=NULL && hmajor!=hminor)
@@ -225,7 +225,7 @@ void orbitelements::init(OBJHANDLE hmajor, OBJHANDLE hminor)
 		init(craftpos, craftvel, timestamp, gmmajor);
 		// initialise the orbit of the minor body around its barycentre
 		if(minoraboutbarycentre == NULL)
-			minoraboutbarycentre = new orbitelements();
+			minoraboutbarycentre = new OrbitElements();
 		VECTOR3 mintruepos, mintruevel;
 		oapiGetGlobalPos(hminor, &mintruepos);
 		oapiGetGlobalVel(hminor, &mintruevel);
@@ -237,18 +237,18 @@ void orbitelements::init(OBJHANDLE hmajor, OBJHANDLE hminor)
 	}
 }
 
-double orbitelements::gettimestamp() const
+double OrbitElements::gettimestamp() const
 {
 	return timestamp;
 }
 
-void orbitelements::init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, double gmplanet)
+void OrbitElements::init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, double gmplanet)
 {
 	timestamp=oapiGetSimTime();
 	init(rposition, rvelocity, timestamp, gmplanet);
 }
 
-void orbitelements::init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, double ttimestamp, double gmplanet)
+void OrbitElements::init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, double ttimestamp, double gmplanet)
 {
 	valid=true;
 	planevector=crossp(rposition,rvelocity);
@@ -275,7 +275,7 @@ void orbitelements::init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, dou
 	timestamp=ttimestamp;
 }
 
-double orbitelements::simpletimetoradius(double radius) const
+double OrbitElements::simpletimetoradius(double radius) const
 {
 	double costhi,coscosh, sinsinh, e_angle, loc_deltatime;
 	//Calculate costhi from radius
@@ -320,7 +320,7 @@ double orbitelements::simpletimetoradius(double radius) const
 }
 
 
-double orbitelements::GetTimeToRadius(double radius, bool outward) const
+double OrbitElements::GetTimeToRadius(double radius, bool outward) const
 {
 	if (!valid) return 0;
 	double costhi,coscosh, sinsinh, e_angle, loc_deltatime;
@@ -374,7 +374,7 @@ double orbitelements::GetTimeToRadius(double radius, bool outward) const
 }
 
 
-double orbitelements::simpletimetothi(double costhi,double sinthi) const
+double OrbitElements::simpletimetothi(double costhi,double sinthi) const
 //returns time from periapsis
 {
 	double coscosh;
@@ -430,7 +430,7 @@ double orbitelements::simpletimetothi(double costhi,double sinthi) const
 
 
 
-double orbitelements::GetTimeToThi(double costhi, double sinthi,int fullorbits,int halforbits) const
+double OrbitElements::GetTimeToThi(double costhi, double sinthi,int fullorbits,int halforbits) const
 
 //Gets time from present position to the position pointed to by cos and sin thi.
 
@@ -507,7 +507,7 @@ double orbitelements::GetTimeToThi(double costhi, double sinthi,int fullorbits,i
 	return loc_deltatime;//Adjusts this forward as prescribed
 }
 
-void orbitelements::vectortothi(const VECTOR3 &vector,double *costhi,double *sinthi) const
+void OrbitElements::vectortothi(const VECTOR3 &vector,double *costhi,double *sinthi) const
 {
 	double majorsize=dotp(vector,majoraxis);
 	double minorsize=dotp(vector,minoraxis);
@@ -522,84 +522,84 @@ void orbitelements::vectortothi(const VECTOR3 &vector,double *costhi,double *sin
 	}
 }
 
-double orbitelements::thitoradius(double costhi) const
+double OrbitElements::thitoradius(double costhi) const
 {
 	return angularmomentum2/(planet*(eccentricity*costhi+1));
 }
 
-double orbitelements::radiustothi(double radius) const
+double OrbitElements::radiustothi(double radius) const
 {
 	return (angularmomentum2/(planet*radius)-1)/eccentricity;
 }
 
-double orbitelements::getpedistance() const
+double OrbitElements::getpedistance() const
 {
 	return semimajor*(eccentricity-1);
 }
 
-double orbitelements::getapodistance() const
+double OrbitElements::getapodistance() const
 {
 	return -semimajor*(eccentricity+1);
 }
 
-double orbitelements::getcurrradius() const
+double OrbitElements::getcurrradius() const
 {
 	return length(currposition);
 }
 
-VECTOR3 orbitelements::getintersectvector(const ORBIT &torbit) const
+VECTOR3 OrbitElements::getintersectvector(const OrbitElements &torbit) const
 {
 	return crossp(planevector, torbit.planevector);
 }
 
-double orbitelements::geteccentricity() const 
+double OrbitElements::geteccentricity() const 
 {
 	return eccentricity;
 }
 
-double orbitelements::getangmomentum2() const
+double OrbitElements::getangmomentum2() const
 {
 	return angularmomentum2;
 }
 
-double orbitelements::getcurrcosthi() const
+double OrbitElements::getcurrcosthi() const
 {
 	return currcosthi;
 }
 
-double orbitelements::getcurrsinthi() const 
+double OrbitElements::getcurrsinthi() const 
 {
 	return currsinthi;
 }
 
-void orbitelements::getaxes(VECTOR3 *tmajoraxis, VECTOR3 *tminoraxis) const
+void OrbitElements::getaxes(VECTOR3 *tmajoraxis, VECTOR3 *tminoraxis) const
 {
 	*tmajoraxis=majoraxis;
 	*tminoraxis=minoraxis;
 }
 	
-void orbitelements::getcurrentvectors(VECTOR3 *tpos, VECTOR3 *tvel) const
+void OrbitElements::getcurrentvectors(VECTOR3 *tpos, VECTOR3 *tvel) const
 {
 	*tpos=currposition;
 	*tvel=currvelocity;
 }
 
-double orbitelements::getsemimajor() const
+double OrbitElements::getsemimajor() const
 {
 	return semimajor;
 }
 
-VECTOR3 orbitelements::geteccentricityvector() const
+VECTOR3 OrbitElements::geteccentricityvector() const
 {
 	return eccvector;
 }
 
-VECTOR3 orbitelements::getplanevector() const
+VECTOR3 OrbitElements::getplanevector() const
 {
 	return planevector;
 }
 
-double orbitelements::getpedeltatime() const
+double OrbitElements::getpedeltatime() const
 {
 	//Gets time to next Pe passage
 	//Deltatime is always time from the last one (unless ecc>1, in which case there is only one)
@@ -615,17 +615,17 @@ double orbitelements::getpedeltatime() const
 	return temp;
 }
 
-bool orbitelements::isvalid() const
+bool OrbitElements::isvalid() const
 {
 	return valid;
 }
 
-double orbitelements::getgmplanet() const
+double OrbitElements::getgmplanet() const
 {
 	return planet;
 }
 
-void orbitelements::GetTimesToThi(double costhi, double *time1, double *time2,int fullorbits,int halforbits) const
+void OrbitElements::GetTimesToThi(double costhi, double *time1, double *time2,int fullorbits,int halforbits) const
 // There are two solutions for any value of costhi
 // Useful as costhi can be derived from a radius from a body
 {
@@ -701,7 +701,7 @@ void orbitelements::GetTimesToThi(double costhi, double *time1, double *time2,in
 }
 
 
-void orbitelements::draworbit(HDC hDC, const GRAPH *graph, bool drawradius) const
+void OrbitElements::draworbit(HDC hDC, const Graph *graph, bool drawradius) const
 {
 	// Create projection vectors
 	if (!valid) return;
@@ -819,7 +819,7 @@ void orbitelements::draworbit(HDC hDC, const GRAPH *graph, bool drawradius) cons
 
 
 
-void orbitelements::timetovectors(double timefromnow,ORBITTIME *posvel) const
+void OrbitElements::timetovectors(double timefromnow,OrbitTime *posvel) const
 {
 	if (!valid) return;
 	double timetarget=timefromnow+deltatime;//Now in units of time from Pe
@@ -855,7 +855,7 @@ void orbitelements::timetovectors(double timefromnow,ORBITTIME *posvel) const
 	posvel->processed=true;
 }
 
-void orbitelements::improvebyradius(double timetarget,double topthi,double timeattopthi,ORBITTIME *posvel) const
+void OrbitElements::improvebyradius(double timetarget,double topthi,double timeattopthi,OrbitTime *posvel) const
 {//Only ever called at the asymptotes of a hyperbola where velocity is hopefully reasonably constant
 	double radius=thitoradius(topthi);
 	bool reversed=false;
@@ -888,7 +888,7 @@ void orbitelements::improvebyradius(double timetarget,double topthi,double timea
 	if (reversed) posvel->currangle=-posvel->currangle;
 }
 
-void orbitelements::improvebysubdivision(double timetarget,double topthi,double timeattopthi,ORBITTIME *posvel) const
+void OrbitElements::improvebysubdivision(double timetarget,double topthi,double timeattopthi,OrbitTime *posvel) const
 {
 	//double angmomentum=sqrt(angularmomentum2);
 	bool reversed=false;
@@ -935,7 +935,7 @@ void orbitelements::improvebysubdivision(double timetarget,double topthi,double 
 	return;
 }
 
-bool orbitelements::improve(double timetarget,ORBITTIME *posvel) const
+bool OrbitElements::improve(double timetarget,OrbitTime *posvel) const
 {
 	double angmomentum=sqrt(angularmomentum2);
 	double timeerr,iradius,iangleerr,icosthi;
@@ -973,7 +973,7 @@ bool orbitelements::improve(double timetarget,ORBITTIME *posvel) const
 	return true;
 }
 
-void orbitelements::timetovectors(double timefromnow, VECTOR3 *pos, VECTOR3 *vel) const
+void OrbitElements::timetovectors(double timefromnow, VECTOR3 *pos, VECTOR3 *vel) const
 {
 	// Find the position of a planet at timefromnow in the future
 
@@ -1040,13 +1040,13 @@ void orbitelements::timetovectors(double timefromnow, VECTOR3 *pos, VECTOR3 *vel
 	}
 }
 
-void orbittime::getposvel(VECTOR3 *tpos,VECTOR3 *tvel)
+void OrbitTime::getposvel(VECTOR3 *tpos,VECTOR3 *tvel)
 {
 	*tpos=pos;
 	*tvel=vel;
 }
 
-orbittime::orbittime()
+OrbitTime::OrbitTime()
 {
 	pos.x=pos.y=pos.z=vel.x=vel.y=vel.z=3;
 	processed=false;

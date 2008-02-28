@@ -136,7 +136,6 @@ DLLCLBK void opcPostStep(double SimT, double SimDT, double mjd)
 
 
 bool SelectVariableBody(void *id, char *str, void *usrdata)
-
 {
 	return ((MFDvarmoon*)usrdata)->SetVariableBody(str);
 }

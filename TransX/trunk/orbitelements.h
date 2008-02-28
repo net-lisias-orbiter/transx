@@ -18,11 +18,9 @@
 ** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.*/
 
-#ifndef __ORBITELEMENTS_H
-#define __ORBITELEMENTS_H
+#pragma once
 
-
-typedef class orbitelements{
+class OrbitElements{
 private:
 	VECTOR3 planevector; // Vector perpendicular to plane - defines orbital plane
 	double angularmomentum2; // Angular momentum squared
@@ -42,25 +40,25 @@ private:
 	bool valid; //Whether the orbit class is valid or not
 	double simpletimetoradius(double radius) const;
 	double simpletimetothi(double costhi, double sinthi) const;//private time calculation function
-	orbitelements *minoraboutbarycentre;
+	OrbitElements *minoraboutbarycentre;
 public:
-	void improvebyradius(double timetarget,double topthi,double timeattopthi,class orbittime *posvel) const;
-	void improvebysubdivision(double timetarget,double topthi,double timeattopthi,class orbittime *posvel) const;
-	bool improve(double timetarget,class orbittime *posvel) const;
+	void improvebyradius(double timetarget,double topthi,double timeattopthi,class OrbitTime *posvel) const;
+	void improvebysubdivision(double timetarget,double topthi,double timeattopthi,class OrbitTime *posvel) const;
+	bool improve(double timetarget,class OrbitTime *posvel) const;
 	void release();
 public:
-	virtual ~orbitelements();
-	orbitelements(); // Default constructor
+	virtual ~OrbitElements();
+	OrbitElements(); // Default constructor
 	void gettimeorbit(int *orbitnumber,double *orbittime, double timefromnow) const;
-	orbitelements(OBJHANDLE hmajor, OBJHANDLE hminor); //Constructor
-	orbitelements(VECTOR3 rposition, VECTOR3 rvelocity, double gmplanet); //Constructor using pos and vel vectors
+	OrbitElements(OBJHANDLE hmajor, OBJHANDLE hminor); //Constructor
+	OrbitElements(VECTOR3 rposition, VECTOR3 rvelocity, double gmplanet); //Constructor using pos and vel vectors
 	double getvelocityatdist(double radius);//Calculates velocity using energy calculation - gives results even outside area of current orbit
 	void init(OBJHANDLE hmajor, OBJHANDLE hminor);//Initialiser
 	void init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, double gmplanet); //Initialiser using pos and vel vectors
 	void init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, double ttimestamp, double gmplanet); //Initialiser that pushes out a timestamp as well
-	void minortomajorinit(const class orbitelements &craftinrmin, const class orbitelements &rmininrmaj, double soisize);
-	void majortominorinit(OBJHANDLE target, OBJHANDLE object, const class intercept &closestapproach, double soisize);//Going from major to minor
-	void draworbit(HDC hDC, const class graphset *graph, bool drawradius) const; //Draws an orbit in window and projection described in graph
+	void minortomajorinit(const OrbitElements &craftinrmin, const OrbitElements &rmininrmaj, double soisize);
+	void majortominorinit(OBJHANDLE target, OBJHANDLE object, const class Intercept &closestapproach, double soisize);//Going from major to minor
+	void draworbit(HDC hDC, const class Graph *graph, bool drawradius) const; //Draws an orbit in window and projection described in graph
 	//Can be called even if orbit.isvalid() is false
 	void setinvalid(){valid=false;};//Forces an existing orbit structure into invalidity
 	//The routines below generally ASSUME that orbit has been initialised
@@ -73,8 +71,8 @@ public:
 	void thitovectors(double costhi, double sinthi, VECTOR3 *position, VECTOR3 *velocity) const; //Angle thi from periapsis to pos and vel
 	void radiustovectors(double radius, bool outward, VECTOR3 *position, VECTOR3 *velocity) const; // Now works from radius length too - should always go from known information
 	void timetovectors(double timefromnow, VECTOR3 *pos, VECTOR3 *vel) const;//Time from present to pos and vel vectors
-	void timetovectors(double timefromnow,class orbittime *posvel) const;
-	void minortomajor(const class orbitelements &rmininrmaj, class orbitelements *rmajorbit, double soisize) const; //Finds path from hyperbolic orbit around present body to orbit around rmaj
+	void timetovectors(double timefromnow,class OrbitTime *posvel) const;
+	void minortomajor(const OrbitElements &rmininrmaj, OrbitElements *rmajorbit, double soisize) const; //Finds path from hyperbolic orbit around present body to orbit around rmaj
 	double geteccentricity() const; //Parameter retrieving routines
 	double getangmomentum2() const;
 	double gettimeorbit() const {return orbitconstant*2*PI;};//Time to go around a complete orbit
@@ -94,25 +92,20 @@ public:
 	double getcurrradius() const;
 	double getpedistance() const;
 	double getapodistance() const;
-	VECTOR3 getintersectvector(const class orbitelements &torbit) const;//vector along line of intersection of two orbits (like align MFD)
-	orbitelements *getminorbarycentricorbit() const {return minoraboutbarycentre;};
-} ORBIT;
+	VECTOR3 getintersectvector(const OrbitElements &torbit) const;//vector along line of intersection of two orbits (like align MFD)
+	OrbitElements *getminorbarycentricorbit() const {return minoraboutbarycentre;};
+};
 
-typedef class orbittime{
+class OrbitTime{
 public:
 	void getposvel(VECTOR3 *tpos,VECTOR3 *tvel);
-	orbittime::orbittime();
+	OrbitTime();
 private:
 	VECTOR3 pos,vel;
 	double currangle,icosthi;
 	bool processed;
-	friend void orbitelements::timetovectors(double timefromnow,class orbittime *posvel) const;
-	friend bool orbitelements::improve(double timetarget,class orbittime *posvel) const;
-	friend void orbitelements::improvebysubdivision(double timetarget,double topthi,double timeattopthi,class orbittime *posvel) const;
-	friend void orbitelements::improvebyradius(double timetarget,double topthi,double timeattopthi,class orbittime *posvel) const;
-
-} ORBITTIME;
-
-
-
-#endif
+	friend void OrbitElements::timetovectors(double timefromnow,OrbitTime *posvel) const;
+	friend bool OrbitElements::improve(double timetarget,OrbitTime *posvel) const;
+	friend void OrbitElements::improvebysubdivision(double timetarget,double topthi,double timeattopthi,OrbitTime *posvel) const;
+	friend void OrbitElements::improvebyradius(double timetarget,double topthi,double timeattopthi,OrbitTime *posvel) const;
+};

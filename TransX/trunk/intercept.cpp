@@ -27,7 +27,7 @@
 #include "mfd.h"
 #include "intercept.h"
 
-intercept::intercept()
+Intercept::Intercept()
 {
 	iceptmethod=1;
 	newintercept=true;
@@ -36,14 +36,14 @@ intercept::intercept()
 	fullorbits=halforbits=-1;
 }
 
-void intercept::resetintercept()
+void Intercept::resetintercept()
 {
 	iceptmethod=1;
 	newintercept=true;
 	fullorbits=halforbits=-1;
 }
 
-void intercept::adjustorbitsdown()
+void Intercept::adjustorbitsdown()
 {
 	if (halforbits>0)
 	{
@@ -59,7 +59,7 @@ void intercept::adjustorbitsdown()
 	}
 }
 
-void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &target)
+void Intercept::improveinterceptstraightline(const OrbitElements &craft, const OrbitElements &target)
 {
 	double craftorbittime;
 	if (craft.geteccentricity()<1)
@@ -104,7 +104,7 @@ void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &ta
 	// Get vectors for angles now that time error has been reduced
 	craft.thitovectors(craftcosthi,craftsinthi,&icraftpos,&icraftvel);
 	target.thitovectors(targetcosthi,targetsinthi,&itargetpos,&itargetvel);
-	ORBIT *targetaboutbarycentreorbit = target.getminorbarycentricorbit();
+	OrbitElements *targetaboutbarycentreorbit = target.getminorbarycentricorbit();
 
 	// modify orbit if it target is based around the barycentre.
 	if(targetaboutbarycentreorbit != NULL)
@@ -164,13 +164,13 @@ void intercept::improveinterceptstraightline(const ORBIT &craft, const ORBIT &ta
 	return;
 }
 
-void intercept::getorbitsoffset(int *ifullorbits,int *ihalforbits) const
+void Intercept::getorbitsoffset(int *ifullorbits,int *ihalforbits) const
 {
 	*ifullorbits=fullorbits;
 	*ihalforbits=halforbits;
 }
 
-void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double craftorbitsahead)
+void Intercept::updateintercept(const OrbitElements &craft, const OrbitElements &target,double craftorbitsahead)
 // Updates the intercept structure holding closest approach between 'craft' and target. 'craft' may be hypothetical or actual
 // Only one orbit may be hyperbolic
 //To be broken up into submethods next time it's revised
@@ -191,7 +191,7 @@ void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double c
 	//First option is to check to see whether the plane intercept vector is a good first guess.
 	//
 
-	const ORBIT *alpha, *beta;
+	const OrbitElements *alpha, *beta;
 	//The inversion functionality no longer matters - timetovectors is now good enough to avoid the problem
 	
 	alpha=&craft;
@@ -313,34 +313,34 @@ void intercept::updateintercept(const ORBIT &craft, const ORBIT &target,double c
 
 
 
-void intercept::getplanecept(VECTOR3 *planecept) const
+void Intercept::getplanecept(VECTOR3 *planecept) const
 {
 	*planecept=iplanecept;
 }
 
-void intercept::getpositions(VECTOR3 *craftpos, VECTOR3 *targetpos) const
+void Intercept::getpositions(VECTOR3 *craftpos, VECTOR3 *targetpos) const
 {
 	*craftpos=icraftpos;
 	*targetpos=itargetpos;
 }
 
-void intercept::getrelpos(VECTOR3 *relpos) const
+void Intercept::getrelpos(VECTOR3 *relpos) const
 {
 	*relpos=icraftpos-itargetpos;
 }
 
-void intercept::getrelvel(VECTOR3 *relvel) const
+void Intercept::getrelvel(VECTOR3 *relvel) const
 {
 	*relvel=icraftvel-itargetvel;
 }
 
-void intercept::getvelocities(VECTOR3 *craftvel, VECTOR3 *targetvel) const
+void Intercept::getvelocities(VECTOR3 *craftvel, VECTOR3 *targetvel) const
 {
 	*craftvel=icraftvel;
 	*targetvel=itargetvel;
 }
 
-double intercept::gettimeintercept() const
+double Intercept::gettimeintercept() const
 {
 	return itimeintercept;
 }

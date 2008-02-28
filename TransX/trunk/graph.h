@@ -18,15 +18,14 @@
 ** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 ** THE SOFTWARE.*/
 
-#ifndef __GRAPH_H
-#define __GRAPH_H
+#pragma once
 
 #include "orbitelements.h"
 
-typedef class graphset{
+class Graph{
 //This class holds information on a display window for graphs, and vectors for the projection angle of these
 //orbit graphs, and current scaling
-friend class orbitelements;
+friend class OrbitElements;
 public:
 	enum Shape
 	{
@@ -37,15 +36,15 @@ public:
 	void drawvectorline(HDC hDC, const VECTOR3 &line);//Draws vector line at current projection & scaling
 	void drawplanet(HDC hDC, OBJHANDLE body); //Draw circle representing planet
 	void drawatmosphere(HDC hDC, OBJHANDLE body); //Draw circle representing atmosphere
-	void setprojection(const class orbitelements &torbit);//View set from orbit's plane vector
+	void setprojection(const OrbitElements &torbit);//View set from orbit's plane vector
 	void setprojection(const VECTOR3 &projection);// View set from vector
 	void setprojection(const VECTOR3 &txaxis, const VECTOR3 &tyaxis, const VECTOR3 &tzaxis);//Explicitly set axes
 	void drawvector(HDC hDC,const VECTOR3 &line1);//Draw vector using current projection & scale
 	void drawmarker(HDC hDC, const VECTOR3 location, Shape shape);	// draws a marker at the specified location
 	void drawtwovector(HDC hDC, const VECTOR3 &line1, const VECTOR3 &line2);//Draw two vectors using current projection & scaling
-	void draworbit(const class orbitelements &element, HDC hDC, bool drawradius);//Calls draworbit in orbitelements
+	void draworbit(const class OrbitElements &element, HDC hDC, bool drawradius);//Calls draworbit in orbitelements
 	double vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VESSEL *vessel, bool isposition);//Nice little pointer utility
-	void setviewscale(const class orbitelements &orbit);//Set scale of picture using orbit size
+	void setviewscale(const class OrbitElements &orbit);//Set scale of picture using orbit size
 	void setviewscale(double temp);//Set scale using a number
 	void setviewscalesize(double temp);//Set scale using a distance size
 	void setviewwindow(DWORD xstart, DWORD ystart, DWORD xend, DWORD yend);//Set a window within MFD
@@ -56,6 +55,4 @@ private:
 	VECTOR3 xaxis, yaxis, zaxis; // projection vectors
 	DWORD ixstart, iystart, ixend, iyend, windowsize;//window parameters
 	double scale;//scaling factor for diagram
-}GRAPH;
-
-#endif
+};

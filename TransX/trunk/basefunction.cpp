@@ -565,7 +565,7 @@ void basefunction::switchadvanced()
 
 
 
-void basefunction::getcraftorbitattarget(ORBIT *tcraft)
+void basefunction::getcraftorbitattarget(OrbitElements *tcraft)
 {
 	if (hmajtarget==NULL || !primary.getvalid())//No attempt made to target at all
 	{
@@ -702,7 +702,7 @@ void basefunction::calculate(VECTOR3 *targetvel)
 		m_updbaseorbit=0;
 	}
 	Getmode2hypo(targetvel);
-	ORBIT planorbit;
+	OrbitElements planorbit;
 	if (planpointer!=NULL)
 	{
 		planpointer->getplanorbit(&planorbit);
@@ -738,7 +738,7 @@ void basefunction::calculate(VECTOR3 *targetvel)
 	}
 }
 
-ORBIT basefunction::getpassforwardorbit()
+OrbitElements basefunction::getpassforwardorbit()
 {
 	switch (interceptwith)
 	{
@@ -762,7 +762,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 	int wpos=0;
 	int hpos=linespacing;
 	char buffer[20];
-	ORBIT plan;
+	OrbitElements plan;
 	if (planpointer!=NULL)
 	{
 		planpointer->getlabel(buffer);

@@ -177,7 +177,7 @@ bool TransXFunction::loadvector(FILEHANDLE scn, VECTOR3 *loadedvector)
 }
 
 
-bool TransXFunction::loadorbit(FILEHANDLE scn,ORBIT *loadorbit)
+bool TransXFunction::loadorbit(FILEHANDLE scn,OrbitElements *loadorbit)
 {
 	char *bufferpointer, *member;
 	bool ok=oapiReadScenario_nextline(scn,bufferpointer);
@@ -216,7 +216,7 @@ void TransXFunction::savehandle(FILEHANDLE scn, OBJHANDLE handle)
 }
 
 
-void TransXFunction::saveorbit(FILEHANDLE scn, const ORBIT &saveorbit)
+void TransXFunction::saveorbit(FILEHANDLE scn, const OrbitElements &saveorbit)
 {
 	char validvalue[6];
 	if (saveorbit.isvalid())

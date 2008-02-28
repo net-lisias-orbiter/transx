@@ -88,7 +88,7 @@ void slingshot::calculate(class MFDvarhandler *vars,basefunction *base)
 	//First, get handed-on orbit from previous
 	planorbit.setinvalid();
 	
-	ORBIT craft=base->getcraftorbit();
+	OrbitElements craft=base->getcraftorbit();
 	VECTOR3 inward={0,0,0};
 	if (craft.isvalid())
 		craft.getinfinityvelvector(false,&inward);
@@ -180,7 +180,7 @@ void slingshot::calculate(class MFDvarhandler *vars,basefunction *base)
 }
 
 
-void minorejectplan::graphscale(GRAPH *graph)
+void minorejectplan::graphscale(Graph *graph)
 {//Needs revising to remove references to focus vessel. OK for now.
 	if (planorbit.isvalid())
 		graph->setviewscale(planorbit);
@@ -211,15 +211,15 @@ void minorejectplan::graphscale(GRAPH *graph)
 }
 
 
-void slingshot::graphscale(GRAPH *graph)
+void slingshot::graphscale(Graph *graph)
 {
 	if (planorbit.isvalid())
 		graph->setviewscale(planorbit);
 }
 
-bool minorejectplan::maingraph(HDC hDC,GRAPH *graph, basefunction *base)
+bool minorejectplan::maingraph(HDC hDC,Graph *graph, basefunction *base)
 {
-	ORBIT craft=base->getcraftorbit();
+	OrbitElements craft=base->getcraftorbit();
 	if (craft.isvalid() && planorbit.isvalid())
 	{
 		// Draw intersect line
@@ -229,18 +229,18 @@ bool minorejectplan::maingraph(HDC hDC,GRAPH *graph, basefunction *base)
 		// Draw Ascending Node (filled)
 		intersect = unitise(intersect) * this->ibase->getcraftorbit().getapodistance(); // Put markers out of the way
 		base->SelectBrush(hDC, TransXFunction::Grey);
-		graph->drawmarker(hDC, -intersect, graphset::Circle);
+		graph->drawmarker(hDC, -intersect, Graph::Circle);
 		// Draw Descending Node (hollow)
 		base->SelectBrush(hDC, TransXFunction::Hollow);
-		graph->drawmarker(hDC, intersect, graphset::Circle);
+		graph->drawmarker(hDC, intersect, Graph::Circle);
 	}
 	return true;
 }
 
-bool slingshot::maingraph(HDC hDC,GRAPH *graph,basefunction *base)
+bool slingshot::maingraph(HDC hDC,Graph *graph,basefunction *base)
 {
 	HPEN pen;
-	ORBIT craft=base->getcraftorbit();
+	OrbitElements craft=base->getcraftorbit();
 	OBJHANDLE hmajor=base->gethmajor();
 	double planetsize=oapiGetSize(hmajor);
 	if (!craft.isvalid()) return true;
@@ -267,7 +267,7 @@ bool slingshot::maingraph(HDC hDC,GRAPH *graph,basefunction *base)
 }
 
 
-void encounterplan::graphupdate(HDC hDC,GRAPH *graph,basefunction *base)
+void encounterplan::graphupdate(HDC hDC,Graph *graph,basefunction *base)
 {
 	HPEN pen;
 	drawnbase=false;
@@ -281,7 +281,7 @@ void encounterplan::graphupdate(HDC hDC,GRAPH *graph,basefunction *base)
 	OBJHANDLE hmaj=base->gethmajor();
 	oapiGetRelativePos(surfbase,hmaj,&baseposition);
 	double rot = oapiGetPlanetPeriod(hmaj);
-	ORBIT craft=base->getcraftorbit();
+	OrbitElements craft=base->getcraftorbit();
 	
 	// Get the base position at the Pe/impact by rotating the body by the time until Pe/impact
 	double radius = oapiGetSize(hmaj);
@@ -311,12 +311,12 @@ void encounterplan::graphupdate(HDC hDC,GRAPH *graph,basefunction *base)
 }
 
 
-void slingshot::graphupdate(HDC hDC, GRAPH *graph,basefunction *base)
+void slingshot::graphupdate(HDC hDC, Graph *graph,basefunction *base)
 {
 	HPEN pen;
 	pen=base->SelectDefaultPen(hDC,TransXFunction::Yellow);
 	planorbit.draworbit(hDC,graph,false);
-	ORBIT craft=base->getcraftorbit();
+	OrbitElements craft=base->getcraftorbit();
 	if (!craft.isvalid()) return;
 	VECTOR3 intersect=planorbit.getintersectvector(craft);
 	pen=base->SelectDefaultPen(hDC,TransXFunction::Grey);
@@ -329,7 +329,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	int linespacing=height/24;
 	int pos=15*linespacing;
 	int len;
-	ORBIT craft=base->getcraftorbit();
+	OrbitElements craft=base->getcraftorbit();
 	if (!craft.isvalid() || !planorbit.isvalid()) return;
 	OBJHANDLE hcraft=base->gethcraft();
 	VESSEL *pV=oapiGetVesselInterface(hcraft);
@@ -404,7 +404,7 @@ void slingshot::wordupdate(HDC hDC, int width, int height, basefunction *base)
 {
 	int linespacing=height/24;
 	int pos=15*linespacing;
-	ORBIT craft=base->getcraftorbit();
+	OrbitElements craft=base->getcraftorbit();
 	if (!craft.isvalid() || !planorbit.isvalid()) return;
 	TextShow(hDC,"R. Inc:",0,pos,180*acos(cosangle(planorbit.getplanevector(),craft.getplanevector()))/PI);
 	pos+=linespacing;
@@ -427,7 +427,7 @@ void slingshot::wordupdate(HDC hDC, int width, int height, basefunction *base)
 	}
 }
 
-void encounterplan::getplanorbit(ORBIT *planorbit)
+void encounterplan::getplanorbit(OrbitElements *planorbit)
 {
 	planorbit->setinvalid();
 }
@@ -437,7 +437,7 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 {
 	int linespacing=height/24;
 	int pos=15*linespacing;
-	ORBIT craft=base->getmanoeuvreorbit();
+	OrbitElements craft=base->getmanoeuvreorbit();
 	if (!craft.isvalid()) craft=base->getcraftorbit();//Gets manoeuvre if it's valid, otherwise craft
 
 	OBJHANDLE hmajor=base->gethmajor();
@@ -505,19 +505,19 @@ void majejectplan::wordupdate(HDC hDC,int width, int height, basefunction *base)
 
 
 
-void minorejectplan::graphupdate(HDC hDC, GRAPH *graph,basefunction *base)
+void minorejectplan::graphupdate(HDC hDC, Graph *graph,basefunction *base)
 {
 	base->SelectDefaultPen(hDC,TransXFunction::Yellow);
 	planorbit.draworbit(hDC,graph,true);
 }
 
-void majejectplan::graphscale(GRAPH *graph)
+void majejectplan::graphscale(Graph *graph)
 {
 	if (planorbit.isvalid())
 		graph->setviewscale(planorbit);
 }
 
-void majejectplan::graphupdate(HDC hDC, GRAPH *graph,basefunction *base)
+void majejectplan::graphupdate(HDC hDC, Graph *graph,basefunction *base)
 {
 	base->SelectDefaultPen(hDC,TransXFunction::Yellow);
 	planorbit.draworbit(hDC,graph,false);
@@ -610,13 +610,13 @@ void slingejectplan::calcejectvector(const VECTOR3 &rminplane,const VECTOR3 &min
 void majejectplan::calculate(class MFDvarhandler *vars,basefunction *base)
 {
 	//get the position and velocity vectors of the minor planet at the eject time
-	ORBIT rmin=base->getminororbit();
+	OrbitElements rmin=base->getminororbit();
 	VECTOR3 minorpos,minorvel;
 	planorbit.setinvalid();
 	mapfunction *map=mapfunction::getthemap();
 	basefunction *previous=base->getpreviousfunc();
 
-	ORBIT craftinrmin;
+	OrbitElements craftinrmin;
 	double escvel=-1;
 	double soisize;
 	plan *previousplan;
@@ -656,7 +656,7 @@ VECTOR3 plan::getvelocityvector()
 	return temp;
 }
 
-void plan::getplanorbit(ORBIT *planorbit)
+void plan::getplanorbit(OrbitElements *planorbit)
 {
 	planorbit->setinvalid();
 }
@@ -675,7 +675,7 @@ class plan *minorejectplan::iclone()
 	return newplan;
 }
 
-void slingshot::getplanorbit(ORBIT *tplanorbit)
+void slingshot::getplanorbit(OrbitElements *tplanorbit)
 {//Only pass on plan orbit if it's basically correct
 	if (goodness<1.01 && goodness>0.99)
 		*tplanorbit=planorbit;
@@ -755,7 +755,7 @@ void minorejectplan::calculate(class MFDvarhandler *vars,basefunction *base)
 	//make the orbit, then track back to also give parameters to pass to the major function
 }
 
-void minorejectplan::getplanorbit(ORBIT *tplanorbit)
+void minorejectplan::getplanorbit(OrbitElements *tplanorbit)
 {
 	*tplanorbit=planorbit;
 }
