@@ -342,8 +342,8 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 
 	// Get the target inclination (absolute wrt global coordinates)
 	VECTOR3 down = {0, -1, 0};
-	double targetInc = 180/PI*acos(cosangle(up, planorbit.getplanevector()));
-	sprintf(buffer, "Abs Inc:%.4g", targetInc);
+	double targetInc = 180/PI*acos(cosangle(down, planorbit.getplanevector()));
+	sprintf(buffer, "Abs Inc:%.4g°", targetInc);
 	TextOut(hDC, 0, pos, buffer, strlen(buffer));
 	pos += linespacing;
 
@@ -352,7 +352,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	oapiGetPlanetObliquityMatrix(base->gethmajor(), &oblmat);
 	VECTOR3 south = mul(oblmat, down);
 	targetInc = 180/PI*acos(cosangle(south, planorbit.getplanevector()));
-	sprintf(buffer, "Rel Inc:%.4g", targetInc);
+	sprintf(buffer, "Maj Inc:%.4g°", targetInc);
 	TextOut(hDC, 0, pos, buffer, strlen(buffer));
 	pos += linespacing;
 
@@ -372,11 +372,11 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 			if(angle > 360)
 				angle -= 360;
 		}
-		len=sprintf(buffer,"Heading:%.4g'", angle);
+		len=sprintf(buffer,"Heading:%.4g°", angle);
 	}
 	else
 	{
-		len=sprintf(buffer, "R.Inc:  %.4g'", angle);
+		len=sprintf(buffer, "Rel Inc:%.4g°", angle);
 	}
 	TextOut(hDC, 0, pos, buffer, len);
 
