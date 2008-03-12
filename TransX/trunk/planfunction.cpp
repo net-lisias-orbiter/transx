@@ -498,17 +498,33 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 		pos+=linespacing;
 		TextShow(hDC,"Capture Delta:",0,pos,actualpevelocity-escvelocity);
 		pos+=linespacing;
+
+		VECTOR3 position,velocity;
+		craft.radiustovectors(ped+10,false,&position,&velocity);
 		if (m_drawbase==0 && drawnbase)
 		{
 			VECTOR3 plane=unitise(craft.getplanevector());
 			double distoffplane=dotp(plane,baseposition);
 			TextShow(hDC,"Offplane Dist:",0,pos,distoffplane);
 			pos+=linespacing;
-			VECTOR3 position,velocity;
-			craft.radiustovectors(ped+10,false,&position,&velocity);
 			double distfrombase=length(position-baseposition);
 			TextShow(hDC,"Pe dist to Base:",0,pos,distfrombase);
 			pos+=linespacing;
+		}
+		else
+		{
+			MATRIX3 planetrot;
+			oapiGetRotationMatrix(hmajor, &planetrot);
+			VECTOR3 relposition = mul(getinvmatrix(planetrot), position);
+			double lat = asin(relposition.y / radius) * 180 / PI;
+			double lng = (atan2(relposition.z, relposition.x)) * 180 / PI;
+			lng -= 360.0 * craft.GetTimeToRadius(radius, false) / oapiGetPlanetPeriod(hmajor);
+			while(lng < -180)
+				lng += 360;
+			char output[64];
+			sprintf(output, "Pe Lat/Long: %.4g, %.4g", lat, lng);
+			TextOut(hDC, 0, pos, output, strlen(output));
+			pos += linespacing;
 		}
 	}
 
