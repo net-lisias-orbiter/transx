@@ -821,12 +821,6 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 	}
 	else
 	{
-		//Draw the central body
-		SelectDefaultPen(hDC,PEN_ATMOSPHERE);
-		graph.drawatmosphere(hDC,hmajor); 
-		SelectDefaultPen(hDC,Grey);
-		graph.drawplanet(hDC,hmajor); 
-
 		VECTOR3 ntemp={0,-1,0};
 		graph.setviewwindow(0,0,tw,th);
 		graph.setprojection(ntemp);
@@ -847,6 +841,11 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 			if (!planpointer->maingraph(hDC,&graph,this)) 
 			{
 				planpointer->wordupdate(hDC,tw,th,this);
+				//Draw the central body
+				SelectDefaultPen(hDC,PEN_ATMOSPHERE);
+				graph.drawatmosphere(hDC,hmajor); 
+				SelectDefaultPen(hDC,Grey);
+				graph.drawplanet(hDC,hmajor); 
 				return;
 			}
 		}
@@ -867,6 +866,12 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 			}
 			graph.setviewscale(rmin);
 		}
+		//Draw the central body
+		SelectDefaultPen(hDC,PEN_ATMOSPHERE);
+		graph.drawatmosphere(hDC,hmajor); 
+		SelectDefaultPen(hDC,Grey);
+		graph.drawplanet(hDC,hmajor); 
+
 		if (target.isvalid() && m_scale!=2) graph.setviewscale(target);
 		if (hypormaj.isvalid() && m_scale==0) graph.setviewscale(hypormaj);
 		if (planpointer!=NULL && m_scale==0)
@@ -930,7 +935,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		else
 		{
 			//Describe information relevant to central body
-			int hpos=6*linespacing;
+			int hpos=8*linespacing;
 			int wpos=0;
 			TextShow(hDC,"Maj. Rad: ",wpos,hpos,oapiGetSize(hmajor));
 			hpos+=linespacing;
@@ -948,7 +953,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 				TextOut(hDC,wpos,hpos,buffer, length);
 				hpos+=linespacing;
 				VECTOR3 south = {0, -1, 0};
-				length = sprintf(buffer, "Inc:      %.4f", 180/PI*acos(cosangle(south, craft.getplanevector())));
+				length = sprintf(buffer, "Inc:      %.4g°", 180/PI*acos(cosangle(south, craft.getplanevector())));
 				TextOut(hDC,wpos,hpos,buffer, length);
 				hpos+=linespacing;
 			}
