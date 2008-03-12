@@ -327,7 +327,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 {
 	char buffer[20];
 	int linespacing=height/24;
-	int pos=15*linespacing;
+	int pos=16*linespacing;
 	int len;
 	OrbitElements craft=base->getcraftorbit();
 	if (!craft.isvalid() || !planorbit.isvalid()) return;
@@ -339,6 +339,23 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	VECTOR3 tpos,tvel;
 	tpos=status.rpos;
 	tvel=status.rvel;
+
+	// Get the target inclination (absolute wrt global coordinates)
+	VECTOR3 down = {0, -1, 0};
+	double targetInc = 180/PI*acos(cosangle(up, planorbit.getplanevector()));
+	sprintf(buffer, "Abs Inc:%.4g", targetInc);
+	TextOut(hDC, 0, pos, buffer, strlen(buffer));
+	pos += linespacing;
+
+	// Get the relative inclination of the orbit to the planet. 
+	MATRIX3 oblmat;
+	oapiGetPlanetObliquityMatrix(base->gethmajor(), &oblmat);
+	VECTOR3 south = mul(oblmat, down);
+	targetInc = 180/PI*acos(cosangle(south, planorbit.getplanevector()));
+	sprintf(buffer, "Rel Inc:%.4g", targetInc);
+	TextOut(hDC, 0, pos, buffer, strlen(buffer));
+	pos += linespacing;
+
 	if (status.status==1)
 	{ //Vessel is landed!
 		VECTOR3 tintersectvector=planorbit.getintersectvector(craft);//Gets intersection vector
@@ -359,7 +376,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	}
 	else
 	{
-		len=sprintf(buffer, "R.Inc:%.4g'", angle);
+		len=sprintf(buffer, "R.Inc:  %.4g'", angle);
 	}
 	TextOut(hDC, 0, pos, buffer, len);
 
@@ -369,7 +386,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	double radius=length(tpos);
 	double deltav=sqrt(planorbit.getgmplanet()*(2/radius+1/planorbit.getsemimajor()))-length(tvel);
 	pos+=linespacing;
-	TextShow(hDC,"Delta V ", 0, pos, deltav);
+	TextShow(hDC,"Delta V:", 0, pos, deltav);
 	pos+=linespacing;
 
 	//Calculate timings for burn
@@ -384,7 +401,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	{
 		TextShow(hDC,"T to Pe:",0,pos,timefromstamp);
 		pos+=linespacing;
-		TextShow(hDC,"Begin Burn",0,pos,GetBurnStart(pV, timefromstamp, deltav));
+		TextShow(hDC,"Begin Burn:",0,pos,GetBurnStart(pV, timefromstamp, deltav));
 		pos+=linespacing;
 		double angle=180/PI*acos(cosangle(planpos,craftpos));
 		TextShow(hDC,"Ang. to Pe:",0,pos,angle);

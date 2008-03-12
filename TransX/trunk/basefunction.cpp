@@ -930,9 +930,9 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		else
 		{
 			//Describe information relevant to central body
-			int hpos=8*linespacing;
+			int hpos=6*linespacing;
 			int wpos=0;
-			TextShow(hDC,"Maj. Rad:",wpos,hpos,oapiGetSize(hmajor));
+			TextShow(hDC,"Maj. Rad: ",wpos,hpos,oapiGetSize(hmajor));
 			hpos+=linespacing;
 			if (craft.isvalid())
 			{
@@ -944,7 +944,11 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 				}
 				hpos+=linespacing;
 				char buffer[20];
-				int length=sprintf(buffer,"Pe MJD %.4f",(craft.getpedeltatime()+craft.gettimestamp())/SECONDS_PER_DAY+simstartMJD);
+				int length=sprintf(buffer,"Pe MJD:   %.4f",(craft.getpedeltatime()+craft.gettimestamp())/SECONDS_PER_DAY+simstartMJD);
+				TextOut(hDC,wpos,hpos,buffer, length);
+				hpos+=linespacing;
+				VECTOR3 south = {0, -1, 0};
+				length = sprintf(buffer, "Inc:      %.4f", 180/PI*acos(cosangle(south, craft.getplanevector())));
 				TextOut(hDC,wpos,hpos,buffer, length);
 				hpos+=linespacing;
 			}

@@ -180,7 +180,6 @@ bool TransxMFD::ConsumeButton(int bt, int event)
 
 
 bool TransxMFD::ConsumeKeyBuffered (DWORD key)
-
 {
 	if (!valid) return false;
 	MFDvariable *currvar=viewstate->GetCurrVariable();
