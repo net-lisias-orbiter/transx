@@ -821,12 +821,6 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 	}
 	else
 	{
-		//Draw the central body
-		SelectDefaultPen(hDC,PEN_ATMOSPHERE);
-		graph.drawatmosphere(hDC,hmajor); 
-		SelectDefaultPen(hDC,Grey);
-		graph.drawplanet(hDC,hmajor); 
-
 		VECTOR3 ntemp={0,-1,0};
 		graph.setviewwindow(0,0,tw,th);
 		graph.setprojection(ntemp);
@@ -893,6 +887,12 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		{
 			planpointer->graphupdate(hDC,&graph,this);
 		}
+
+		//Draw the central body
+		SelectDefaultPen(hDC,PEN_ATMOSPHERE);
+		graph.drawatmosphere(hDC,hmajor); 
+		SelectDefaultPen(hDC,Grey);
+		graph.drawplanet(hDC,hmajor); 
 
 		// If there is a target, draw it, and if there's an intercept,the targeting lines
 		if (target.isvalid())
