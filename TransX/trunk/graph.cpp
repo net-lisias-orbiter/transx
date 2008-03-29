@@ -239,37 +239,49 @@ double Graph::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VESSE
 	MATRIX3 rotmatrix;
 	getinvrotmatrix(arot,&rotmatrix);
 	trtarget = mul(rotmatrix, temp);
-	int lines=int(windowsize/10);
-	int edge=int(windowsize/1.5);
-	int centre=int(windowsize/3);
 	HPEN pen;
 	pen=mfd->SelectDefaultPen(hDC,TransXFunction::White);
-	Arc(hDC, ixstart,iystart+lines,ixstart+edge,iystart+edge+lines,ixstart,iystart+centre,ixstart,iystart+centre);
-	edge-=centre/3;
-	int nearedge=centre/3;
-	Arc(hDC,ixstart+nearedge,iystart+nearedge+lines,ixstart+edge,iystart+edge+lines,ixstart+nearedge,iystart+centre,ixstart+nearedge,iystart+centre);
-	edge-=centre/3;
-	nearedge+=centre/3;
-	Arc(hDC,ixstart+nearedge,iystart+nearedge+lines,ixstart+edge,iystart+edge+lines,ixstart+nearedge,iystart+centre,ixstart+nearedge,iystart+centre);
-	edge=int(windowsize/1.5);
-	MoveToEx(hDC,ixstart+centre,iystart+lines,NULL);
-	LineTo(hDC,ixstart+centre,iystart+edge+lines);
-	MoveToEx(hDC,ixstart,iystart+centre+lines,NULL);
-	LineTo(hDC, ixstart+edge,iystart+centre+lines);
-	double offsetsize=sqrt(trtarget.x*trtarget.x+trtarget.y*trtarget.y);
-	double scalar=sqrt(2.0) / 2;
-	double xang=trtarget.x/offsetsize;
-	double yang=-trtarget.y/offsetsize;
-	offsetsize=sqrt(offsetsize/trtarget.z);
-	if (offsetsize>scalar || trtarget.z<0) offsetsize=scalar;
-	offsetsize=offsetsize/scalar*windowsize/3;
-	int xpos=int(offsetsize*xang+centre+ixstart);
-	int ypos=int(offsetsize*yang+centre+lines+iystart);
+
+	const int rings = 3;
+	const int width = (ixend - ixstart),
+			  height = (iyend - iystart);
+	const double edgeBorderSize = 0.9;
+	for(int i = 1; i <= rings; i++)
+	{
+		// Must move to the righthand side of the circle to draw
+		int rightside = int(width / 2 * (1 + edgeBorderSize * i / rings));
+		double radius = i * width * edgeBorderSize / 2 / rings;
+		MoveToEx(hDC, rightside, 
+					height / 2, NULL);
+		AngleArc(hDC, width / 2, height / 2, 
+					(DWORD)radius, 
+					0, 360);
+	}
+
+	// Draw the horizontal and vertical lines across the target circles
+	MoveToEx(hDC, int(width * (1 - edgeBorderSize) / 2), height / 2, NULL);
+	LineTo(hDC, int(width * (1 + edgeBorderSize) / 2), height / 2);
+	MoveToEx(hDC, width / 2, int(height * (1 - edgeBorderSize) / 2), NULL);
+	LineTo(hDC, width / 2, int(height * (1 + edgeBorderSize) / 2));
+
+	// Draw the target cross
+	double offsetsize = sqrt(trtarget.x * trtarget.x + trtarget.y * trtarget.y);
+	double scalar = sqrt(0.5);
+	double xang = trtarget.x / offsetsize;
+	double yang =- trtarget.y / offsetsize;
+	offsetsize = sqrt(offsetsize / trtarget.z);
+	if (offsetsize > scalar || trtarget.z < 0) 
+		offsetsize = scalar;
+	offsetsize = offsetsize / scalar * windowsize / 3;
+	int xpos = int(offsetsize * xang + width / 2 + ixstart);
+	int ypos = int(offsetsize * yang + height / 2 + iystart);
+
 	pen=mfd->SelectDefaultPen(hDC,TransXFunction::Green);
-	MoveToEx(hDC,xpos-3,ypos-3,NULL);
-	LineTo(hDC,xpos+3,ypos+3);
-	MoveToEx(hDC,xpos-3,ypos+3,NULL);
-	LineTo(hDC,xpos+3,ypos-3);
+	const int crossSize = 3;
+	MoveToEx(hDC, xpos - crossSize, ypos - crossSize, NULL);
+	LineTo(hDC, xpos + crossSize, ypos + crossSize);
+	MoveToEx(hDC, xpos - crossSize, ypos + crossSize, NULL);
+	LineTo(hDC, xpos + crossSize, ypos - crossSize);
 	return length(trtarget);
 }
 
