@@ -343,16 +343,16 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	// Get the target inclination (absolute wrt global coordinates)
 	VECTOR3 down = {0, -1, 0};
 	double targetInc = 180/PI*acos(cosangle(down, planorbit.getplanevector()));
-	sprintf(buffer, "Abs Inc:%.4g°", targetInc);
+	sprintf(buffer, "Incl.  :%.4g°", targetInc);
 	TextOut(hDC, 0, pos, buffer, strlen(buffer));
 	pos += linespacing;
 
-	// Get the relative inclination of the orbit to the planet. 
-	MATRIX3 oblmat;
-	oapiGetPlanetObliquityMatrix(base->gethmajor(), &oblmat);
-	VECTOR3 south = mul(oblmat, down);
-	targetInc = 180/PI*acos(cosangle(south, planorbit.getplanevector()));
-	sprintf(buffer, "Maj Inc:%.4g°", targetInc);
+	// Get the target LAN (absolute wrt global coordinates)
+	VECTOR3 LAN = crossp(planorbit.getplanevector(), down);
+	double lan = atan2(LAN.z, LAN.x) * 180 / PI;
+	if(lan < 0)
+		lan += 360;
+	sprintf(buffer, "LAN    :%.4g°", lan);
 	TextOut(hDC, 0, pos, buffer, strlen(buffer));
 	pos += linespacing;
 
