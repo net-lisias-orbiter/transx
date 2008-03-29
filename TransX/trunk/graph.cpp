@@ -205,13 +205,6 @@ void Graph::drawatmosphere(HDC hDC, OBJHANDLE body)
 		int y=int((iystart+iyend)/2);
 		if (size*scale>2)
 			drawcircle(hDC, size);
-		else
-		{
-			MoveToEx(hDC,x-6,y,NULL);
-			LineTo(hDC,x+6,y);
-			MoveToEx(hDC,x,y-6,NULL);
-			LineTo(hDC,x,y+6);
-		}
 	}
 }
 
