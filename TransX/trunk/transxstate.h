@@ -24,7 +24,6 @@
 #include "mfdfunction.h"
 #include "mfdvarhandler.h"
 #include "mfdvartypes.h"
-#include "cmdnugget.h"
 #include <deque>
 #define SECONDS_PER_DAY 86400
 
@@ -81,15 +80,6 @@ private:
 	class mapfunction *mappointer;//The mapfunction pointer
 	OBJHANDLE hcraft;
 	std::deque<class basefunction*> baselist,todeletelist;
-};
-
-class copytransxstatecmd : public cmdnugget
-{
-private:
-	class transxstate *mytxstate;
-public:
-	virtual void execute();
-	void settransxstate(class transxstate *state){mytxstate=state;};
 };
 
 

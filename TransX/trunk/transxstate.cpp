@@ -303,14 +303,6 @@ transxstate::transxstate(OBJHANDLE thcraft, class shipptrs *tshipptrs)
 }
 
 
-void copytransxstatecmd::execute()
-{
-	OBJHANDLE craft=ivar->gethandle();//Get the handle this is based on
-	if (craft!=NULL)
-		mytxstate->baseonvessel(craft);
-}
-
-
 void transxstate::baseonvessel(OBJHANDLE p_craft)
 {
 	class shipptrs *ship=shipptrs::findship(p_craft);
@@ -361,9 +353,6 @@ bool transxstate::initialisevars()
 	m_ships.sethelpstrings(
 		"Select the ship from which",
 		"you wish to inherit settings.");
-	class copytransxstatecmd *nugget=new copytransxstatecmd;
-	nugget->settransxstate(this);
-	m_ships.setcmdnugget(nugget);
 
 	return true;
 }
