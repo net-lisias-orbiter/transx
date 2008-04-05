@@ -272,7 +272,7 @@ double Graph::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VESSE
 	offsetsize = sqrt(offsetsize / trtarget.z);
 	if (offsetsize > scalar || trtarget.z < 0) 
 		offsetsize = scalar;
-	offsetsize = offsetsize / scalar * windowsize / 3;
+	offsetsize = offsetsize / scalar * windowsize * edgeBorderSize / 2;
 	int xpos = int(offsetsize * xang + width / 2 + ixstart);
 	int ypos = int(offsetsize * yang + height / 2 + iystart);
 
