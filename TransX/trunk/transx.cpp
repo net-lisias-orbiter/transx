@@ -140,6 +140,8 @@ bool TransxMFD::ConsumeKeyImmediate(char *kstate)
 	if (!valid) return false;
 	MFDvariable *varpointer=viewstate->GetCurrVariable();
 	if (varpointer==NULL) return false;
+	if(!varpointer->IsContinuous())
+		return false;	// do not process this continuous change if the variable is not continuous.
 	if  (*(kstate+OAPI_KEY_MINUS)==-128)
 	{
 		varpointer->dec_variable();
@@ -181,6 +183,7 @@ bool TransxMFD::ConsumeButton(int bt, int event)
 bool TransxMFD::ConsumeKeyBuffered (DWORD key)
 {
 	if (!valid) return false;
+
 	MFDvariable *currvar=viewstate->GetCurrVariable();
 	bool access=(currvar!=NULL);
 	switch (key) {
