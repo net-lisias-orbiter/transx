@@ -25,6 +25,7 @@
 #include <math.h>
 #include "orbitersdk.h"
 #include "shiplist.h"
+#include <list>
 
 static int mode;
 
@@ -259,6 +260,37 @@ MATRIX3 getinvmatrix(const MATRIX3 mat)
 	return out;
 }
 
+void AddVesselToStack(VESSEL *vessel, list<VESSEL*> &stack)
+{
+	// Is the vessel in the stack
+	for(list<VESSEL*>::iterator it = stack.begin(); it != stack.end(); it++)
+		if(*it == vessel)
+			return;	// return early as the vessel is already in the stack
+
+	if(vessel)
+	{
+		stack.push_back(vessel);
+
+		// Add all the docked vessels to the stack
+		for(unsigned int i = 0; i < vessel->DockCount(); i++)
+			if(OBJHANDLE dockedVessel = vessel->GetDockStatus(vessel->GetDockHandle(i)))
+				AddVesselToStack(oapiGetVesselInterface(dockedVessel), stack);
+	}
+}
+
+double GetStackMass(VESSEL *vessel)
+{
+	// Create a list with all the vessels in the stack contained in the list
+	list<VESSEL*> stack;
+	AddVesselToStack(vessel, stack);
+
+	// Get the total mass of all the vessels in the list.
+	double stackMass = 0.0;
+	for(list<VESSEL*>::iterator it = stack.begin(); it != stack.end(); it++)
+		stackMass += ((VESSEL*)*it)->GetMass();
+	return stackMass;
+}
+
 double GetBurnTime(VESSEL *vessel, double deltaV)
 {
 	// Returns the time to burn to the required deltaV. Calculates via rocket equation
@@ -272,7 +304,7 @@ double GetBurnTime(VESSEL *vessel, double deltaV)
 		T += vessel->GetThrusterMax0(thruster);
 		isp += vessel->GetThrusterIsp0(thruster);
 	}
-	return - (isp * vessel->GetMass() / T * (exp(-deltaV / isp) - 1.0));
+	return - (isp * GetStackMass(vessel) / T * (exp(-deltaV / isp) - 1.0));
 }
 
 double GetBurnStart(VESSEL *vessel, double instantaneousBurnTime, double deltaV)
@@ -286,7 +318,7 @@ double GetBurnStart(VESSEL *vessel, double instantaneousBurnTime, double deltaV)
 		isp += vessel->GetThrusterIsp0(thruster);
 	}
 
-	double mass = oapiGetMass(vessel->GetHandle());
+	double mass = GetStackMass(vessel);
 	double startAccel = thrust / mass;
 	double mdot = thrust / isp;	// mass flow rate (rate of change of mass)
 	// jerk is rate of change of acceleration - differentiate F/(M - dm * t) using chain rule
