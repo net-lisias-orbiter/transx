@@ -141,13 +141,13 @@ bool SelectVariableBody(void *id, char *str, void *usrdata)
 	return ((MFDvarmoon*)usrdata)->SetVariableBody(str);
 }
 
-void TextShow(HDC hDC,const char *label,int wpos,int hpos,OBJHANDLE handle)
+void TextShow(Sketchpad *sketchpad,const char *label,int wpos,int hpos,OBJHANDLE handle)
 {
 	char buffer[30],buffer2[20];
 	oapiGetObjectName(handle,buffer2,20);
 	strcpy(buffer,label);
 	strcat(buffer,buffer2);
-	TextOut(hDC,wpos,hpos,buffer,strlen(buffer));
+	sketchpad->Text(wpos,hpos,buffer,strlen(buffer));
 }
 
 void TextForm(char *buffer,const char *label,double value)
@@ -181,13 +181,13 @@ void TextForm(char *buffer,const char *label,double value)
 }
 	
 
-void TextShow(HDC hDC,const char *label, int wpos, int hpos, double value)
+void TextShow(Sketchpad *sketchpad,const char *label, int wpos, int hpos, double value)
 {
 	char buffer[30];
 	TextForm(buffer,label,value);
 
 	int length=strlen(buffer);
-	TextOut(hDC, wpos, hpos, buffer, length);
+	sketchpad->Text( wpos, hpos, buffer, length);
 }
 
 

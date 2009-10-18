@@ -36,7 +36,7 @@ public:
 
 	virtual void dolowpriaction();
 
-	bool doupdate(HDC hDC,int tw, int th, unsigned int curfunction,int currview, unsigned int curvarfunction, int currvarview,class TransxMFD *tmfdpointer);
+	bool doupdate(Sketchpad *sketchpad,int tw, int th, unsigned int curfunction,int currview, unsigned int curvarfunction, int currvarview,class TransxMFD *tmfdpointer);
 	void savecurrent(FILEHANDLE scn);
 	bool restoresave(FILEHANDLE scn);
 
@@ -57,7 +57,7 @@ public:
 	class basefunction *getbasefn(unsigned int stagenumber);
 	class shipptrs *getshipptrs(){return shipptrs;};
 	void setshipptrs(class shipptrs *ptr){shipptrs=ptr;};
-	void showinitialstage(HDC hDC,int linespacing,int tw);
+	void showinitialstage(Sketchpad *sketchpad,int linespacing,int tw);
 	bool checkbasefunction();//checks if first function should now be deleted due to non-validity
 private:
 	bool initfunctions();

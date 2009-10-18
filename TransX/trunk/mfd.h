@@ -36,8 +36,8 @@ double GetBurnTime(VESSEL *vessel, double deltaV);
 double GetBurnStart(VESSEL *vessel, double instantaneousBurnTime, double deltaV);
 
 // Standard formatting function
-void TextShow(HDC hDC, const char *label, int wpos, int hpos, double value);
-void TextShow(HDC hDC, const char *label, int wpos, int hpos, OBJHANDLE handle);
+void TextShow(oapi::Sketchpad *sketchpad, const char *label, int wpos, int hpos, double value);
+void TextShow(oapi::Sketchpad *sketchpad, const char *label, int wpos, int hpos, OBJHANDLE handle);
 void TextForm(char *buffer,const char *label,double value);
 
 const double GRAVITY=6.67259e-11; // Gravitational constant

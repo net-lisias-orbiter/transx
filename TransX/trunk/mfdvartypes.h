@@ -44,9 +44,9 @@ private:
 public:
 	void initbybody(OBJHANDLE craft,bool reset);//Used to create list to select from
 	void addtolist(char *name);
-	virtual bool show(HDC hDC, int width, int line);
+	virtual bool show(Sketchpad *sketchpad, int width, int line);
 	virtual OBJHANDLE gethandle() const;
-	virtual void showadjustment(HDC hDC, int width, int line) const{};
+	virtual void showadjustment(Sketchpad *sketchpad, int width, int line) const{};
 	virtual void ch_adjmode(){};
 	virtual void chm_adjmode(){};
 	virtual void inc_variable();
@@ -78,10 +78,10 @@ public:
 	virtual void setall(class MFDvariable *var);
 	bool validate();
 	void initvalidate();
-	virtual bool show(HDC hDC, int width, int line);
+	virtual bool show(Sketchpad *sketchpad, int width, int line);
 	virtual void ch_adjmode();					// toggles between craft and planet/moon
 	virtual void chm_adjmode() {ch_adjmode();};	// toggles between craft and planet/moon
-	virtual void showadjustment(HDC hDC, int width, int line) const;
+	virtual void showadjustment(Sketchpad *sketchpad, int width, int line) const;
 	virtual int getvalue() const;
 	virtual OBJHANDLE gethandle() const;
 	virtual bool loadvalue(char *buffer);
@@ -118,8 +118,8 @@ public:
 	virtual void dec_variable(); //Decrease the variable
 	virtual void ch_adjmode();
 	virtual void chm_adjmode();
-	virtual void showadjustment(HDC hDC, int width, int line) const;
-	bool show(HDC hDC, int width, int line);
+	virtual void showadjustment(Sketchpad *sketchpad, int width, int line) const;
+	bool show(Sketchpad *sketchpad, int width, int line);
 	double getvalue() const; //Get the value
 	void setvalue(double tvalue);
 	virtual void getsaveline(char *buffer) const;
@@ -131,7 +131,7 @@ public:
 
 class MFDvarMJD: public MFDvarfloat {
 public:
-	bool show(HDC hDC, int width, int line);
+	bool show(Sketchpad *sketchpad, int width, int line);
 	virtual void inc_variable(); // Increase the variable
 	virtual void dec_variable(); //Decrease the variable
 
@@ -148,7 +148,7 @@ public:
 	void inc_variable(); //Change to next projection
 	operator int() {return value;};
 	int operator = (int tvalue){value=tvalue;return value;};
-	bool show(HDC hDC, int width, int line);
+	bool show(Sketchpad *sketchpad, int width, int line);
 	virtual void getsaveline(char *buffer) const;
 	virtual bool loadvalue(char *buffer);
 	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname, int vvalue, int vlimit, char *st1, char *st2, char *st3, char *st4, char *st5);
@@ -164,7 +164,7 @@ public:
 	virtual void getsaveline(char *buffer) const;
 	virtual bool loadvalue(char *buffer);
 	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname,int tvalue);
-	virtual bool show(HDC hDC,int width,int line);
+	virtual bool show(Sketchpad *sketchpad, int width, int line);
 	MFDsemiintdiscrete(){value=0;};
 };
 
@@ -175,7 +175,7 @@ public:
 	double operator = (double tvalue){setvalue(tvalue);return tvalue;};
 	virtual void inc_variable(); // Increase the variable
 	virtual void dec_variable(); //Decrease the variable
-	bool show(HDC hDC, int width, int line);
+	bool show(Sketchpad *sketchpad, int width, int line);
 	double getsin() const;
 	double getcos() const;
 	void init(MFDvarhandler *vars,char *vname, bool vloop);

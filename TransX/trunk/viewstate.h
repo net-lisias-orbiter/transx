@@ -24,6 +24,8 @@
 #include "transx.h"
 #include "transxstate.h"
 
+using namespace std;
+
 class viewstate
 {
 	int mfdposition;
@@ -38,7 +40,7 @@ class viewstate
 	void selfdownshift();
 	void resetshift();
 public:
-	bool doupdate(HDC hDC,int tw,int th,TransxMFD *mfdptr);
+	bool doupdate(Sketchpad *sketchpad, int tw, int th, TransxMFD *mfdptr);
 	bool getrenderviewport(){return renderviewport;};
 	class MFDvariable *GetCurrVariable(); 
 	static void preparetoclose();

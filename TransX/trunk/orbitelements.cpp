@@ -701,7 +701,7 @@ void OrbitElements::GetTimesToThi(double costhi, double *time1, double *time2,in
 }
 
 
-void OrbitElements::draworbit(HDC hDC, const Graph *graph, bool drawradius) const
+void OrbitElements::draworbit(Sketchpad *sketchpad, const Graph *graph, bool drawradius) const
 {
 	// Create projection vectors
 	if (!valid) return;
@@ -714,7 +714,7 @@ void OrbitElements::draworbit(HDC hDC, const Graph *graph, bool drawradius) cons
 	DWORD ystart=graph->iystart;
 	DWORD yend=graph->iyend;
 	double scale=graph->scale;
-	POINT pointarray[50];
+	IVECTOR2 pointarray[50];
 	DWORD numpoints;
 	int xpos, ypos;
 	double xposd,yposd;
@@ -737,7 +737,7 @@ void OrbitElements::draworbit(HDC hDC, const Graph *graph, bool drawradius) cons
 		if (xposd<xstart || xposd>xend || yposd<xstart || yposd>xend) return; // Makes safe if orbit too large to fit screen!
 		xpos=int(xposd);
 		ypos=int(yposd);
-		MoveToEx (hDC, xpos, ypos, NULL);
+		sketchpad->MoveTo(xpos, ypos);
 		bool exit=false;
 		do //This inner loop draws half an orbit from periapsis outwards
 		{
@@ -797,7 +797,8 @@ void OrbitElements::draworbit(HDC hDC, const Graph *graph, bool drawradius) cons
 		}
 		while (!exit);
 		numpoints=DWORD(ct);
-		PolylineTo(hDC, pointarray, numpoints);
+		sketchpad->LineTo(pointarray[0].x, pointarray[0].y); // draw the line from the current position to the start of the polyline
+		sketchpad->Polyline(pointarray, numpoints);
 		sinstep=-sinstep;
 		currcos=1;
 		currsin=0;
@@ -808,11 +809,11 @@ void OrbitElements::draworbit(HDC hDC, const Graph *graph, bool drawradius) cons
 	{
 		xpos=(int) xoffset;
 		ypos=(int) yoffset;
-		MoveToEx (hDC, xpos, ypos, NULL);
+		sketchpad->MoveTo(xpos, ypos);
 		currvector=currposition;
 		xpos= int(dotp(xaxis, currvector)*scale +xoffset);
 		ypos= int(dotp(yaxis, currvector)*scale +yoffset);
-		LineTo(hDC, xpos, ypos);
+		sketchpad->LineTo(xpos, ypos);
 	}
 }
 

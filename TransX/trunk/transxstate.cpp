@@ -401,7 +401,7 @@ transxstate::~transxstate()
 	todeletelist.clear();
 }
 
-bool transxstate::doupdate(HDC hDC, int tw, int th,unsigned int curfunction,int currview, unsigned int curvarfunction, int currvarview,TransxMFD *tmfdpointer)
+bool transxstate::doupdate(Sketchpad *sketchpad, int tw, int th,unsigned int curfunction,int currview, unsigned int curvarfunction, int currvarview,TransxMFD *tmfdpointer)
 {
 	saveflag=false;
 	selectshipvars=(curvarfunction<1);
@@ -412,30 +412,30 @@ bool transxstate::doupdate(HDC hDC, int tw, int th,unsigned int curfunction,int 
 	if (mappointer->getinitialised()==false)
 	{//show the Easter eggs!
 
-		TextOut(hDC,tw/3,6*linespacing,"TransX",6);
-		TextOut(hDC,0,22*linespacing,"(C) Sirius Cybernetics Corporation.",35);
+		sketchpad->Text(tw/3,6*linespacing,"TransX",6);
+		sketchpad->Text(0,22*linespacing,"(C) Sirius Cybernetics Corporation.",35);
 
 		switch (eastereggswitch)
 		{
 		case 0:
-			TextOut(hDC,tw/6,9*linespacing,"Change your world.",18);
+			sketchpad->Text(tw/6,9*linespacing,"Change your world.",18);
 			return false;
 		case 1:
-			TextOut(hDC,tw/6,9*linespacing,"It doesn't do dishes.",21);
-			TextOut(hDC,tw/6,10*linespacing,"Sorry.",6);
+			sketchpad->Text(tw/6,9*linespacing,"It doesn't do dishes.",21);
+			sketchpad->Text(tw/6,10*linespacing,"Sorry.",6);
 			return false;
 		case 2:
-			TextOut(hDC,tw/6,8*linespacing,"Check out our new robotics",26);
-			TextOut(hDC,tw/6,9*linespacing,"range.",6);
-			TextOut(hDC,tw/6,11*linespacing,"Your plastic pal who's",22);
-			TextOut(hDC,tw/6,12*linespacing,"fun to be with!",15);
+			sketchpad->Text(tw/6,8*linespacing,"Check out our new robotics",26);
+			sketchpad->Text(tw/6,9*linespacing,"range.",6);
+			sketchpad->Text(tw/6,11*linespacing,"Your plastic pal who's",22);
+			sketchpad->Text(tw/6,12*linespacing,"fun to be with!",15);
 			return false;
 		case 3:
-			TextOut(hDC,tw/6,8*linespacing,"Blue sky thinking -",19);
-			TextOut(hDC,tw/6,9*linespacing,"we look down on it",18);
+			sketchpad->Text(tw/6,8*linespacing,"Blue sky thinking -",19);
+			sketchpad->Text(tw/6,9*linespacing,"we look down on it",18);
 			return false;
 		case 4:
-			TextOut(hDC,tw/6,9*linespacing,"Change your world.",18);
+			sketchpad->Text(tw/6,9*linespacing,"Change your world.",18);
 			return false;
 		}
 		return false;
@@ -443,7 +443,7 @@ bool transxstate::doupdate(HDC hDC, int tw, int th,unsigned int curfunction,int 
 	if (selectshipvars)
 	{
 		m_ships.initbybody(hcraft,false);//Initialise variable if it hasn't been done.
-		showinitialstage(hDC,linespacing,tw);
+		showinitialstage(sketchpad,linespacing,tw);
 		return true;//If this is the case, only the variable system for ship-level is active.
 	}
 	if (baselist.empty())
@@ -465,31 +465,31 @@ bool transxstate::doupdate(HDC hDC, int tw, int th,unsigned int curfunction,int 
 		if (variable!=NULL)
 		{
 			variable->gethelpstrings(help1,help2);
-			TextOut(hDC,0,11*linespacing,help1,strlen(help1));
-			TextOut(hDC,0,12*linespacing,help2,strlen(help2));
+			sketchpad->Text(0,11*linespacing,help1,strlen(help1));
+			sketchpad->Text(0,12*linespacing,help2,strlen(help2));
 		}
 		//Help for function
 		cfunction->gethelp(help1,help2,help3,help4,help5);
-		TextOut(hDC,0,16*linespacing,help1,strlen(help1));
-		TextOut(hDC,0,17*linespacing,help2,strlen(help2));
-		TextOut(hDC,0,18*linespacing,help3,strlen(help3));
-		TextOut(hDC,0,19*linespacing,help4,strlen(help4));
-		TextOut(hDC,0,20*linespacing,help5,strlen(help5));
+		sketchpad->Text(0,16*linespacing,help1,strlen(help1));
+		sketchpad->Text(0,17*linespacing,help2,strlen(help2));
+		sketchpad->Text(0,18*linespacing,help3,strlen(help3));
+		sketchpad->Text(0,19*linespacing,help4,strlen(help4));
+		sketchpad->Text(0,20*linespacing,help5,strlen(help5));
 	}
 	else
 	{
 		cvarfunction->processvisiblevars();//Update any visibility changes
-		cfunction->doupdate(hDC,tw,th,currview);
+		cfunction->doupdate(sketchpad,tw,th,currview);
 	}
 	char buffer[20];
 	int length=sprintf(buffer,"Stage %i:%i",curfunction,baselist.size());
-	TextOut(hDC,tw/2,0,buffer,length);
+	sketchpad->Text(tw/2,0,buffer,length);
 	length=sprintf(buffer,"Vars Stage %i",curvarfunction);
-	TextOut(hDC,tw/2,4*linespacing,buffer,length);
+	sketchpad->Text(tw/2,4*linespacing,buffer,length);
 	return true;
 }
 
-void transxstate::showinitialstage(HDC hDC,int linespacing,int tw)
+void transxstate::showinitialstage(Sketchpad *sketchpad,int linespacing,int tw)
 {
-	TextOut(hDC,tw/2,0,"General Setup",13);
+	sketchpad->Text(tw/2,0,"General Setup",13);
 }

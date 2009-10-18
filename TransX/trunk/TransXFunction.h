@@ -39,7 +39,7 @@ class transxstate;
 class TransXFunction: public MFDFunction
 {
 public:
-	enum Pen
+	enum PenIdentifier
 	{ 
 		Hollow = -1,
 		Green = 0,
@@ -67,12 +67,12 @@ protected:
 	double simstartMJD; //Time at which current scenario commenced
 	class MFDvarhandler vars; //Variable set associated with this MFDFunction
 	class transxstate *state; //Pointer to calling transxstate
-	HPEN pens[NUM_PENS];//Replacement pens for MFD
-	HBRUSH brush[NUM_PENS];
+	Pen *pens[NUM_PENS];//Replacement pens for MFD
+	Brush *brush[NUM_PENS];
 
 public:
-	HPEN SelectDefaultPen(HDC hDC, int value);
-	HBRUSH TransXFunction::SelectBrush(HDC hDC, int value);
+	Pen* SelectDefaultPen(Sketchpad *sketchpad, int value);
+	Brush* TransXFunction::SelectBrush(Sketchpad *sketchpad, int value);
 
 	MFDvarhandler* getvariablehandler();//Passes pointer to variable handler
 	TransXFunction(class transxstate *tstate, OBJHANDLE thmajor, OBJHANDLE thminor, OBJHANDLE thtarget, OBJHANDLE thcraft, OBJHANDLE thbase);//Constructor
@@ -90,7 +90,7 @@ public:
 	bool loadvector(FILEHANDLE scn, VECTOR3 *loadedvector);
 	void saveorbit(FILEHANDLE scn, const OrbitElements &saveorbit);//Saves an orbit structure
 	bool loadorbit(FILEHANDLE scn, OrbitElements *loadorbit);//Loads an orbit structure
-	virtual void doupdate(HDC hDC, int tw, int th, int viewmode){return;};//overloaded to create views
+	virtual void doupdate(Sketchpad *sketchpad, int tw, int th, int viewmode){return;};//overloaded to create views
 	MFDvariable *getcurrentvariable(int view);
 	void gethandles(OBJHANDLE *thmajor, OBJHANDLE *thminor, OBJHANDLE *thtarget, OBJHANDLE *thcraft, OBJHANDLE *thbase); //Gets handles
 	OBJHANDLE gethmajor(){return hmajor;};//Return central body

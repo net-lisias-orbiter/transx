@@ -217,29 +217,28 @@ void slingshot::graphscale(Graph *graph)
 		graph->setviewscale(planorbit);
 }
 
-bool minorejectplan::maingraph(HDC hDC,Graph *graph, basefunction *base)
+bool minorejectplan::maingraph(Sketchpad *sketchpad,Graph *graph, basefunction *base)
 {
 	OrbitElements craft=base->getcraftorbit();
 	if (craft.isvalid() && planorbit.isvalid())
 	{
 		// Draw intersect line
-		base->SelectDefaultPen(hDC,TransXFunction::Grey);
+		base->SelectDefaultPen(sketchpad, TransXFunction::Grey);
 		VECTOR3 intersect=planorbit.getintersectvector(craft);
-		graph->drawvectorline(hDC,intersect);
+		graph->drawvectorline(sketchpad,intersect);
 		// Draw Ascending Node (filled)
 		intersect = unitise(intersect) * this->ibase->getcraftorbit().getapodistance(); // Put markers out of the way
-		base->SelectBrush(hDC, TransXFunction::Grey);
-		graph->drawmarker(hDC, -intersect, Graph::Circle);
+		base->SelectBrush(sketchpad, TransXFunction::Grey);
+		graph->drawmarker(sketchpad, -intersect, Graph::Circle);
 		// Draw Descending Node (hollow)
-		base->SelectBrush(hDC, TransXFunction::Hollow);
-		graph->drawmarker(hDC, intersect, Graph::Circle);
+		base->SelectBrush(sketchpad, TransXFunction::Hollow);
+		graph->drawmarker(sketchpad, intersect, Graph::Circle);
 	}
 	return true;
 }
 
-bool slingshot::maingraph(HDC hDC,Graph *graph,basefunction *base)
+bool slingshot::maingraph(Sketchpad *sketchpad,Graph *graph,basefunction *base)
 {
-	HPEN pen;
 	OrbitElements craft=base->getcraftorbit();
 	OBJHANDLE hmajor=base->gethmajor();
 	double planetsize=oapiGetSize(hmajor);
@@ -255,23 +254,22 @@ bool slingshot::maingraph(HDC hDC,Graph *graph,basefunction *base)
 	craft.getinfinityvelvector(false,&velvector);//Now finally set for real
 	graph->setprojection(velvector);
 
-	pen=base->SelectDefaultPen(hDC,TransXFunction::PEN_ATMOSPHERE);
-	graph->drawatmosphere(hDC,hmajor); 
-	pen=base->SelectDefaultPen(hDC,TransXFunction::Grey);
-	graph->drawplanet(hDC,hmajor); 
-	pen=base->SelectDefaultPen(hDC,TransXFunction::Green);
-	graph->drawvector(hDC,craftpos);
-	pen=base->SelectDefaultPen(hDC,TransXFunction::Yellow);
-	graph->drawvector(hDC,planpos);
+	oapi::Pen *pen=base->SelectDefaultPen(sketchpad,TransXFunction::PEN_ATMOSPHERE);
+	graph->drawatmosphere(sketchpad,hmajor); 
+	pen=base->SelectDefaultPen(sketchpad,TransXFunction::Grey);
+	graph->drawplanet(sketchpad,hmajor); 
+	pen=base->SelectDefaultPen(sketchpad,TransXFunction::Green);
+	graph->drawvector(sketchpad,craftpos);
+	pen=base->SelectDefaultPen(sketchpad,TransXFunction::Yellow);
+	graph->drawvector(sketchpad,planpos);
 	return false;//No need to draw any more graphs
 }
 
 
-void encounterplan::graphupdate(HDC hDC,Graph *graph,basefunction *base)
+void encounterplan::graphupdate(Sketchpad *sketchpad,Graph *graph,basefunction *base)
 {
-	HPEN pen;
 	drawnbase=false;
-	pen=base->SelectDefaultPen(hDC,TransXFunction::Yellow);
+	Pen* pen=base->SelectDefaultPen(sketchpad,TransXFunction::Yellow);
 	OBJHANDLE hvessel=base->gethcraft();
 	VESSEL *curfocus=oapiGetVesselInterface(hvessel);
 	VESSELSTATUS status;
@@ -305,25 +303,24 @@ void encounterplan::graphupdate(HDC hDC,Graph *graph,basefunction *base)
 	double radius2=radius*radius;
 	if (radius2*1.5>distance2)
 	{
-		graph->drawvector(hDC,baseposition);
+		graph->drawvector(sketchpad,baseposition);
 		drawnbase=true;
 	}
 }
 
 
-void slingshot::graphupdate(HDC hDC, Graph *graph,basefunction *base)
+void slingshot::graphupdate(Sketchpad *sketchpad, Graph *graph,basefunction *base)
 {
-	HPEN pen;
-	pen=base->SelectDefaultPen(hDC,TransXFunction::Yellow);
-	planorbit.draworbit(hDC,graph,false);
+	Pen* pen=base->SelectDefaultPen(sketchpad,TransXFunction::Yellow);
+	planorbit.draworbit(sketchpad,graph,false);
 	OrbitElements craft=base->getcraftorbit();
 	if (!craft.isvalid()) return;
 	VECTOR3 intersect=planorbit.getintersectvector(craft);
-	pen=base->SelectDefaultPen(hDC,TransXFunction::Grey);
-	graph->drawvectorline(hDC,intersect);
+	pen=base->SelectDefaultPen(sketchpad,TransXFunction::Grey);
+	graph->drawvectorline(sketchpad,intersect);
 }
 
-void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *base)
+void minorejectplan::wordupdate(Sketchpad *sketchpad, int width, int height, basefunction *base)
 {
 	char buffer[20];
 	int linespacing=height/24;
@@ -344,7 +341,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	VECTOR3 down = {0, -1, 0};
 	double targetInc = 180/PI*acos(cosangle(down, planorbit.getplanevector()));
 	sprintf(buffer, "Incl.  :%.4g°", targetInc);
-	TextOut(hDC, 0, pos, buffer, strlen(buffer));
+	sketchpad->Text( 0, pos, buffer, strlen(buffer));
 	pos += linespacing;
 
 	// Get the target LAN (absolute wrt global coordinates)
@@ -353,7 +350,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	if(lan < 0)
 		lan += 360;
 	sprintf(buffer, "LAN    :%.4g°", lan);
-	TextOut(hDC, 0, pos, buffer, strlen(buffer));
+	sketchpad->Text( 0, pos, buffer, strlen(buffer));
 	pos += linespacing;
 
 	if (status.status==1)
@@ -378,7 +375,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	{
 		len=sprintf(buffer, "Rel Inc:%.4g°", angle);
 	}
-	TextOut(hDC, 0, pos, buffer, len);
+	sketchpad->Text( 0, pos, buffer, len);
 
 	// Calculate Delta-v
 	if (status.rbody!=base->gethmajor()) return;
@@ -386,7 +383,7 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	double radius=length(tpos);
 	double deltav=sqrt(planorbit.getgmplanet()*(2/radius+1/planorbit.getsemimajor()))-length(tvel);
 	pos+=linespacing;
-	TextShow(hDC,"Delta V:", 0, pos, deltav);
+	TextShow(sketchpad,"Delta V:", 0, pos, deltav);
 	pos+=linespacing;
 
 	//Calculate timings for burn
@@ -399,47 +396,47 @@ void minorejectplan::wordupdate(HDC hDC, int width, int height, basefunction *ba
 	//Only display if timestamp is current
 	if (fabs(craft.gettimestamp()-oapiGetSimTime())<1)
 	{
-		TextShow(hDC,"T to Pe:",0,pos,timefromstamp);
+		TextShow(sketchpad,"T to Pe:",0,pos,timefromstamp);
 		pos+=linespacing;
-		TextShow(hDC,"Begin Burn:",0,pos,GetBurnStart(pV, timefromstamp, deltav));
+		TextShow(sketchpad,"Begin Burn:",0,pos,GetBurnStart(pV, timefromstamp, deltav));
 		pos+=linespacing;
 		double angle=180/PI*acos(cosangle(planpos,craftpos));
-		TextShow(hDC,"Ang. to Pe:",0,pos,angle);
+		TextShow(sketchpad,"Ang. to Pe:",0,pos,angle);
 		pos+=linespacing;
 		if (craft.geteccentricity()>0.03)
 		{
 			craft.getaxes(&crmajaxis,&temp);
 			planorbit.getaxes(&plmajaxis,&temp);
 			angle=180/PI*acos(cosangle(crmajaxis,plmajaxis));
-			TextShow(hDC,"S.maj diff:",0,pos,angle);
+			TextShow(sketchpad,"S.maj diff:",0,pos,angle);
 		}
 	}
 }
 
 
-void slingshot::wordupdate(HDC hDC, int width, int height, basefunction *base)
+void slingshot::wordupdate(Sketchpad *sketchpad, int width, int height, basefunction *base)
 {
 	int linespacing=height/24;
 	int pos=15*linespacing;
 	OrbitElements craft=base->getcraftorbit();
 	if (!craft.isvalid() || !planorbit.isvalid()) return;
-	TextShow(hDC,"R. Inc:",0,pos,180*acos(cosangle(planorbit.getplanevector(),craft.getplanevector()))/PI);
+	TextShow(sketchpad,"R. Inc:",0,pos,180*acos(cosangle(planorbit.getplanevector(),craft.getplanevector()))/PI);
 	pos+=linespacing;
-	TextShow(hDC,"Pe Ratio:",0,pos,craft.getpedistance()/planorbit.getpedistance());
+	TextShow(sketchpad,"Pe Ratio:",0,pos,craft.getpedistance()/planorbit.getpedistance());
 	pos+=linespacing;
 	double timetope=craft.GetTimeToThi(1,0)+craft.gettimestamp()-oapiGetSimTime();
-	TextShow(hDC,"Time to Pe:",0,pos,timetope);
+	TextShow(sketchpad,"Time to Pe:",0,pos,timetope);
 	pos+=linespacing;
 	//Calculate reqd delta using energy calculation
 	double craftreqvel=craft.getvelocityatdist(planorbit.getpedistance());
 	double outplanpevel=sqrt(ejectvelocity2+2*planorbit.getgmplanet()/planorbit.getpedistance());
 	if (fabs(outplanpevel-craftreqvel)>0.1)//Only show if a manoeuvre is required
 	{
-		TextShow(hDC,"Delta V:",0,pos,outplanpevel-craftreqvel);
+		TextShow(sketchpad,"Delta V:",0,pos,outplanpevel-craftreqvel);
 		pos+=linespacing;
 		OBJHANDLE hcraft=base->gethcraft();
 		VESSEL *pV=oapiGetVesselInterface(hcraft);
-		TextShow(hDC,"Begin Burn",0,pos,GetBurnStart(pV, timetope, (outplanpevel-craftreqvel)));
+		TextShow(sketchpad,"Begin Burn",0,pos,GetBurnStart(pV, timetope, (outplanpevel-craftreqvel)));
 		pos+=linespacing;
 	}
 }
@@ -450,7 +447,7 @@ void encounterplan::getplanorbit(OrbitElements *planorbit)
 }
 
 
-void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *base)
+void encounterplan::wordupdate(Sketchpad *sketchpad, int width, int height, basefunction *base)
 {
 	int linespacing=height/24;
 	int pos=18*linespacing;
@@ -468,7 +465,7 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 		if (m_drawbase==0 && drawnbase)
 		{
 			double distfrombase=length(position-baseposition);
-			TextShow(hDC,"L.site dist to Base:",0,pos,distfrombase);
+			TextShow(sketchpad,"L.site dist to Base:",0,pos,distfrombase);
 			pos+=linespacing;
 		}
 		else
@@ -483,20 +480,20 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 				lng += 360;
 			char output[64];
 			sprintf(output, "Land Site Lat/Long: %.4g, %.4g", lat, lng);
-			TextOut(hDC, 0, pos, output, strlen(output));
+			sketchpad->Text( 0, pos, output, strlen(output));
 			pos += linespacing;
 		}
 	}
 	else
 	{
-		TextShow(hDC,"Min Alt:",0,pos,ped-radius);
+		TextShow(sketchpad,"Min Alt:",0,pos,ped-radius);
 		pos+=linespacing;
 		double planetenergy=GRAVITY*oapiGetMass(hmajor)/ped;
 		double escvelocity=sqrt(2*planetenergy);
 		double actualpevelocity=sqrt(craft.getangmomentum2())/ped;
-		TextShow(hDC,"Pe Vel:",0,pos,actualpevelocity);
+		TextShow(sketchpad,"Pe Vel:",0,pos,actualpevelocity);
 		pos+=linespacing;
-		TextShow(hDC,"Capture Delta:",0,pos,actualpevelocity-escvelocity);
+		TextShow(sketchpad,"Capture Delta:",0,pos,actualpevelocity-escvelocity);
 		pos+=linespacing;
 
 		VECTOR3 position,velocity;
@@ -505,10 +502,10 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 		{
 			VECTOR3 plane=unitise(craft.getplanevector());
 			double distoffplane=dotp(plane,baseposition);
-			TextShow(hDC,"Offplane Dist:",0,pos,distoffplane);
+			TextShow(sketchpad,"Offplane Dist:",0,pos,distoffplane);
 			pos+=linespacing;
 			double distfrombase=length(position-baseposition);
-			TextShow(hDC,"Pe dist to Base:",0,pos,distfrombase);
+			TextShow(sketchpad,"Pe dist to Base:",0,pos,distfrombase);
 			pos+=linespacing;
 		}
 		else
@@ -523,7 +520,7 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 				lng += 360;
 			char output[64];
 			sprintf(output, "Pe Lat/Long: %.4g, %.4g", lat, lng);
-			TextOut(hDC, 0, pos, output, strlen(output));
+			sketchpad->Text( 0, pos, output, strlen(output));
 			pos += linespacing;
 		}
 	}
@@ -531,31 +528,31 @@ void encounterplan::wordupdate(HDC hDC, int width, int height, basefunction *bas
 	VECTOR3 ecliptic={0,-1,0};
 	double inclination=acos(dotp(unitise(craft.getplanevector()),ecliptic));
 	inclination=inclination/PI*180;
-	TextShow(hDC,"Inclination:",0,pos,inclination);
+	TextShow(sketchpad,"Inclination:",0,pos,inclination);
 	pos+=linespacing;
 	VECTOR3 lanvector=unitise(crossp(craft.getplanevector(),ecliptic));
 	double lan=acos(lanvector.x)/PI*180;
 	if (lanvector.z<0) lan=-lan;
-	TextShow(hDC,"LAN ",0,pos,lan);
+	TextShow(sketchpad,"LAN ",0,pos,lan);
 }
 
 
-void majejectplan::wordupdate(HDC hDC,int width, int height, basefunction *base)
+void majejectplan::wordupdate(Sketchpad *sketchpad,int width, int height, basefunction *base)
 {
 	if (ratioorbit>0)
 	{
 		int linespacing=height/24;
 		int pos=15*linespacing;
-		TextShow(hDC,"Pe/Pl Rad:",0,pos,ratioorbit);
+		TextShow(sketchpad,"Pe/Pl Rad:",0,pos,ratioorbit);
 	}
 }
 
 
 
-void minorejectplan::graphupdate(HDC hDC, Graph *graph,basefunction *base)
+void minorejectplan::graphupdate(Sketchpad *sketchpad, Graph *graph,basefunction *base)
 {
-	base->SelectDefaultPen(hDC,TransXFunction::Yellow);
-	planorbit.draworbit(hDC,graph,true);
+	base->SelectDefaultPen(sketchpad,TransXFunction::Yellow);
+	planorbit.draworbit(sketchpad,graph,true);
 }
 
 void majejectplan::graphscale(Graph *graph)
@@ -564,10 +561,10 @@ void majejectplan::graphscale(Graph *graph)
 		graph->setviewscale(planorbit);
 }
 
-void majejectplan::graphupdate(HDC hDC, Graph *graph,basefunction *base)
+void majejectplan::graphupdate(Sketchpad *sketchpad, Graph *graph,basefunction *base)
 {
-	base->SelectDefaultPen(hDC,TransXFunction::Yellow);
-	planorbit.draworbit(hDC,graph,false);
+	base->SelectDefaultPen(sketchpad,TransXFunction::Yellow);
+	planorbit.draworbit(sketchpad,graph,false);
 }
 
 bool slingejectplan::init(class MFDvarhandler *vars, class basefunction *base)

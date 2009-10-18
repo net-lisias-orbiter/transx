@@ -22,7 +22,9 @@
 #define __TRANSX_H
 #include "graph.h"
 
-class TransxMFD: public MFD {
+using namespace oapi;
+
+class TransxMFD: public MFD2 {
 public:
 	TransxMFD (DWORD w, DWORD h, VESSEL *Vessel, UINT mfd);
 	~TransxMFD();
@@ -31,7 +33,7 @@ public:
 	bool ConsumeKeyImmediate(char *kstate);
 	bool ConsumeButton(int bt, int event);
 	bool ConsumeKeyBuffered(DWORD key);
-	void Update (HDC hDC);
+	bool Update (Sketchpad *sketchpad);
 	void WriteStatus(FILEHANDLE scn) const;
 	void ReadStatus(FILEHANDLE scn);
 	static int MsgProc (UINT msg, UINT mfd, WPARAM wparam, LPARAM lparam);

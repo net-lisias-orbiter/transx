@@ -53,7 +53,7 @@ void MFDvariable::setall(class MFDvariable *var)
 	sethandle(var->gethandle());
 }
 
-bool MFDvariable::showgeneric(HDC hDC,int width,int line, char *inbuff)
+bool MFDvariable::showgeneric(Sketchpad *sketchpad,int width,int line, char *inbuff)
 {
 // This is a helper function that formats output to the MFD screen
 	char buffer[MAX_NAME_LENGTH];
@@ -62,19 +62,19 @@ bool MFDvariable::showgeneric(HDC hDC,int width,int line, char *inbuff)
 	int inlength=strlen(inbuff);
 	strcpy(buffer,name);
 	int length=strlen(buffer);
-	TextOut(hDC, linecentre, linepos, buffer, length);
-	showadjustment(hDC, width, line);
+	sketchpad->Text(linecentre, linepos, buffer, length);
+	showadjustment(sketchpad, width, line);
 	linepos+=line+line;
-	TextOut(hDC, linecentre, linepos, inbuff,inlength);
+	sketchpad->Text(linecentre, linepos, inbuff,inlength);
 	return true;
 }
 
-bool MFDvariable::show(HDC hDC, int width, int line)
+bool MFDvariable::show(Sketchpad *sketchpad, int width, int line)
 //This is a virtual function that will not normally be used. Although MFDvariable is not
 // a pure virtual class, it is only the derived classes that are created in practice.
 // All these show() functions describe the MFDvariable on the screen
 {
-	return showgeneric(hDC,width,line," ");
+	return showgeneric(sketchpad, width, line, " ");
 }
 
 bool MFDvariable::loadvalue(char *buffer)

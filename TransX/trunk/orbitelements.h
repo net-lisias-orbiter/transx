@@ -20,6 +20,8 @@
 
 #pragma once
 
+using namespace oapi;
+
 class OrbitElements{
 private:
 	VECTOR3 planevector; // Vector perpendicular to plane - defines orbital plane
@@ -58,7 +60,7 @@ public:
 	void init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, double ttimestamp, double gmplanet); //Initialiser that pushes out a timestamp as well
 	void minortomajorinit(const OrbitElements &craftinrmin, const OrbitElements &rmininrmaj, double soisize);
 	void majortominorinit(OBJHANDLE target, OBJHANDLE object, const class Intercept &closestapproach, double soisize);//Going from major to minor
-	void draworbit(HDC hDC, const class Graph *graph, bool drawradius) const; //Draws an orbit in window and projection described in graph
+	void draworbit(Sketchpad *sketchpad, const class Graph *graph, bool drawradius) const; //Draws an orbit in window and projection described in graph
 	//Can be called even if orbit.isvalid() is false
 	void setinvalid(){valid=false;};//Forces an existing orbit structure into invalidity
 	//The routines below generally ASSUME that orbit has been initialised

@@ -120,13 +120,13 @@ void Graph::setprojection(const VECTOR3 &projection)
 	}
 }
 
-void Graph::draworbit(const OrbitElements &element, HDC hDC, bool drawradius)
+void Graph::draworbit(const OrbitElements &element, Sketchpad *sketchpad, bool drawradius)
 {
-	element.draworbit(hDC,this ,drawradius);
+	element.draworbit(sketchpad,this ,drawradius);
 }
 
 
-void Graph::drawtwovector(HDC hDC, const VECTOR3 &line1, const VECTOR3 &line2)
+void Graph::drawtwovector(Sketchpad *sketchpad, const VECTOR3 &line1, const VECTOR3 &line2)
 // Draw two vectors from the planet centre
 {
 	const double xoffset=(ixstart+ixend)*0.5;
@@ -134,34 +134,34 @@ void Graph::drawtwovector(HDC hDC, const VECTOR3 &line1, const VECTOR3 &line2)
 	int xpos, ypos;
 	xpos=int(xoffset);
 	ypos=int(yoffset);
-	MoveToEx(hDC, xpos, ypos, NULL);
+	sketchpad->MoveTo(xpos, ypos);
 	xpos=int(dotp(xaxis, line1)*scale+xoffset);
 	ypos=int(dotp(yaxis, line1)*scale+yoffset);
-	LineTo(hDC, xpos, ypos);
+	sketchpad->LineTo(xpos, ypos);
 	xpos=int(xoffset);
 	ypos=int(yoffset);
-	MoveToEx(hDC, xpos, ypos, NULL);
+	sketchpad->MoveTo(xpos, ypos);
 	xpos=int(dotp(xaxis, line2)*scale+xoffset);
 	ypos=int(dotp(yaxis, line2)*scale+yoffset);
-	LineTo(hDC, xpos, ypos);
+	sketchpad->LineTo(xpos, ypos);
 }
 
 
-void Graph::drawvector(HDC hDC,const VECTOR3 &line1)
+void Graph::drawvector(Sketchpad *sketchpad,const VECTOR3 &line1)
 {
 	const double xoffset=(ixstart+ixend)*0.5;
 	const double yoffset=(iystart+iyend)*0.5;
 	int xpos, ypos;
 	xpos=int(xoffset);
 	ypos=int(yoffset);
-	MoveToEx(hDC, xpos, ypos, NULL);
+	sketchpad->MoveTo(xpos, ypos);
 	xpos=int(dotp(xaxis, line1)*scale+xoffset);
 	ypos=int(dotp(yaxis, line1)*scale+yoffset);
-	LineTo(hDC, xpos, ypos);
+	sketchpad->LineTo(xpos, ypos);
 }
 
 
-void Graph::drawvectorline(HDC hDC, const VECTOR3 &line)
+void Graph::drawvectorline(Sketchpad *sketchpad, const VECTOR3 &line)
 // Draw a vector from the planet centre
 {
 	const double xoffset=(ixstart+ixend)*0.5;
@@ -172,30 +172,30 @@ void Graph::drawvectorline(HDC hDC, const VECTOR3 &line)
 	double yline=dotp(yaxis, temp);
 	xpos=int(xoffset-xline);
 	ypos=int(yoffset-yline);
-	MoveToEx(hDC, xpos, ypos, NULL);
+	sketchpad->MoveTo(xpos, ypos);
 	xpos=int(xoffset+xline);
 	ypos=int(yoffset+yline);
-	LineTo(hDC, xpos, ypos);
+	sketchpad->LineTo(xpos, ypos);
 }
 
-void Graph::drawplanet(HDC hDC, OBJHANDLE body)
+void Graph::drawplanet(Sketchpad *sketchpad, OBJHANDLE body)
 {
 	// Draw a circle of the right size to represent a planet
 	double size=oapiGetSize(body);
 	int x=int((ixstart+ixend)/2);
 	int y=int((iystart+iyend)/2);
 	if (size*scale>2)
-		drawcircle(hDC, size);
+		drawcircle(sketchpad, size);
 	else
 	{
-		MoveToEx(hDC,x-6,y,NULL);
-		LineTo(hDC,x+6,y);
-		MoveToEx(hDC,x,y-6,NULL);
-		LineTo(hDC,x,y+6);
+		sketchpad->MoveTo(x-6,y);
+		sketchpad->LineTo(x+6,y);
+		sketchpad->MoveTo(x,y-6);
+		sketchpad->LineTo(x,y+6);
 	}
 }
 
-void Graph::drawatmosphere(HDC hDC, OBJHANDLE body)
+void Graph::drawatmosphere(Sketchpad *sketchpad, OBJHANDLE body)
 {
 	// Draw a circle of the right size to represent the atmosphere of a planet
 	if(oapiPlanetHasAtmosphere(body))
@@ -204,11 +204,11 @@ void Graph::drawatmosphere(HDC hDC, OBJHANDLE body)
 		int x=int((ixstart+ixend)/2);
 		int y=int((iystart+iyend)/2);
 		if (size*scale>2)
-			drawcircle(hDC, size);
+			drawcircle(sketchpad, size);
 	}
 }
 
-void Graph::drawcircle(HDC hDC, double size)
+void Graph::drawcircle(Sketchpad *sketchpad, double size)
 {
 	int x=int((ixstart+ixend)/2);
 	int y=int((iystart+iyend)/2);
@@ -216,10 +216,10 @@ void Graph::drawcircle(HDC hDC, double size)
 	int lowx=int(x-size*scale);
 	int highy=int(y+size*scale);
 	int lowy=int(y-size*scale);
-	Arc(hDC,lowx, lowy, highx, highy, highx, y, highx, y);	
+	sketchpad->Ellipse(lowx, lowy, highx, highy);
 }
 
-double Graph::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VESSEL *vessel, bool isposition)
+double Graph::vectorpointdisplay(Sketchpad *sketchpad, const VECTOR3 &target, MFD2 *mfd, VESSEL *vessel, bool isposition)
 //targetvector is a vector in the global reference plane
 //isposition true
 {
@@ -239,8 +239,7 @@ double Graph::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VESSE
 	MATRIX3 rotmatrix;
 	getinvrotmatrix(arot,&rotmatrix);
 	trtarget = mul(rotmatrix, temp);
-	HPEN pen;
-	pen=mfd->SelectDefaultPen(hDC,TransXFunction::White);
+	Pen *pen=mfd->SelectDefaultPen(sketchpad,TransXFunction::White);
 
 	const int rings = 3;
 	const int width = (ixend - ixstart),
@@ -251,18 +250,14 @@ double Graph::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VESSE
 		// Must move to the righthand side of the circle to draw
 		int rightside = int(width / 2 * (1 + edgeBorderSize * i / rings));
 		double radius = i * width * edgeBorderSize / 2 / rings;
-		MoveToEx(hDC, rightside, 
-					height / 2, NULL);
-		AngleArc(hDC, width / 2, height / 2, 
-					(DWORD)radius, 
-					0, 360);
+		sketchpad->Ellipse(rightside - radius, height/2 - radius, rightside + radius, height/2 + radius);
 	}
 
 	// Draw the horizontal and vertical lines across the target circles
-	MoveToEx(hDC, int(width * (1 - edgeBorderSize) / 2), height / 2, NULL);
-	LineTo(hDC, int(width * (1 + edgeBorderSize) / 2), height / 2);
-	MoveToEx(hDC, width / 2, int(height * (1 - edgeBorderSize) / 2), NULL);
-	LineTo(hDC, width / 2, int(height * (1 + edgeBorderSize) / 2));
+	sketchpad->MoveTo(int(width * (1 - edgeBorderSize) / 2), height / 2);
+	sketchpad->LineTo(int(width * (1 + edgeBorderSize) / 2), height / 2);
+	sketchpad->MoveTo(width / 2, int(height * (1 - edgeBorderSize) / 2));
+	sketchpad->LineTo(width / 2, int(height * (1 + edgeBorderSize) / 2));
 
 	// Draw the target cross
 	double offsetsize = sqrt(trtarget.x * trtarget.x + trtarget.y * trtarget.y);
@@ -276,16 +271,16 @@ double Graph::vectorpointdisplay(HDC hDC, const VECTOR3 &target, MFD *mfd, VESSE
 	int xpos = int(offsetsize * xang + width / 2 + ixstart);
 	int ypos = int(offsetsize * yang + height / 2 + iystart);
 
-	pen=mfd->SelectDefaultPen(hDC,TransXFunction::Green);
+	pen=mfd->SelectDefaultPen(sketchpad,TransXFunction::Green);
 	const int crossSize = 3;
-	MoveToEx(hDC, xpos - crossSize, ypos - crossSize, NULL);
-	LineTo(hDC, xpos + crossSize, ypos + crossSize);
-	MoveToEx(hDC, xpos - crossSize, ypos + crossSize, NULL);
-	LineTo(hDC, xpos + crossSize, ypos - crossSize);
+	sketchpad->MoveTo(xpos - crossSize, ypos - crossSize);
+	sketchpad->LineTo(xpos + crossSize, ypos + crossSize);
+	sketchpad->MoveTo(xpos - crossSize, ypos + crossSize);
+	sketchpad->LineTo(xpos + crossSize, ypos - crossSize);
 	return length(trtarget);
 }
 
-void Graph::drawmarker(HDC hDC, const VECTOR3 location, Shape shape)
+void Graph::drawmarker(Sketchpad *sketchpad, const VECTOR3 location, Shape shape)
 {
 	int x = (ixstart + ixend) / 2;
 	int y = (iystart + iyend) / 2;
@@ -299,7 +294,7 @@ void Graph::drawmarker(HDC hDC, const VECTOR3 location, Shape shape)
 	int bottom	= (int)(y + ypos + radius + 0.5);
 
 	if(shape == Circle)
-		Ellipse(hDC, left, top, right, bottom);
+		sketchpad->Ellipse(left, top, right, bottom);
 	else if(shape == Rectangle)
-		::Rectangle(hDC, left, top, right, bottom);
+		sketchpad->Rectangle(left, top, right, bottom);
 }

@@ -75,7 +75,7 @@ public:
 	void setplanstate(int plantype,int plan);//selects the type of plan to be carried out
 	void setnextplanstate(int plantype,int plan,int targettype);
 	void getplanstate(int *xplantype,int *xplan,int *targettype);
-	virtual void doupdate(HDC hDC, int tw, int th,int viewmode);
+	virtual void doupdate(Sketchpad *sketchpad, int tw, int th,int viewmode);
 
 	virtual void saveself(FILEHANDLE scn);
 	virtual void restoreself(FILEHANDLE scn);

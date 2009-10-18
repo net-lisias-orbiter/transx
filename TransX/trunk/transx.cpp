@@ -39,7 +39,7 @@ int TransxMFD::MfdCount=0;
 double debug;
 
 TransxMFD::TransxMFD (DWORD w, DWORD h, VESSEL *vessel, UINT mfd)
-: MFD (w, h, vessel)
+: MFD2 (w, h, vessel)
 
 // Initialise TransXMFD
 {
@@ -64,15 +64,15 @@ TransxMFD::~TransxMFD()
 }
 
 // Called by Orbiter when a screen update is needed
-void TransxMFD::Update (HDC hDC)
-
+bool TransxMFD::Update (Sketchpad *sketchpad)
 {
-	Title (hDC, "TransX MFD");
-	HPEN pen=SelectDefaultPen(hDC,TransXFunction::Green);//Selects an Orbiter default pen, and retrieves called pen
-	valid=viewstate->doupdate(hDC,W,H,this);
+	Title (sketchpad, "TransX MFD");
+	Pen *pen = SelectDefaultPen(sketchpad, TransXFunction::Green);//Selects an Orbiter default pen, and retrieves called pen
+	valid=viewstate->doupdate(sketchpad,W,H,this);
 	shipptrs::refreshsave();//allow save again, as new values are now available
-	SelectObject(hDC,pen);//Replaces initial pen back into hDC. Now the MFD causes no pen creation
-	if (!valid) return;
+	sketchpad->SetPen(pen);
+	if (!valid) 
+		return false;
 	int linespacing=H/24;
 	
 	if (debug!=0)
@@ -80,12 +80,15 @@ void TransxMFD::Update (HDC hDC)
 		char buffer[20];
 
 		int length=sprintf(buffer,"Debug:%g",debug);
-		TextOut(hDC,0,linespacing*22,buffer,length);
+		sketchpad->Text(0, linespacing*22, buffer, length);
 	}
 
 	MFDvariable *varpointer=viewstate->GetCurrVariable();
-	if (varpointer==NULL) return;
-	varpointer->show(hDC,W,linespacing);
+	if (varpointer==NULL) 
+		return false;
+	varpointer->show(sketchpad,W,linespacing);
+
+	return true;	// FIXME what should it return in this case?
 }
 
 int TransxMFD::getwidth()

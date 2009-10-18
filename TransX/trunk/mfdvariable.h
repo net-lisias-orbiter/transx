@@ -26,6 +26,8 @@
 #define MAX_NAME_LENGTH			20
 #define MAX_HELPSTRING_LENGTH	40
 
+using namespace oapi;
+
 class MFDvariable : listelement
 {
 private:
@@ -43,8 +45,8 @@ public:
 	void initialise(class MFDvarhandler *vars,int viewmode1,int viewmode2);
 	virtual ~MFDvariable();
 	void setshow(bool value);
-	bool showgeneric(HDC hDC,int width,int line, char *inbuff);
-	virtual void showadjustment(HDC hDC, int width, int line) const {}; //Show the adjustment mode
+	bool showgeneric(Sketchpad *sketchpad,int width,int line, char *inbuff);
+	virtual void showadjustment(Sketchpad *sketchpad, int width, int line) const {}; //Show the adjustment mode
 	void gethelpstrings(char *help1, char *help2) const;//Returns help strings
 	void sethelpstrings(char *help1, char *help2);//Sets help strings
 	void getname(char *buffer) const;
@@ -55,7 +57,7 @@ public:
 	virtual void chm_adjmode() {};
 	virtual void inc_variable() = 0; //Increase the variable
 	virtual void dec_variable() {inc_variable();}; //Decrease the variable
-	virtual bool show(HDC hDC, int width, int line);
+	virtual bool show(Sketchpad *sketchpad, int width, int line);
 	virtual void sethandle(OBJHANDLE tpointer);
 	virtual void setall(class MFDvariable *var);
 	virtual OBJHANDLE gethandle() const;

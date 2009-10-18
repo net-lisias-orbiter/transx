@@ -196,7 +196,7 @@ void MFDvarmoon::ch_adjmode()
 		adjMode = Planet;
 }
 
-void MFDvarmoon::showadjustment(HDC hDC, int width, int line) const
+void MFDvarmoon::showadjustment(Sketchpad *sketchpad, int width, int line) const
 // This shows the mode of adjustment currently in force for the current MFDvariable
 {
 	char buffer[20];
@@ -212,7 +212,7 @@ void MFDvarmoon::showadjustment(HDC hDC, int width, int line) const
 		length=sprintf(buffer,"Ships");
 		break;
 	}
-	TextOut(hDC, xpos, ypos, buffer, length);
+	sketchpad->Text(xpos, ypos, buffer, length);
 }
 
 void MFDvarmoon::getsaveline(char *buffer) const
@@ -284,7 +284,7 @@ bool MFDvarmoon::validate()
 	return false;
 }
 
-bool MFDvarmoon::show(HDC hDC, int width, int line)
+bool MFDvarmoon::show(Sketchpad *sketchpad, int width, int line)
 {
 	char buffer[20];
 	if (target!=NULL)
@@ -299,7 +299,7 @@ bool MFDvarmoon::show(HDC hDC, int width, int line)
 		else
 			strcpy(buffer,"None");
 	}
-	showgeneric(hDC,width,line,buffer);
+	showgeneric(sketchpad, width, line, buffer);
 	return true;
 }
 
@@ -335,7 +335,7 @@ void MFDvarfloat::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vna
 	logborder=vlogborder;
 }
 
-bool MFDvarshiplist::show(HDC hDC,int width,int line)
+bool MFDvarshiplist::show(Sketchpad *sketchpad,int width,int line)
 {
 	char buffer[20];
 	liststring *entry=static_cast<liststring*>(iterator->current());//It is this type
@@ -350,7 +350,7 @@ bool MFDvarshiplist::show(HDC hDC,int width,int line)
 		strncpy(buffer,shipname,length);
 		buffer[length]=0;
 	}
-	return showgeneric(hDC, width,line,buffer);
+	return showgeneric(sketchpad, width,line,buffer);
 }
 
 
@@ -372,18 +372,18 @@ void MFDvarshiplist::dec_variable()
 	iterator->previous();
 }
 
-bool MFDvarfloat::show(HDC hDC, int width, int line)
+bool MFDvarfloat::show(Sketchpad *sketchpad, int width, int line)
 {
 	char buffer[20];
 	int linecentre=(int) width/2;
 	int linepos= 6*line;
 	strcpy(buffer,name);
 	int length=strlen(buffer);
-	TextOut(hDC, linecentre, linepos, buffer, length);
-	showadjustment(hDC, width, line);
+	sketchpad->Text(linecentre, linepos, buffer, length);
+	showadjustment(sketchpad, width, line);
 	linepos+=line+line;
 	TextForm(buffer," ",value);
-	showgeneric(hDC,width,line,buffer);
+	showgeneric(sketchpad, width, line, buffer);
 	return true;
 }
 
@@ -430,7 +430,7 @@ void MFDvarfloat::chm_adjmode()
 	}
 }
 
-void MFDvarfloat::showadjustment(HDC hDC, int width, int line) const
+void MFDvarfloat::showadjustment(Sketchpad *sketchpad, int width, int line) const
 // This shows the mode of adjustment currently in force for the current MFDvariable
 {
 	char buffer[MAX_NAME_LENGTH];
@@ -461,7 +461,7 @@ void MFDvarfloat::showadjustment(HDC hDC, int width, int line) const
 		length=sprintf(buffer,"Reset");
 		break;
 	}
-	TextOut(hDC, xpos, ypos, buffer, length);
+	sketchpad->Text(xpos, ypos, buffer, length);
 }
 
 void MFDvarfloat::inc_variable()
@@ -548,20 +548,20 @@ double MFDvarfloat::getvalue() const
 MFDvarfloat::~MFDvarfloat()
 {}
 
-bool MFDsemiintdiscrete::show(HDC hDC,int width,int line)
+bool MFDsemiintdiscrete::show(Sketchpad *sketchpad, int width, int line)
 {
 	char buffer[20];
 	double temp=value*0.5;
 	sprintf(buffer,"%.1f",temp);
-	showgeneric(hDC, width,line,buffer);
+	showgeneric(sketchpad, width, line,buffer);
 	return true;
 }
 
-bool MFDvarMJD::show(HDC hDC, int width, int line)
+bool MFDvarMJD::show(Sketchpad *sketchpad, int width, int line)
 {
 	char buffer[20];
 	sprintf(buffer,"%.4f", value);
-	showgeneric(hDC,width,line,buffer);
+	showgeneric(sketchpad, width, line, buffer);
 	return true;
 }
 
@@ -599,9 +599,9 @@ void MFDvardiscrete::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *
 }
 
 
-bool MFDvardiscrete::show(HDC hDC, int width, int line)
+bool MFDvardiscrete::show(Sketchpad *sketchpad, int width, int line)
 {
-	showgeneric(hDC, width,line,label[value]);
+	showgeneric(sketchpad, width, line, label[value]);
 	return true;
 }
 
@@ -646,11 +646,11 @@ void MFDvarangle::init(MFDvarhandler *vars,char *vname, bool vloop)
 	loop=vloop;
 }
 
-bool MFDvarangle::show(HDC hDC, int width, int line)
+bool MFDvarangle::show(Sketchpad *sketchpad, int width, int line)
 {
 	char buffer[20];
 	sprintf(buffer,"%.4f'", value/PI*180);
-	showgeneric(hDC, width,line,buffer);
+	showgeneric(sketchpad, width,line,buffer);
 	return true;
 }
 

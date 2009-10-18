@@ -76,12 +76,12 @@ void viewstate::restoresave(FILEHANDLE scn)
 	state->restoresave(scn);
 }
 
-bool viewstate::doupdate(HDC hDC,int tw,int th,TransxMFD *mfdptr)
+bool viewstate::doupdate(Sketchpad *sketchpad,int tw,int th,TransxMFD *mfdptr)
 {
 	int numfunctions=state->getnumfunctions();
 	if (viewfunction>numfunctions && numfunctions>0) viewfunction=numfunctions;
 	if (varviewfunction>numfunctions && numfunctions>0) varviewfunction=numfunctions;
-	return state->doupdate(hDC,tw,th,viewfunction,viewmode,varviewfunction,varviewmode,mfdptr);
+	return state->doupdate(sketchpad,tw,th,viewfunction,viewmode,varviewfunction,varviewmode,mfdptr);
 }
 
 void viewstate::selfdownshift()

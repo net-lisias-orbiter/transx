@@ -752,7 +752,7 @@ OrbitElements basefunction::getpassforwardorbit()
 	return craft;
 }
 
-void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
+void basefunction::doupdate(Sketchpad *sketchpad,int tw, int th,int viewmode)
 {
 	if (!valid) return;
 	if (!m_target.validate()) hmajtarget=NULL;
@@ -766,18 +766,18 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 	if (planpointer!=NULL)
 	{
 		planpointer->getlabel(buffer);
-		TextOut(hDC,wpos,hpos,buffer,strlen(buffer));
+		sketchpad->Text(wpos,hpos,buffer,strlen(buffer));
 		planpointer->getplanorbit(&plan);
 	}
 	hpos+=linespacing;
 
 	//Print the bodies
-	TextShow(hDC,"MAJ:",wpos,hpos,hmajor);
+	TextShow(sketchpad,"MAJ:",wpos,hpos,hmajor);
 	hpos+=linespacing;
-	if (hminor!=NULL) TextShow(hDC,"MIN:",wpos,hpos,hminor);
+	if (hminor!=NULL) TextShow(sketchpad,"MIN:",wpos,hpos,hminor);
 	hpos-=linespacing;
 	wpos=tw/2;
-	if (hmajtarget!=NULL) TextShow(hDC,"TGT:",wpos,hpos,hmajtarget);
+	if (hmajtarget!=NULL) TextShow(sketchpad,"TGT:",wpos,hpos,hmajtarget);
 	hpos-=linespacing;
 	switch (viewmode)
 	{
@@ -806,7 +806,7 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		viewmode=2;
 		break;
 	}
-	TextOut(hDC,wpos,hpos,buffer,strlen(buffer));
+	sketchpad->Text(wpos,hpos,buffer,strlen(buffer));
 	if (viewmode==1 && hypormaj.isvalid())//Target view
 	{
 		double timeoffset=(m_ejdate-simstartMJD)*SECONDS_PER_DAY-craft.gettimestamp();
@@ -814,10 +814,10 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		craft.timetovectors(timeoffset,&deltavel);//New eccentricity insensitive timetovectors
 		deltavel.getposvel(&craftpos,&craftvel);
 		VESSEL *pV=oapiGetVesselInterface(hcraft);
-		double rvel=graph.vectorpointdisplay(hDC, targetvel-craftvel, state->GetMFDpointer(), pV, false);
-		TextShow(hDC,"Delta V: ",0,18*linespacing,rvel);
-		TextShow(hDC,"T to Mnvre ",0,19*linespacing,timeoffset);
-		TextShow(hDC,"Begin Burn",0,20*linespacing,GetBurnStart(pV, timeoffset, rvel));
+		double rvel=graph.vectorpointdisplay(sketchpad, targetvel-craftvel, state->GetMFDpointer(), pV, false);
+		TextShow(sketchpad,"Delta V: ",0,18*linespacing,rvel);
+		TextShow(sketchpad,"T to Mnvre ",0,19*linespacing,timeoffset);
+		TextShow(sketchpad,"Begin Burn",0,20*linespacing,GetBurnStart(pV, timeoffset, rvel));
 	}
 	else
 	{
@@ -838,9 +838,9 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		}
 		if (planpointer!=NULL && viewmode==3)
 		{
-			if (!planpointer->maingraph(hDC,&graph,this)) 
+			if (!planpointer->maingraph(sketchpad,&graph,this)) 
 			{
-				planpointer->wordupdate(hDC,tw,th,this);
+				planpointer->wordupdate(sketchpad,tw,th,this);
 				return;
 			}
 		}
@@ -869,62 +869,62 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 		}
 
 		// Draw the craft orbit
-		SelectDefaultPen(hDC,Green);
-		graph.draworbit(craft, hDC, !previousexists);
+		SelectDefaultPen(sketchpad,Green);
+		graph.draworbit(craft, sketchpad, !previousexists);
 
 		//Draw the minor object orbit
-		SelectDefaultPen(hDC,Blue);
-		graph.draworbit(rmin, hDC, true);
+		SelectDefaultPen(sketchpad,Blue);
+		graph.draworbit(rmin, sketchpad, true);
 
 		//Draw the hypothetical manoeuvre orbit
 		if (hypormaj.isvalid())
 		{
-			SelectDefaultPen(hDC,Yellow);
-			graph.draworbit(hypormaj,hDC,true);
+			SelectDefaultPen(sketchpad,Yellow);
+			graph.draworbit(hypormaj,sketchpad,true);
 		}
 
 		if (planpointer!=NULL)
 		{
-			planpointer->graphupdate(hDC,&graph,this);
+			planpointer->graphupdate(sketchpad,&graph,this);
 		}
 
 		//Draw the central body
-		SelectDefaultPen(hDC,PEN_ATMOSPHERE);
-		graph.drawatmosphere(hDC,hmajor); 
-		SelectDefaultPen(hDC,Grey);
-		graph.drawplanet(hDC,hmajor); 
+		SelectDefaultPen(sketchpad,PEN_ATMOSPHERE);
+		graph.drawatmosphere(sketchpad,hmajor); 
+		SelectDefaultPen(sketchpad,Grey);
+		graph.drawplanet(sketchpad,hmajor); 
 
 		// If there is a target, draw it, and if there's an intercept,the targeting lines
 		if (target.isvalid())
 		{
-			SelectDefaultPen(hDC,Blue);
-			graph.draworbit(target, hDC, true);
+			SelectDefaultPen(sketchpad,Blue);
+			graph.draworbit(target, sketchpad, true);
 			if (interceptflag)
 			{
-				SelectDefaultPen(hDC,Yellow);
+				SelectDefaultPen(sketchpad,Yellow);
 				VECTOR3 craftpos, targetpos, intersect;
 				primary.getpositions(&craftpos,&targetpos);
-				graph.drawtwovector(hDC, craftpos,targetpos);
+				graph.drawtwovector(sketchpad, craftpos,targetpos);
 				primary.getplanecept(&intersect);
-				SelectDefaultPen(hDC,Grey);
-				graph.drawvectorline(hDC,intersect);
+				SelectDefaultPen(sketchpad,Grey);
+				graph.drawvectorline(sketchpad,intersect);
 
 				//Describe targeting quality
 				int hpos=8*linespacing;
 				int wpos=0;
 				int len=sprintf(buffer, "Cl. App. (rough)");
-				TextOut(hDC, wpos, hpos, buffer, len);
+				sketchpad->Text(wpos, hpos, buffer, len);
 				hpos+=linespacing;
-				TextShow(hDC, " ", wpos, hpos, length(craftpos-targetpos));
+				TextShow(sketchpad, " ", wpos, hpos, length(craftpos-targetpos));
 				hpos+=linespacing;
 				VECTOR3 relvel;
 				primary.getrelvel(&relvel);
-				TextShow(hDC,"Enc. V:", wpos, hpos, length(relvel));
+				TextShow(sketchpad,"Enc. V:", wpos, hpos, length(relvel));
 				hpos+=linespacing;
 				double intercepttime=primary.gettimeintercept();
 				double arrmjd=oapiTime2MJD(intercepttime);
 				len=sprintf(buffer,"Enc. MJD %.4f", arrmjd);
-				TextOut(hDC, wpos, hpos, buffer, len);
+				sketchpad->Text(wpos, hpos, buffer, len);
 			}
 		}
 		else
@@ -932,38 +932,38 @@ void basefunction::doupdate(HDC hDC,int tw, int th,int viewmode)
 			//Describe information relevant to central body
 			int hpos=8*linespacing;
 			int wpos=0;
-			TextShow(hDC,"Maj. Rad: ",wpos,hpos,oapiGetSize(hmajor));
+			TextShow(sketchpad,"Maj. Rad: ",wpos,hpos,oapiGetSize(hmajor));
 			hpos+=linespacing;
 			if (craft.isvalid())
 			{
-				TextShow(hDC,"Focus PeD:", wpos, hpos, craft.getpedistance());
+				TextShow(sketchpad,"Focus PeD:", wpos, hpos, craft.getpedistance());
 				if (craft.geteccentricity()<1)
 				{
 					hpos+=linespacing;
-					TextShow(hDC,"Focus ApD:", wpos,hpos, craft.getapodistance());
+					TextShow(sketchpad,"Focus ApD:", wpos,hpos, craft.getapodistance());
 				}
 				hpos+=linespacing;
 				char buffer[20];
 				int length=sprintf(buffer,"Pe MJD:   %.4f",(craft.getpedeltatime()+craft.gettimestamp())/SECONDS_PER_DAY+simstartMJD);
-				TextOut(hDC,wpos,hpos,buffer, length);
+				sketchpad->Text(wpos,hpos,buffer, length);
 				hpos+=linespacing;
 				VECTOR3 south = {0, -1, 0};
 				length = sprintf(buffer, "Inc:      %.4g°", 180/PI*acos(cosangle(south, craft.getplanevector())));
-				TextOut(hDC,wpos,hpos,buffer, length);
+				sketchpad->Text(wpos,hpos,buffer, length);
 				hpos+=linespacing;
 			}
 			if (hypormaj.isvalid())
 			{
-				TextShow(hDC,"Hyp PeD ",wpos,hpos,hypormaj.getpedistance());
+				TextShow(sketchpad,"Hyp PeD ",wpos,hpos,hypormaj.getpedistance());
 				hpos+=linespacing;
 				double timeatped=(hypormaj.gettimestamp()+hypormaj.getpedeltatime())/SECONDS_PER_DAY+simstartMJD;
 				int length=sprintf(buffer,"H. Pe MJD %.2f",timeatped);
-				TextOut(hDC,wpos,hpos,buffer,length);
+				sketchpad->Text(wpos,hpos,buffer,length);
 			}
 		}
 		if (viewmode==3 && planpointer!=NULL)
 		{
-			planpointer->wordupdate(hDC,tw,th,this);
+			planpointer->wordupdate(sketchpad,tw,th,this);
 		}
 	}
 }

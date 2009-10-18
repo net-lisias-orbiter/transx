@@ -305,18 +305,18 @@ void TransXFunction::gethandles(OBJHANDLE *thmajor, OBJHANDLE *thminor, OBJHANDL
 
 void TransXFunction::initpens(void)								//(rbd+)
 {
-	pens[Green]		= CreatePen(PS_SOLID, 0 , RGB(0x00, 0xFF, 0x00));	// Green - stands for craft
-	pens[Blue]		= CreatePen(PS_SOLID, 0 , RGB(0x00, 0x00, 0xCD));	// Blue - stands for planet
-	pens[Yellow]	= CreatePen(PS_DOT,	  0	, RGB(0xCD, 0xCD, 0x00));	// Bright yellow - hypos
-	pens[Red]		= CreatePen(PS_SOLID, 0 , RGB(0xFF, 0x00, 0x00));	// Bright red - unused, but danger
-	pens[Grey]		= CreatePen(PS_SOLID, 0 , RGB(0xC0, 0xC0, 0xC0));	// Light Grey
-	pens[White]		= CreatePen(PS_SOLID, 0 , RGB(0xFF, 0xFF, 0xFF));	// Bright white - unused
-	brush[Green]	= CreateSolidBrush(RGB(0x00, 0xFF, 0x00));
-	brush[Blue]		= CreateSolidBrush(RGB(0x00, 0x00, 0xCD));
-	brush[Yellow]	= CreateSolidBrush(RGB(0xCD, 0xCD, 0x00));
-	brush[Red]		= CreateSolidBrush(RGB(0xFF, 0x00, 0x00));
-	brush[Grey]		= CreateSolidBrush(RGB(0xC0, 0xC0, 0xC0));
-	brush[Green]	= CreateSolidBrush(RGB(0xFF, 0xFF, 0xFF));
+	pens[Green]		= oapiCreatePen(1, 1 , RGB(0x00, 0xFF, 0x00));	// Green - stands for craft
+	pens[Blue]		= oapiCreatePen(1, 1 , RGB(0x00, 0x00, 0xCD));	// Blue - stands for planet
+	pens[Yellow]	= oapiCreatePen(2,	  1	, RGB(0xCD, 0xCD, 0x00));	// Bright yellow - hypos
+	pens[Red]		= oapiCreatePen(1, 1 , RGB(0xFF, 0x00, 0x00));	// Bright red - unused, but danger
+	pens[Grey]		= oapiCreatePen(1, 1 , RGB(0xC0, 0xC0, 0xC0));	// Light Grey
+	pens[White]		= oapiCreatePen(1, 1 , RGB(0xFF, 0xFF, 0xFF));	// Bright white - unused
+	brush[Green]	= new Brush(RGB(0x00, 0xFF, 0x00));
+	brush[Blue]		= new Brush(RGB(0x00, 0x00, 0xCD));
+	brush[Yellow]	= new Brush(RGB(0xCD, 0xCD, 0x00));
+	brush[Red]		= new Brush(RGB(0xFF, 0x00, 0x00));
+	brush[Grey]		= new Brush(RGB(0xC0, 0xC0, 0xC0));
+	brush[Green]	= new Brush(RGB(0xFF, 0xFF, 0xFF));
 }
 
 
@@ -329,20 +329,20 @@ void TransXFunction::deletepens()
 	}
 }
 															//(rbd-)
-HPEN TransXFunction::SelectDefaultPen(HDC hDC, int value)
+Pen* TransXFunction::SelectDefaultPen(Sketchpad *sketchpad, int value)
 {
 	if(value < NUM_PENS) //(rbd+)
-		return((HPEN)SelectObject(hDC, pens[value]));		// Custom pen
+		return sketchpad->SetPen(pens[value]);
 	else //(rbd-)
-		return state->GetMFDpointer()->SelectDefaultPen(hDC,value);
+		return state->GetMFDpointer()->SelectDefaultPen(sketchpad, value);
 }
 
-HBRUSH TransXFunction::SelectBrush(HDC hDC, int value)
+Brush* TransXFunction::SelectBrush(Sketchpad *sketchpad, int value)
 {
 	if(value < NUM_PENS && value > 0) //(rbd+)
-		return (HBRUSH)SelectObject(hDC, brush[value]);		// Custom brush
+		return sketchpad->SetBrush(brush[value]);		// Custom brush
 	else //(rbd-)
-		return (HBRUSH)SelectObject(hDC, GetStockObject(HOLLOW_BRUSH));
+		return sketchpad->SetBrush(brush[Grey]);
 }
 
 void TransXFunction::sethelp(char *help1,char *help2,char *help3,char *help4,char *help5)

@@ -31,13 +31,13 @@ class plan
 {
 public:
 	virtual void getplanorbit(OrbitElements *planorbit) = 0;//All plans can return an orbit to the main function
-	virtual bool maingraph(HDC hDC,Graph *graph,basefunction *base){return true;};
+	virtual bool maingraph(Sketchpad *sketchpad,Graph *graph,basefunction *base){return true;};
 	virtual int getplanid() = 0;
 	virtual class plan *clone(class MFDvarhandler *vars,basefunction *base);//returns a pointer to a clone of this plan
 	virtual class plan *iclone() = 0; 
 	virtual void graphscale(Graph *graph){};//Use to scale graph for later update
-	virtual void graphupdate(HDC hDC, Graph *graph,basefunction *base){};//Update graphs
-	virtual void wordupdate(HDC hDC,int width, int height, basefunction *base){};//Update text
+	virtual void graphupdate(Sketchpad *sketchpad, Graph *graph,basefunction *base){};//Update graphs
+	virtual void wordupdate(Sketchpad *sketchpad,int width, int height, basefunction *base){};//Update text
 	virtual bool init(class MFDvarhandler *vars, basefunction *base) = 0;//Initialises plan - sets up variableset
 	virtual void calculate(class MFDvarhandler *vars,basefunction *base) = 0;
 	virtual double getentryvelocity(){return 0;};
@@ -57,9 +57,9 @@ public:
 	virtual void getviewname(char *buffer){strcpy(buffer,"View:Escape Plan");};
 	virtual void getplanorbit(OrbitElements *tplanorbit);
 	virtual void graphscale(Graph *graph);//Use to scale graph for later update
-	virtual bool maingraph(HDC hDC,Graph *graph, basefunction *base);
-	virtual void wordupdate(HDC hDC, int width, int height, basefunction *base);
-	virtual void graphupdate(HDC hDC,Graph *graph,basefunction *base);
+	virtual bool maingraph(Sketchpad *sketchpad,Graph *graph, basefunction *base);
+	virtual void wordupdate(Sketchpad *sketchpad, int width, int height, basefunction *base);
+	virtual void graphupdate(Sketchpad *sketchpad,Graph *graph,basefunction *base);
 	virtual bool init(class MFDvarhandler *vars, basefunction *base);
 	virtual void calculate(class MFDvarhandler *vars,basefunction *base);
 	virtual ~minorejectplan(){};
@@ -78,8 +78,8 @@ public:
 	virtual void getplanorbit(OrbitElements *tplanorbit){*tplanorbit=planorbit;};
 
 	virtual void graphscale(Graph *graph);//Use to scale graph for later update
-	virtual void graphupdate(HDC hDC,Graph *graph,basefunction *base);
-	virtual void wordupdate(HDC hDC,int width, int height, basefunction *base);
+	virtual void graphupdate(Sketchpad *sketchpad,Graph *graph,basefunction *base);
+	virtual void wordupdate(Sketchpad *sketchpad,int width, int height, basefunction *base);
 	virtual void calculate(class MFDvarhandler *vars,basefunction *base);
 	virtual VECTOR3 getvelocityvector();
 	virtual double geteventtime(){return timefromnow;};
@@ -141,8 +141,8 @@ public:
 	virtual void getplanorbit(OrbitElements *planorbit);
 	virtual void calculate(class MFDvarhandler *vars,basefunction *base){};
 	encounterplan(){drawnbase=false;};
-	virtual void graphupdate(HDC hDC, Graph *graph, basefunction *base);
-	virtual void wordupdate(HDC hDC, int width, int height, basefunction *base);
+	virtual void graphupdate(Sketchpad *sketchpad, Graph *graph, basefunction *base);
+	virtual void wordupdate(Sketchpad *sketchpad, int width, int height, basefunction *base);
 	virtual void getlabel(char *buffer){strcpy(buffer,"Plan:Encounter");};
 	virtual void getviewname(char *buffer){strcpy(buffer,"View:Encounter");};
 	virtual ~encounterplan(){};
@@ -155,10 +155,10 @@ public:
 	virtual class plan *iclone(){return new slingshot();};
 	virtual void getplanorbit(OrbitElements *tplanorbit);
 	virtual void graphscale(Graph *graph);//Use to scale graph for later update
-	virtual void graphupdate(HDC hDC, Graph *graph,basefunction *base);
-	virtual void wordupdate(HDC hDC, int width, int height, basefunction *base);
+	virtual void graphupdate(Sketchpad *sketchpad, Graph *graph,basefunction *base);
+	virtual void wordupdate(Sketchpad *sketchpad, int width, int height, basefunction *base);
 	virtual void calculate(class MFDvarhandler *vars,basefunction *base);
-	virtual bool maingraph(HDC hDC,Graph *graph,basefunction *base);//bool returns whether base should draw a graph
+	virtual bool maingraph(Sketchpad *sketchpad,Graph *graph,basefunction *base);//bool returns whether base should draw a graph
 	virtual double geteventtime(){return eventtime;};
 	virtual double getentryvelocity(){return inwardvelocity;};
 	virtual double getratio2radius(){return ratiotoradius;};
