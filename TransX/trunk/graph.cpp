@@ -250,7 +250,10 @@ double Graph::vectorpointdisplay(Sketchpad *sketchpad, const VECTOR3 &target, MF
 		// Must move to the righthand side of the circle to draw
 		int rightside = int(width / 2 * (1 + edgeBorderSize * i / rings));
 		double radius = i * width * edgeBorderSize / 2 / rings;
-		sketchpad->Ellipse(rightside - radius, height/2 - radius, rightside + radius, height/2 + radius);
+		sketchpad->Ellipse(int(rightside - radius),
+							int(height/2 - radius), 
+							int(rightside + radius), 
+							int(height/2 + radius));
 	}
 
 	// Draw the horizontal and vertical lines across the target circles
