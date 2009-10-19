@@ -45,6 +45,7 @@ private:
 	bool initialised;
 	static class mapfunction *themap;
 	VECTOR3 getweightedvector(OBJHANDLE, void(OBJHANDLE, VECTOR3*));
+	static map<OBJHANDLE, double> atmLimit;
 public:
 	mapfunction();
 	~mapfunction();
@@ -61,6 +62,7 @@ public:
 	OBJHANDLE getcurrbody	(OBJHANDLE vessel);//Get current body for arbitrary vessel
 	VECTOR3 getbarycentre	(OBJHANDLE body); // Gets the global pos of the barycentre of the system with body as the main object
 	VECTOR3 getbarycentrevel(OBJHANDLE body); // Gets the global velocity of the barycentre of the system with body as the main object
+	static double GetApproxAtmosphericLimit(OBJHANDLE body);// Gets the (approximate) altitude for a given pressure to get a useful 'edge of atmosphere'
 };
 
 #endif

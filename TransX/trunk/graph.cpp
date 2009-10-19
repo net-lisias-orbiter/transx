@@ -27,6 +27,7 @@
 #include "mfd.h"
 #include "graph.h"
 #include "TransXFunction.h"
+#include "mapfunction.h"
 
 
 void Graph::setviewwindow(DWORD xstart,DWORD ystart,DWORD xend,DWORD yend)
@@ -198,13 +199,12 @@ void Graph::drawplanet(Sketchpad *sketchpad, OBJHANDLE body)
 void Graph::drawatmosphere(Sketchpad *sketchpad, OBJHANDLE body)
 {
 	// Draw a circle of the right size to represent the atmosphere of a planet
-	if(oapiPlanetHasAtmosphere(body))
+	if(double atmlimit = mapfunction::GetApproxAtmosphericLimit(body) > 0)
 	{
-		double size = oapiGetPlanetAtmConstants(body)->radlimit;
 		int x=int((ixstart+ixend)/2);
 		int y=int((iystart+iyend)/2);
-		if (size*scale>2)
-			drawcircle(sketchpad, size);
+		if (atmlimit * scale > 2)
+			drawcircle(sketchpad, atmlimit);
 	}
 }
 

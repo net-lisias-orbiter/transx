@@ -260,3 +260,34 @@ void mapfunction::InitialiseSolarSystem()
 		templist.push_back(body); // add it to the temp list
 	}
 }
+
+double mapfunction::GetApproxAtmosphericLimit(OBJHANDLE body)
+{
+	if(!oapiPlanetHasAtmosphere(body))
+		return 0;
+	if(atmLimit[body] != 0)
+		return atmLimit[body];	// return the limit if we have already found it
+	
+	// Perform a binary search (trial and error) to see find the altitude for a given static pressure
+	double alt = oapiGetPlanetAtmConstants(body)->radlimit;
+	double step = oapiGetPlanetAtmConstants(body)->radlimit / 2;
+
+	// Search for an altitude that matches the magic value (that corresponds to ~150km altitude for Earth
+	const double PRESSURE = 0.01;	// in Pa - the target pressure that we want to get an altitude for
+	const double TOLERANCE = 0.01;	// in Pa - used for the trial-and-error method to detect when we're 'close enough'
+	ATMPARAM prm;
+	prm.p = 0;	// Initialise to be zero at limit of atmosphere
+	do
+	{
+		if(prm.p > PRESSURE)	// pressure is too high at our current location, raise altitude to lower pressure
+			alt += step;
+		else					// pressure is too low at our current location, lower altitude to raise pressure
+			alt -= step;
+		step /= 2;		// halve the search step
+		oapiGetPlanetAtmParams(body, alt, 0, 0, &prm);	// get the pressure at the equator on the meridian as it's only rough anyway
+	}
+	while(fabs(prm.p - PRESSURE) > TOLERANCE);
+	return atmLimit[body] = alt;
+}
+
+map<OBJHANDLE, double> mapfunction::atmLimit;
