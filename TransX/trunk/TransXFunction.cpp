@@ -333,8 +333,8 @@ Pen* TransXFunction::SelectDefaultPen(Sketchpad *sketchpad, int value)
 {
 	if(value < NUM_PENS) //(rbd+)
 		return sketchpad->SetPen(pens[value]);
-	else //(rbd-)
-		return state->GetMFDpointer()->SelectDefaultPen(sketchpad, value);
+	else
+		return sketchpad->SetPen(pens[Green]);
 }
 
 Brush* TransXFunction::SelectBrush(Sketchpad *sketchpad, int value)
@@ -363,3 +363,5 @@ void TransXFunction::gethelp(char *help1,char *help2,char *help3,char *help4,cha
 	strcpy(help5,helpstring5);
 }
 
+Pen* TransXFunction::pens[NUM_PENS];
+Brush* TransXFunction::brush[NUM_PENS];

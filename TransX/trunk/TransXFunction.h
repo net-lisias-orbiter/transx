@@ -52,9 +52,9 @@ public:
 	};
 
 private:
-	void initpens(void);
+	static void initpens(void);
 	virtual bool initialisevars() = 0;
-	void deletepens();
+	static void deletepens();
 	Parser parser;
 	char helpstring1[MAX_HELPSTRING_LENGTH],
 		 helpstring2[MAX_HELPSTRING_LENGTH],
@@ -67,12 +67,12 @@ protected:
 	double simstartMJD; //Time at which current scenario commenced
 	class MFDvarhandler vars; //Variable set associated with this MFDFunction
 	class transxstate *state; //Pointer to calling transxstate
-	Pen *pens[NUM_PENS];//Replacement pens for MFD
-	Brush *brush[NUM_PENS];
+	static Pen *pens[NUM_PENS];//Replacement pens for MFD
+	static Brush *brush[NUM_PENS];
 
 public:
-	Pen* SelectDefaultPen(Sketchpad *sketchpad, int value);
-	Brush* TransXFunction::SelectBrush(Sketchpad *sketchpad, int value);
+	static Pen* SelectDefaultPen(Sketchpad *sketchpad, int value);
+	static Brush* TransXFunction::SelectBrush(Sketchpad *sketchpad, int value);
 
 	MFDvarhandler* getvariablehandler();//Passes pointer to variable handler
 	TransXFunction(class transxstate *tstate, OBJHANDLE thmajor, OBJHANDLE thminor, OBJHANDLE thtarget, OBJHANDLE thcraft, OBJHANDLE thbase);//Constructor

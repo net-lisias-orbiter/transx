@@ -240,7 +240,7 @@ double Graph::vectorpointdisplay(Sketchpad *sketchpad, const VECTOR3 &target, MF
 	MATRIX3 rotmatrix;
 	getinvrotmatrix(arot,&rotmatrix);
 	trtarget = mul(rotmatrix, temp);
-	Pen *pen=mfd->SelectDefaultPen(sketchpad,TransXFunction::White);
+	TransXFunction::SelectDefaultPen(sketchpad,TransXFunction::Grey);
 
 	const int rings = 3;
 	const int width = (ixend - ixstart),
@@ -249,11 +249,10 @@ double Graph::vectorpointdisplay(Sketchpad *sketchpad, const VECTOR3 &target, MF
 	for(int i = 1; i <= rings; i++)
 	{
 		// Must move to the righthand side of the circle to draw
-		int rightside = int(width / 2 * (1 + edgeBorderSize * i / rings));
 		double radius = i * width * edgeBorderSize / 2 / rings;
-		sketchpad->Ellipse(int(rightside - radius),
+		sketchpad->Ellipse(int(width/2 - radius),
 							int(height/2 - radius), 
-							int(rightside + radius), 
+							int(width/2 + radius), 
 							int(height/2 + radius));
 	}
 
@@ -275,7 +274,7 @@ double Graph::vectorpointdisplay(Sketchpad *sketchpad, const VECTOR3 &target, MF
 	int xpos = int(offsetsize * xang + width / 2 + ixstart);
 	int ypos = int(offsetsize * yang + height / 2 + iystart);
 
-	pen=mfd->SelectDefaultPen(sketchpad,TransXFunction::Green);
+	TransXFunction::SelectDefaultPen(sketchpad,TransXFunction::Green);
 	const int crossSize = 3;
 	sketchpad->MoveTo(xpos - crossSize, ypos - crossSize);
 	sketchpad->LineTo(xpos + crossSize, ypos + crossSize);
