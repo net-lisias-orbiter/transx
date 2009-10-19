@@ -45,7 +45,6 @@ private:
 	bool initialised;
 	static class mapfunction *themap;
 	VECTOR3 getweightedvector(OBJHANDLE, void(OBJHANDLE, VECTOR3*));
-	static map<OBJHANDLE, double> atmLimit;
 public:
 	mapfunction();
 	~mapfunction();

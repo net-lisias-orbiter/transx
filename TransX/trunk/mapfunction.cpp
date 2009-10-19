@@ -263,6 +263,7 @@ void mapfunction::InitialiseSolarSystem()
 
 double mapfunction::GetApproxAtmosphericLimit(OBJHANDLE body)
 {
+	static map<OBJHANDLE, double> atmLimit;
 	if(!oapiPlanetHasAtmosphere(body))
 		return 0;
 	if(atmLimit[body] != 0)
@@ -289,5 +290,3 @@ double mapfunction::GetApproxAtmosphericLimit(OBJHANDLE body)
 	while(fabs(prm.p - PRESSURE) > TOLERANCE);
 	return atmLimit[body] = alt;
 }
-
-map<OBJHANDLE, double> mapfunction::atmLimit;
