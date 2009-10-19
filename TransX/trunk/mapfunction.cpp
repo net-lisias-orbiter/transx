@@ -274,8 +274,8 @@ double mapfunction::GetApproxAtmosphericLimit(OBJHANDLE body)
 	double step = oapiGetPlanetAtmConstants(body)->radlimit / 2;
 
 	// Search for an altitude that matches the magic value (that corresponds to ~150km altitude for Earth
-	const double PRESSURE = 0.01;	// in Pa - the target pressure that we want to get an altitude for
-	const double TOLERANCE = 0.01;	// in Pa - used for the trial-and-error method to detect when we're 'close enough'
+	const double PRESSURE = 0.000557;	// in Pa - the target pressure that we want to get an altitude for
+	const double TOLERANCE = 0.000001;	// in Pa - used for the trial-and-error method to detect when we're 'close enough'
 	ATMPARAM prm;
 	prm.p = 0;	// Initialise to be zero at limit of atmosphere
 	do

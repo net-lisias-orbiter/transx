@@ -199,12 +199,13 @@ void Graph::drawplanet(Sketchpad *sketchpad, OBJHANDLE body)
 void Graph::drawatmosphere(Sketchpad *sketchpad, OBJHANDLE body)
 {
 	// Draw a circle of the right size to represent the atmosphere of a planet
-	if(double atmlimit = mapfunction::GetApproxAtmosphericLimit(body) > 0)
+	double atmlimit = mapfunction::GetApproxAtmosphericLimit(body);
+	if(atmlimit > 0)
 	{
 		int x=int((ixstart+ixend)/2);
 		int y=int((iystart+iyend)/2);
 		if (atmlimit * scale > 2)
-			drawcircle(sketchpad, atmlimit);
+			drawcircle(sketchpad, atmlimit + oapiGetSize(body));
 	}
 }
 
