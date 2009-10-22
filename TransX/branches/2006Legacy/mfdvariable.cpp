@@ -24,6 +24,7 @@
 #include <math.h>
 #include "orbitersdk.h"
 #include "mfd.h"
+#include "cmdnugget.h"
 #include "mfdvariable.h"
 
 
@@ -31,6 +32,22 @@ MFDvariable::MFDvariable()
 {
 	continuous = false;
 	showvariable=true;
+	inugget=NULL;
+	execstatus=execcountdown=0;
+}
+
+void MFDvariable::execute()
+{
+	if (inugget!=NULL) 
+	{	
+		inugget->execute();
+		execstatus=1;
+	}
+	else
+	{
+		execstatus=2;
+	}
+	execcountdown=10;
 }
 
 void MFDvariable::initialise(MFDvarhandler *vars,int tviewmode1,int tviewmode2)
@@ -53,6 +70,13 @@ void MFDvariable::setall(class MFDvariable *var)
 	sethandle(var->gethandle());
 }
 
+void MFDvariable::setcmdnugget(cmdnugget *nugget)
+{
+	if (nugget==NULL) return;
+	nugget->setmfdvariable(this);
+	inugget=nugget;
+}
+
 bool MFDvariable::showgeneric(HDC hDC,int width,int line, char *inbuff)
 {
 // This is a helper function that formats output to the MFD screen
@@ -66,6 +90,22 @@ bool MFDvariable::showgeneric(HDC hDC,int width,int line, char *inbuff)
 	showadjustment(hDC, width, line);
 	linepos+=line+line;
 	TextOut(hDC, linecentre, linepos, inbuff,inlength);
+	if (execcountdown>0)
+	{
+		linepos+=line;
+		if (execstatus==1)
+		{
+			strcpy(buffer,"Executed");
+		}
+		else
+		{
+			strcpy(buffer,"No Command");
+		}
+		execcountdown--;
+		if (execcountdown==0) execstatus=0;
+		length=strlen(buffer);
+		TextOut(hDC,linecentre,linepos,buffer,length);
+	}
 	return true;
 }
 
@@ -110,4 +150,5 @@ OBJHANDLE MFDvariable::gethandle() const
 
 MFDvariable::~MFDvariable() 
 {
+	if (inugget!=NULL) delete inugget;
 }

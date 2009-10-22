@@ -22,6 +22,7 @@
 #define __MFDVARIABLE_H
 #include "mfdvarhandler.h"
 #include "doublelink.h"
+class cmdnugget;
 
 #define MAX_NAME_LENGTH			20
 #define MAX_HELPSTRING_LENGTH	40
@@ -30,6 +31,8 @@ class MFDvariable : listelement
 {
 private:
 	int viewmode1,viewmode2;
+	int execstatus,execcountdown;//Simple system to provide feedback message on pressing of EXE
+	cmdnugget *inugget;
 protected:
 	char name[MAX_NAME_LENGTH]; //Name of variable as displayed on MFD
 	char helpstring1[MAX_HELPSTRING_LENGTH]; //Help string
@@ -40,6 +43,8 @@ protected:
 public:
 	MFDvariable();
 	bool IsContinuous() {return continuous;};
+	void setcmdnugget(cmdnugget *nugget);
+	void execute();//Executes any command nugget installed.
 	void initialise(class MFDvarhandler *vars,int viewmode1,int viewmode2);
 	virtual ~MFDvariable();
 	void setshow(bool value);
