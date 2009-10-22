@@ -24,6 +24,7 @@
 #include <math.h>
 #include "orbitersdk.h"
 #include "mfd.h"
+#include "cmdnugget.h"
 #include "mfdvariable.h"
 
 
@@ -31,6 +32,22 @@ MFDvariable::MFDvariable()
 {
 	continuous = false;
 	showvariable=true;
+	inugget=NULL;
+	execstatus=execcountdown=0;
+}
+
+void MFDvariable::execute()
+{
+	if (inugget!=NULL) 
+	{	
+		inugget->execute();
+		execstatus=1;
+	}
+	else
+	{
+		execstatus=2;
+	}
+	execcountdown=10;
 }
 
 void MFDvariable::initialise(MFDvarhandler *vars,int tviewmode1,int tviewmode2)
@@ -50,7 +67,15 @@ void MFDvariable::setshow(bool value)
 
 void MFDvariable::setall(class MFDvariable *var)
 {
+	InheritValues(var);
 	sethandle(var->gethandle());
+}
+
+void MFDvariable::setcmdnugget(cmdnugget *nugget)
+{
+	if (nugget==NULL) return;
+	nugget->setmfdvariable(this);
+	inugget=nugget;
 }
 
 bool MFDvariable::showgeneric(Sketchpad *sketchpad,int width,int line, char *inbuff)
@@ -66,6 +91,22 @@ bool MFDvariable::showgeneric(Sketchpad *sketchpad,int width,int line, char *inb
 	showadjustment(sketchpad, width, line);
 	linepos+=line+line;
 	sketchpad->Text(linecentre, linepos, inbuff,inlength);
+	if (execcountdown>0)
+	{
+		linepos+=line;
+		if (execstatus==1)
+		{
+			strcpy(buffer,"Executed");
+		}
+		else
+		{
+			strcpy(buffer,"No Command");
+		}
+		execcountdown--;
+		if (execcountdown==0) execstatus=0;
+		length=strlen(buffer);
+		sketchpad->Text(linecentre,linepos,buffer,length);
+	}
 	return true;
 }
 
@@ -110,4 +151,5 @@ OBJHANDLE MFDvariable::gethandle() const
 
 MFDvariable::~MFDvariable() 
 {
+	if (inugget!=NULL) delete inugget;
 }

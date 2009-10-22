@@ -77,7 +77,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="odbc32.lib odbccp32.lib orbiter.lib orbitersdk.lib"
-				OutputFile="C:\documents and settings\steve\desktop\base\modules\plugin\transx.dll"
+				OutputFile="C:\documents and settings\steve\desktop\orbiterbeta\modules\plugin\transx.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="C:\Program files\orbitersdk\lib\"
@@ -623,6 +623,10 @@
 			>
 			<File
 				RelativePath="basefunction.h"
+				>
+			</File>
+			<File
+				RelativePath="cmdnugget.h"
 				>
 			</File>
 			<File

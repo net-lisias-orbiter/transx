@@ -114,7 +114,7 @@ int TransxMFD::MsgProc (UINT msg, UINT mfd, WPARAM wparam, LPARAM lparam)
 char *TransxMFD::ButtonLabel (int bt)
 // Routine to pass button label back to Orbiter. Called by Orbiter
 {
-	char *label[] = {"HLP","FWD","BCK", "VW","VAR","-VR", "ADJ", "-AJ","++", "--"};
+	char *label[] = {"HLP","FWD","BCK", "VW","VAR","-VR", "ADJ", "-AJ","++", "--","EXE"};
 	return (bt < sizeof(label) / sizeof(char*) ? label[bt] : 0);
 }
 
@@ -132,6 +132,7 @@ int TransxMFD::ButtonMenu (const MFDBUTTONMENU **menu) const
 		{"Set adjustment", "method (-)", '}'},
 		{"Increment", "variable", '='},
 		{"Decrement", "variable", '-'},
+		{"Execute","Command",'X'}
 	};
 	if (menu) *menu = mnu;
 	return sizeof(mnu) / sizeof(MFDBUTTONMENU);
@@ -162,7 +163,7 @@ bool TransxMFD::ConsumeButton(int bt, int event)
 // Deal with mouse pressing of keys
 {
 	static const DWORD btkey[11]={OAPI_KEY_H, OAPI_KEY_F, OAPI_KEY_R, OAPI_KEY_W, OAPI_KEY_PERIOD, 
-		OAPI_KEY_COMMA, OAPI_KEY_LBRACKET, OAPI_KEY_RBRACKET, OAPI_KEY_EQUALS, OAPI_KEY_MINUS};
+		OAPI_KEY_COMMA, OAPI_KEY_LBRACKET, OAPI_KEY_RBRACKET, OAPI_KEY_EQUALS, OAPI_KEY_MINUS, OAPI_KEY_X};
 	if (!valid) return false;
 	MFDvariable *varpointer=viewstate->GetCurrVariable();
 	if ((event & PANEL_MOUSE_LBDOWN) && (bt<8 || bt==10)) return ConsumeKeyBuffered (btkey[bt]);
@@ -201,6 +202,9 @@ bool TransxMFD::ConsumeKeyBuffered (DWORD key)
 		return true;
 	case OAPI_KEY_W:
 		viewstate->inc_viewmode();
+		return true;
+	case OAPI_KEY_X:
+		if (access) currvar->execute();
 		return true;
 	case OAPI_KEY_PERIOD: //Switch variable
 		{
