@@ -111,14 +111,14 @@ int TransxMFD::MsgProc (UINT msg, UINT mfd, WPARAM wparam, LPARAM lparam)
 char *TransxMFD::ButtonLabel (int bt)
 // Routine to pass button label back to Orbiter. Called by Orbiter
 {
-	char *label[11] = {"HLP","FWD","BCK", "VW","VAR","-VR", "ADJ", "-AJ","++", "--","EXE"};
-	return (bt < 11 ? label[bt] : 0);
+	char *label[] = {"HLP","FWD","BCK", "VW","VAR","-VR", "ADJ", "-AJ","++", "--","EXE"};
+	return (bt < sizeof(label) / sizeof(char*) ? label[bt] : 0);
 }
 
 int TransxMFD::ButtonMenu (const MFDBUTTONMENU **menu) const
 // Routine to pass menu description for buttons back to Orbiter. Called by Orbiter
 {
-	static const MFDBUTTONMENU mnu[11] = {
+	static const MFDBUTTONMENU mnu[] = {
 		{"Toggle Help","On/Off",'H'},
 		{"Step Forward","/ Add Step",'F'},
 		{"Step Back",0,'R'},
@@ -132,7 +132,7 @@ int TransxMFD::ButtonMenu (const MFDBUTTONMENU **menu) const
 		{"Execute","Command",'X'}
 	};
 	if (menu) *menu = mnu;
-	return 11;
+	return sizeof(mnu) / sizeof(MFDBUTTONMENU);
 }
 
 bool TransxMFD::ConsumeKeyImmediate(char *kstate)
