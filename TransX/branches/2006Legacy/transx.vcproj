@@ -626,6 +626,10 @@
 				>
 			</File>
 			<File
+				RelativePath="cmdnugget.h"
+				>
+			</File>
+			<File
 				RelativePath="doublelink.h"
 				>
 			</File>
