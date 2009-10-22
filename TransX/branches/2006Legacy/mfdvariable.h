@@ -65,6 +65,8 @@ public:
 	virtual void setall(class MFDvariable *var);
 	virtual OBJHANDLE gethandle() const;
 	friend class MFDvarhandler;
+protected:
+	virtual void InheritValues(MFDvariable *var) = 0;
 };
 
 #endif

@@ -57,6 +57,8 @@ public:
 
 	virtual void getsaveline(char *buffer) const{};//This MFDvariable type doesn't support load/save
 	virtual bool loadvalue(char *buffer){return true;};//
+protected:
+	virtual void InheritValues(MFDvariable *var) {};	// do nothing
 };
 	
 class MFDvarmoon : public MFDvariable {
@@ -90,6 +92,8 @@ public:
 	void updatecentralbody(OBJHANDLE tcentral){centralbody=tcentral;};
 	operator int(){return value;}
 	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname,OBJHANDLE tcentralbody);
+protected:
+	virtual void InheritValues(MFDvariable *var) {value = ((MFDvarmoon*)var)->value;};
 };
 
 class MFDvarfloat : public MFDvariable {
@@ -127,6 +131,8 @@ public:
 	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname, double vvalue, double vmin, double vmax, double vincrement, double vlogborder);
 	MFDvarfloat();
 	~MFDvarfloat();
+protected:
+	virtual void InheritValues(MFDvariable *var) {value = ((MFDvarfloat*)var)->value;};
 };
 
 class MFDvarMJD: public MFDvarfloat {
@@ -152,6 +158,8 @@ public:
 	virtual void getsaveline(char *buffer) const;
 	virtual bool loadvalue(char *buffer);
 	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname, int vvalue, int vlimit, char *st1, char *st2, char *st3, char *st4, char *st5);
+protected:
+	virtual void InheritValues(MFDvariable *var) {value = ((MFDvardiscrete*)var)->value;};
 };
 
 class MFDsemiintdiscrete: public MFDvariable {
@@ -166,6 +174,8 @@ public:
 	void init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname,int tvalue);
 	virtual bool show(HDC hDC,int width,int line);
 	MFDsemiintdiscrete(){value=0;};
+protected:
+	virtual void InheritValues(MFDvariable *var) {value = ((MFDsemiintdiscrete*)var)->value;};
 };
 
 class MFDvarangle: public MFDvarfloat {

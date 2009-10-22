@@ -67,6 +67,7 @@ void MFDvariable::setshow(bool value)
 
 void MFDvariable::setall(class MFDvariable *var)
 {
+	InheritValues(var);
 	sethandle(var->gethandle());
 }
 
