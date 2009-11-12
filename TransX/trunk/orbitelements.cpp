@@ -223,6 +223,9 @@ void OrbitElements::init(OBJHANDLE hmajor, OBJHANDLE hminor)
 		double gmmajor=GRAVITY*(oapiGetMass(hmajor) + oapiGetMass(hminor)); // use the sum of the masses (see "reduced mass")
 		double timestamp=oapiGetSimTime();
 		init(craftpos, craftvel, timestamp, gmmajor);
+		char MAJOR[64], MINOR[64];
+		oapiGetObjectName(hmajor, MAJOR, 64);
+		oapiGetObjectName(hminor, MINOR, 64);
 		// initialise the orbit of the minor body around its barycentre
 		if(minoraboutbarycentre == NULL)
 			minoraboutbarycentre = new OrbitElements();
@@ -250,6 +253,9 @@ void OrbitElements::init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, dou
 
 void OrbitElements::init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, double ttimestamp, double gmplanet)
 {
+	VECTOR3 *ptr = const_cast<VECTOR3*>(&rvelocity);
+	if(length(rvelocity) < 1)
+		ptr->x = 0.001;	// If it is zero, it causes problems, so make it very small.
 	valid=true;
 	planevector=crossp(rposition,rvelocity);
 	angularmomentum2=dotp(planevector, planevector); //Angular momentum squared (don't usually need it non-squared)
