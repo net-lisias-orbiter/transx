@@ -291,6 +291,6 @@ double mapfunction::GetApproxAtmosphericLimit(OBJHANDLE body)
 		step /= 2;		// halve the search step
 		oapiGetPlanetAtmParams(body, alt, 0, 0, &prm);	// get the pressure at the equator on the meridian as it's only rough anyway
 	}
-	while(fabs(prm.p - PRESSURE) > TOLERANCE && alt >= 1);
+	while(fabs(prm.p - PRESSURE) > TOLERANCE && alt >= 1 && step >= 1);
 	return atmLimit[body] = alt;
 }
