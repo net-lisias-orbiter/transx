@@ -35,7 +35,8 @@ mapfunction::~mapfunction()
 	themap=NULL;
 }
 
-mapfunction::mapfunction()
+mapfunction::mapfunction() : 
+sun(NULL)
 {
 	initialised=false;
 	addaction(0);//Place single low priority action into queue
@@ -50,12 +51,15 @@ mapfunction *mapfunction::getthemap()
 
 void mapfunction::DeleteGBody(GBODY *body)
 {
-	// recursively eletes the GBODY and the tree of satellites 
-	list<GBODY*>::iterator it;
-	for(it = body->satellites.begin(); it != body->satellites.end(); ++it)
-		DeleteGBody(*it);
-	body->satellites.clear();
-	delete body;
+	if(body)
+	{
+		// recursively eletes the GBODY and the tree of satellites 
+		list<GBODY*>::iterator it;
+		for(it = body->satellites.begin(); it != body->satellites.end(); ++it)
+			DeleteGBody(*it);
+		body->satellites.clear();
+		delete body;
+	}
 }
 
 void mapfunction::dolowpriaction()

@@ -567,16 +567,36 @@ bool MFDvarMJD::show(Sketchpad *sketchpad, int width, int line)
 
 void MFDvarMJD::inc_variable()
 {
+	ELEMENTS el;
+	ORBITPARAM param;
+	oapiGetFocusInterface()->GetElements(oapiGetFocusInterface()->GetGravityRef(), el, &param);
+	if(adjMode == Coarse)
+	{
+		value += 5500.8249307686044282429796200623 / SECONDS_PER_DAY;
+	}
+	else
+	{
 	MFDvarfloat::inc_variable();
 	if(adjMode == Reset)
 		value = oapiGetSimMJD();
+	}
 }
 
 void MFDvarMJD::dec_variable()
 {
+	ELEMENTS el;
+	ORBITPARAM param;
+	oapiGetFocusInterface()->GetElements(oapiGetFocusInterface()->GetGravityRef(), el, &param);
+	if(adjMode == Coarse)
+	{
+		value -= 5506.8249307686044282429796200623 / SECONDS_PER_DAY;
+	}
+	else
+	{
 	MFDvarfloat::dec_variable();
 	if(adjMode == Reset)
 		value = oapiGetSimMJD();
+	}
 }
 
 void MFDvarshiplist::init(MFDvarhandler *vars,int viewmode1,int viewmode2,char *vname)
