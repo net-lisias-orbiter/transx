@@ -88,7 +88,10 @@ bool TransxMFD::Update (Sketchpad *sketchpad)
 		return false;
 	varpointer->show(sketchpad,W,linespacing);
 
-	return true;	// FIXME what should it return in this case?
+	return true;
+	// From Martins (http://www.orbiter-forum.com/project.php?issueid=210#note1142): 
+	// The return value is currently ignored.
+	// It may be used in the future to indicate if the surface was redrawn, for optimisation purposes (removal of unneccesary surface copies).
 }
 
 int TransxMFD::getwidth()
