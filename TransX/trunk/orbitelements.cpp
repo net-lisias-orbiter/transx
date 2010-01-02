@@ -254,8 +254,8 @@ void OrbitElements::init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, dou
 void OrbitElements::init(const VECTOR3 &rposition, const VECTOR3 &rvelocity, double ttimestamp, double gmplanet)
 {
 	VECTOR3 *ptr = const_cast<VECTOR3*>(&rvelocity);
-	if(length(rvelocity) < 1)
-		ptr->x = 0.001;	// If it is zero, it causes problems, so make it very small.
+	if(length(rvelocity) < 0.00000001)
+		ptr->x = 0.00000000001;	// If it is zero, it causes problems, so make it very small.
 	valid=true;
 	planevector=crossp(rposition,rvelocity);
 	angularmomentum2=dotp(planevector, planevector); //Angular momentum squared (don't usually need it non-squared)
