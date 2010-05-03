@@ -37,9 +37,10 @@ using namespace std;
 DLLCLBK void InitModule (HINSTANCE hDLL)
 {
 	static char name[] = "TransX";
-	MFDMODESPEC spec;
+	MFDMODESPECEX spec;
 	spec.name    = name;
 	spec.msgproc = TransxMFD::MsgProc;
+	spec.context = NULL;
 	//Code contributed by Dave Robotham
 	ifstream kstream;
 	kstream.open("config\\transx.cfg",NULL);	// this could be any file really.
