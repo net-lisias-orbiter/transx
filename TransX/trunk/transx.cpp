@@ -67,7 +67,7 @@ TransxMFD::~TransxMFD()
 bool TransxMFD::Update (Sketchpad *sketchpad)
 {
 	Title (sketchpad, "TransX MFD");
-	Pen *pen = SelectDefaultPen(sketchpad, TransXFunction::Green);//Selects an Orbiter default pen, and retrieves called pen
+	Pen *pen = GetDefaultPen (TransXFunction::Green); // Retrieves a default MFD pen
 	valid=viewstate->doupdate(sketchpad,W,H,this);
 	shipptrs::refreshsave();//allow save again, as new values are now available
 	sketchpad->SetPen(pen);
