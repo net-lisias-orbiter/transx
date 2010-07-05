@@ -46,7 +46,13 @@ viewstate::~viewstate()
 {}
 
 void viewstate::preparetoclose()
-{}
+{
+	// MS-100704: Added the following line, otherwise
+	// shipptrs::destroyshipptrs() is never called from
+	// TransX::~TransX(), leading to CTD on next session.
+
+	renderviewport=false;
+}
 
 void viewstate::movetonextfunction()
 {
