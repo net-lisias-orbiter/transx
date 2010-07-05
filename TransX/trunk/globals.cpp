@@ -105,15 +105,25 @@ DLLCLBK void ExitModule (HINSTANCE hDLL)
 DLLCLBK void opcCloseRenderViewport()
 {//Clean up
 	viewstate::preparetoclose();
+
+	// MS-100706: The following block should be unnecessary,
+	// since opcCloseRenderViewport() is called BEFORE the TransX destructors,
+	// which means that either GetMfdCount()>0 or shipptrs::destroyshipptrs()
+	// has already be called from TransX::~TransX(). Also see note in
+	// viewstate::preparetoclose(). A developer should have a look at this. 
+
 	if (TransxMFD::GetMfdCount()==0)
 	{// MFD's all closed - up to me to clean up!
 		shipptrs::destroyshipptrs();
 	}
 }
 
+static int choose = 0;
+
 DLLCLBK void opcOpenRenderViewport(HWND renderWnd,DWORD width,DWORD height,BOOL fullscreen)
 {
 	mapfunction *temp=mapfunction::getthemap();//kicks off the process of map creation
+	choose = 0;
 }
 
 DLLCLBK void opcFocusChanged(OBJHANDLE newfocus, OBJHANDLE oldfocus)
@@ -123,7 +133,6 @@ DLLCLBK void opcFocusChanged(OBJHANDLE newfocus, OBJHANDLE oldfocus)
 
 DLLCLBK void opcPostStep(double SimT, double SimDT, double mjd)
 {
-	static int choose;
 	if (choose!=0)
 	{
 		shipptrs::backgroundaction();

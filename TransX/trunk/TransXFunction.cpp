@@ -311,12 +311,12 @@ void TransXFunction::initpens(void)								//(rbd+)
 	pens[Red]		= oapiCreatePen(1, 1 , RGB(0xFF, 0x00, 0x00));	// Bright red - unused, but danger
 	pens[Grey]		= oapiCreatePen(1, 1 , RGB(0xC0, 0xC0, 0xC0));	// Light Grey
 	pens[White]		= oapiCreatePen(1, 1 , RGB(0xFF, 0xFF, 0xFF));	// Bright white - unused
-	brush[Green]	= new Brush(RGB(0x00, 0xFF, 0x00));
-	brush[Blue]		= new Brush(RGB(0x00, 0x00, 0xCD));
-	brush[Yellow]	= new Brush(RGB(0xCD, 0xCD, 0x00));
-	brush[Red]		= new Brush(RGB(0xFF, 0x00, 0x00));
-	brush[Grey]		= new Brush(RGB(0xC0, 0xC0, 0xC0));
-	brush[Green]	= new Brush(RGB(0xFF, 0xFF, 0xFF));
+	brush[Green]    = oapiCreateBrush (RGB(0x00, 0xFF, 0x00));
+	brush[Blue]		= oapiCreateBrush (RGB(0x00, 0x00, 0xCD));
+	brush[Yellow]	= oapiCreateBrush (RGB(0xCD, 0xCD, 0x00));
+	brush[Red]		= oapiCreateBrush (RGB(0xFF, 0x00, 0x00));
+	brush[Grey]		= oapiCreateBrush (RGB(0xC0, 0xC0, 0xC0));
+	brush[Green]	= oapiCreateBrush (RGB(0xFF, 0xFF, 0xFF));
 }
 
 
@@ -324,8 +324,8 @@ void TransXFunction::deletepens()
 {
 	for (int a=0;a<NUM_PENS;a++)
 	{
-		DeleteObject(pens[a]);
-		DeleteObject(brush[a]);
+		oapiReleasePen (pens[a]);
+		oapiReleaseBrush (brush[a]);
 	}
 }
 															//(rbd-)
