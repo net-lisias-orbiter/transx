@@ -106,6 +106,7 @@ END
 STRINGTABLE 
 BEGIN
     IDS_INFO                "TRANS-X V3.14:\r\n\r\nA complex Orbiter navigation tool by Steve Arch and Duncan Sharpe. Activating this module enables the TransX MFD mode.\r\n\r\nSee the documents in Doc\\TransX for for User Manual, Quickstart reference and license."
+    IDS_TYPE                "MFD modes"
 END
 
 #endif    // English (U.K.) resources

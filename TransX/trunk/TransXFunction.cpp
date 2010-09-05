@@ -305,18 +305,18 @@ void TransXFunction::gethandles(OBJHANDLE *thmajor, OBJHANDLE *thminor, OBJHANDL
 
 void TransXFunction::initpens(void)								//(rbd+)
 {
-	pens[Green]		= oapiCreatePen(1, 1 , RGB(0x00, 0xFF, 0x00));	// Green - stands for craft
-	pens[Blue]		= oapiCreatePen(1, 1 , RGB(0x00, 0x00, 0xCD));	// Blue - stands for planet
-	pens[Yellow]	= oapiCreatePen(2,	  1	, RGB(0xCD, 0xCD, 0x00));	// Bright yellow - hypos
-	pens[Red]		= oapiCreatePen(1, 1 , RGB(0xFF, 0x00, 0x00));	// Bright red - unused, but danger
-	pens[Grey]		= oapiCreatePen(1, 1 , RGB(0xC0, 0xC0, 0xC0));	// Light Grey
-	pens[White]		= oapiCreatePen(1, 1 , RGB(0xFF, 0xFF, 0xFF));	// Bright white - unused
-	brush[Green]    = oapiCreateBrush (RGB(0x00, 0xFF, 0x00));
-	brush[Blue]		= oapiCreateBrush (RGB(0x00, 0x00, 0xCD));
-	brush[Yellow]	= oapiCreateBrush (RGB(0xCD, 0xCD, 0x00));
-	brush[Red]		= oapiCreateBrush (RGB(0xFF, 0x00, 0x00));
-	brush[Grey]		= oapiCreateBrush (RGB(0xC0, 0xC0, 0xC0));
-	brush[Green]	= oapiCreateBrush (RGB(0xFF, 0xFF, 0xFF));
+	if (!pens[Green])	pens[Green]		= oapiCreatePen(1, 1 , RGB(0x00, 0xFF, 0x00));	// Green - stands for craft
+	if (!pens[Blue])	pens[Blue]		= oapiCreatePen(1, 1 , RGB(0x00, 0x00, 0xCD));	// Blue - stands for planet
+	if (!pens[Yellow])	pens[Yellow]	= oapiCreatePen(2,	  1	, RGB(0xCD, 0xCD, 0x00));	// Bright yellow - hypos
+	if (!pens[Red])		pens[Red]		= oapiCreatePen(1, 1 , RGB(0xFF, 0x00, 0x00));	// Bright red - unused, but danger
+	if (!pens[Grey])	pens[Grey]		= oapiCreatePen(1, 1 , RGB(0xC0, 0xC0, 0xC0));	// Light Grey
+	if (!pens[White])	pens[White]		= oapiCreatePen(1, 1 , RGB(0xFF, 0xFF, 0xFF));	// Bright white - unused
+	if (!brush[Green])	brush[Green]    = oapiCreateBrush (RGB(0x00, 0xFF, 0x00));
+	if (!brush[Blue])	brush[Blue]		= oapiCreateBrush (RGB(0x00, 0x00, 0xCD));
+	if (!brush[Yellow])	brush[Yellow]	= oapiCreateBrush (RGB(0xCD, 0xCD, 0x00));
+	if (!brush[Red])	brush[Red]		= oapiCreateBrush (RGB(0xFF, 0x00, 0x00));
+	if (!brush[Grey])	brush[Grey]		= oapiCreateBrush (RGB(0xC0, 0xC0, 0xC0));
+	if (!brush[White])	brush[White]	= oapiCreateBrush (RGB(0xFF, 0xFF, 0xFF));
 }
 
 
@@ -324,8 +324,14 @@ void TransXFunction::deletepens()
 {
 	for (int a=0;a<NUM_PENS;a++)
 	{
-		oapiReleasePen (pens[a]);
-		oapiReleaseBrush (brush[a]);
+		if (pens[a]) {
+			oapiReleasePen (pens[a]);
+			pens[a] = 0;
+		}
+		if (brush[a]) {
+			oapiReleaseBrush (brush[a]);
+			brush[a] = 0;
+		}
 	}
 }
 															//(rbd-)
@@ -339,10 +345,10 @@ Pen* TransXFunction::SelectDefaultPen(Sketchpad *sketchpad, int value)
 
 Brush* TransXFunction::SelectBrush(Sketchpad *sketchpad, int value)
 {
-	if(value < NUM_PENS && value > 0) //(rbd+)
+	if(value < NUM_PENS && value >= 0) //(rbd+)
 		return sketchpad->SetBrush(brush[value]);		// Custom brush
 	else //(rbd-)
-		return sketchpad->SetBrush(brush[Grey]);
+		return sketchpad->SetBrush(NULL);
 }
 
 void TransXFunction::sethelp(char *help1,char *help2,char *help3,char *help4,char *help5)
@@ -363,5 +369,5 @@ void TransXFunction::gethelp(char *help1,char *help2,char *help3,char *help4,cha
 	strcpy(help5,helpstring5);
 }
 
-Pen* TransXFunction::pens[NUM_PENS];
-Brush* TransXFunction::brush[NUM_PENS];
+Pen* TransXFunction::pens[NUM_PENS] = {0};
+Brush* TransXFunction::brush[NUM_PENS] = {0};
